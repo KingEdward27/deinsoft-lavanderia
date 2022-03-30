@@ -18,10 +18,7 @@ public class VentasADN {
         boolean result = false;
         Connection cn = null;
         PreparedStatement ps =null;
-        String sql = "insert into ventas(idcliente, tipodoc, seriedoc, numdoc, fecha,hora, igv, subtotal, "
-                        + "total,idusuario,estado,tipo_pago,idtiposervicio,fecha_entrega,"
-                + "fecha_reg,a_cuenta,descuento,tipodoc_id,envio_pse_flag,envio_pse_mensaje) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,?,?,?)";
+        String sql;
         try {//manejador de recursos
             cn = Conexion.Conexion();
             
@@ -403,7 +400,7 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
                         "ifnull(v.codigoqr,''),\n" +
                         "ifnull(v.xmlhash,''),\n" +
                         "td.tipodoc_id,td.nombre,td.value,\n" +
-                        "ts.idtiposervicio,ts.descripcion\n" +
+                        "ts.idtiposervicio,ts.descripcion,v.igv\n" +
                         "from ventas v \n" +
                         "inner join clientes cli on v.idcliente=cli.idcliente\n" +
                         "inner join tipodoc td on td.tipodoc_id = v.tipodoc_id\n" +
@@ -419,7 +416,8 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
                             rs.getFloat(6), rs.getString(7),
                             rs.getString(8), rs.getString(9), rs.getString(10), rs.getFloat(11),
                             rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
-                            rs.getString(16), new TipoDoc(rs.getInt(17), rs.getString(18), rs.getString(19), null), new Tipos_Servicio( rs.getInt(20),  rs.getString(21), null)));
+                            rs.getString(16), new TipoDoc(rs.getInt(17), rs.getString(18), rs.getString(19), null), 
+                            new Tipos_Servicio( rs.getInt(20),  rs.getString(21), null), rs.getFloat(22)));
                 }
             }
         }

@@ -71,6 +71,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
      * Creates new form JIVentas
      */
     Clientes cliente = null;
+
     public JIVentas() {
         super();
         initComponents();
@@ -645,9 +646,9 @@ public class JIVentas extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     public static int idcli = 1, idpro = 0;
-    public static boolean llamada = false, llamada_venta = false, apertura = false, 
-                estado = true, estadoventa = false, estado_cobro,is_open=true;
-    public static float total = 0f, montopagado = 0f, recidido = 0, vuelto = 0, a_cuenta = 0, descuento = 0f,valorIGV= 0.18f;
+    public static boolean llamada = false, llamada_venta = false, apertura = false,
+            estado = true, estadoventa = false, estado_cobro, is_open = true;
+    public static float total = 0f, montopagado = 0f, recidido = 0, vuelto = 0, a_cuenta = 0, descuento = 0f, valorIGV = 0.18f;
     ;
     public static String nomcli = "", nompro = "", nuevo_cliente = "";
     LinkedList<Productos> Lista = new LinkedList<>();
@@ -739,7 +740,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 AutoCompletion.enable(cbxClientes);
                 is_open = false;
             }
-            
+
             try {
                 cbxServicios.removeAllItems();
                 Tipos_Servicio ts = new Tipos_Servicio();
@@ -748,8 +749,6 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 for (Tipos_Servicio ts2 : TiposServicioADN.Lista(ts)) {
                     cbxServicios.addItem(ts2.getDescripcion());
                 }
-                
-
 
             } catch (SQLException ex) {
                 Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
@@ -759,7 +758,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, e.toString());
-            
+
         }
         try {
             try {
@@ -774,7 +773,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
         Util.OcultarColumnaJtable(jTable1, 6);
         Util.OcultarColumnaJtable(jTable1, 7);
 //        try {
-            
+
 //            AutoCompletion.enable(cbxClientes);
 //        } catch (Exception ex) {
 //            AutoCompletion.enable(cbxClientes);
@@ -797,10 +796,10 @@ public class JIVentas extends javax.swing.JInternalFrame {
             subtotal = 0;
             VerTotales();
             idcli = 1;
-            descuento=0;
-            a_cuenta=0;
-            recidido=0;
-            vuelto=0;
+            descuento = 0;
+            a_cuenta = 0;
+            recidido = 0;
+            vuelto = 0;
             tbxnrodocumento.grabFocus();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, e.toString());
@@ -843,7 +842,6 @@ public class JIVentas extends javax.swing.JInternalFrame {
                     estado_cobro = true;
                 }
 
-
                 if (estado_cobro) {
                     if (jTable1.getRowCount() > 0) {
 
@@ -851,13 +849,25 @@ public class JIVentas extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(rootPane, ":.  El número de documento ingresado ya existe .:");
                             return;
                         }
+                        TipoDoc td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
+                        
+                        if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
+                            if(td.getValue().equals("01") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 11)){
+                                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene RUC para generar documento electrónico");
+                                return;
+                            }
+                            if(td.getValue().equals("03") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 8)){
+                                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene DNI para generar documento electrónico");
+                                return;
+                            }
+                        }
 //                        hora = hor + ":" + minutos + ":" + segundos;
                         Ventas aux = new Ventas();
                         aux.setIdventa(0);
                         Clientes c = new Clientes();
                         c.setNombres(cbxClientes.getSelectedItem().toString());
                         aux.setIdcliente(ClientesADN.CapturaIDCliente(c));
-                        aux.setTipoDoc(new TipoDoc(TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString())));
+                        aux.setTipoDoc(td);
                         aux.setSerie(tbxserie1.getText().trim());
                         aux.setNro(tbxnrodocumento.getText().trim());
                         String fecha = Formatos.sdfFecha.format(jdprFecVenta.getDate());
@@ -865,7 +875,6 @@ public class JIVentas extends javax.swing.JInternalFrame {
                         java.util.Date hora = (java.util.Date) jSpinner1.getValue();
                         Date fechasql = Formatos.FechaSQL(fecha);
 
-//                        Date horasql = Formatos.HoraSql(Formatos.sdfHora.format(hora));
                         aux.setFecha(fechasql);
                         aux.setTotal(Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length())));
 
@@ -898,143 +907,36 @@ public class JIVentas extends javax.swing.JInternalFrame {
                             dv.add(d);
                         }
                         aux.setLista(dv);
-
+                        System.out.println("venta: " + aux.toString());
                         int idVenta = VentasADN.Guardar(aux);
                         if (idVenta > 0) {
                             JOptionPane.showMessageDialog(rootPane, ":. Venta Efectuada .:");
-
-//                            String productos = "";
-//                            int filas = jTable1.getRowCount();
-//
-//                            int espacio1 = 7;
-//                            int espacio2 = 50;
-//                            int espacio3 = 8;
-//
-//                            int resta1 = 0;
-//                            int resta2 = 0;
-//
-//                            String espacios1 = "";
-//                            String espacios2 = "";
-//
-//                            String can = "";
-//                            String pro = "";
-//                            String pre = "";
-//
-//                            for (int i = 0; i < filas; i++) {
-//                                if (dtm.getValueAt(i, 1).toString().length() < espacio1) {
-//                                    can = dtm.getValueAt(i, 1).toString();
-//                                    resta1 = espacio1 - dtm.getValueAt(i, 1).toString().length();
-//
-//                                } else {
-//                                    can = dtm.getValueAt(i, 1).toString().substring(0, espacio1 - 1);
-//                                }
-//                                if (dtm.getValueAt(i, 2).toString().length() < espacio2) {
-//                                    resta2 = espacio2 - dtm.getValueAt(i, 2).toString().length();
-//                                    pro = dtm.getValueAt(i, 2).toString();
-//                                } else {
-//                                    pro = dtm.getValueAt(i, 2).toString().substring(0, espacio2 - 1);
-//                                    pro += " ";
-//                                }
-//                                if (dtm.getValueAt(i, 4).toString().length() < espacio3) {
-//                                    pre = dtm.getValueAt(i, 4).toString();
-//                                } else {
-//                                    pre = dtm.getValueAt(i, 4).toString().substring(0, espacio3 - 1);
-//                                }
-//                                for (int j = 0; j < resta1; j++) {
-//                                    espacios1 += " ";
-//                                }
-//                                for (int j = 0; j < resta2; j++) {
-//                                    espacios2 += " ";
-//                                }
-//                                productos += can + espacios1 + pro + espacios2 + pre + "\n";
-//                                espacios1 = "";
-//                                espacios2 = "";
-//                            }
                             try {
-//                                String nombre_empresa = "", direccion = "", telefono = "";
-//                                for (Parametros object : ParametrosADN.Lista()) {
-//                                    nombre_empresa = object.getNombre_empresa();
-//                                    direccion = object.getDireccion();
-//                                    telefono = object.getTelefono();
-//
-//                                }
-//                                float total_ticket = descuento > 0 ? total - descuento : total;
-                                
-//                                int msj = JOptionPane.showConfirmDialog(rootPane, "Desea imprimir el ticket?");
-//                                if (msj == 0) {
-                                    jlblEstado.setText("Imprimiendo ticket...");
-                                        List<Parametros> datosEmpresa;
-                                        try {
-                                            datosEmpresa = ParametrosADN.Lista();
-//                                            ConsultaVentas datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
-//                                            List<ConsultaVentas> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-                                            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0); 
-                                            List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-                                            String resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle);
-                                            if (!resultImpr.equals("")) {
-                                                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
-                                            }
-                                        } catch (Exception ex) {
-                                            Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-//                                    Ticket2 p = new Ticket2();
-//                                    p.setDispositivo("");
-//                                    p.escribir((char) 27 + "m");
-//                                    p.setTipoCaracterLatino();
-//                                    p.setFormato(9);
-//                                    p.escribir(nombre_empresa);
-//                                    p.escribir(direccion);
-//                                    p.escribir("Telefono: " + telefono);
-//                                    p.dividir();
-//                                    p.escribir("Ticket: " + tbxserie.getText() + " - " + tbxnrodocumento.getText());
-//                                    p.escribir("Cliente: " + cbxClientes.getSelectedItem().toString());
-//                                    p.escribir("Le atendio: " + JFLogin.nom_usuario);
-//                                    p.escribir("Fecha venta: " + Formatos.sdfFecha.format(jdprFecVenta.getDate()));
-//                                    p.escribir("Cant.    Descripcion            Imp.");
-//                                    p.dividir();
-//                                    p.escribir(productos);
-//                                    p.dividir();
-//                                    p.escribir("SUBTOTAL: " + jlblTotal.getText());
-//                                    p.escribir("Descuento: " + Formatos.df.format(descuento));
-//                                    p.escribir("IGV: " + jtfdIGV.getText());
-//                                    p.escribir("TOTAL: " + (cbxServicios1.getSelectedIndex() == 0 ? Formatos.df.format(total_ticket) : "POR PAGAR"));
-//                                    p.escribir("");
-//                                    p.escribir("Recibido: " + String.valueOf(recidido) + " Cambio: " + String.valueOf(vuelto));
-//                                    p.escribir("A cuenta: " + Formatos.df.format(a_cuenta));
-//                                    p.escribir("Saldo: " + Formatos.df.format(a_cuenta > 0 ? total_ticket - a_cuenta : 0));
-//                                    p.dividir();
-//                                    p.escribir("Fecha hora actual: " + VentasADN.fecha_hora());
-//                                    p.escribir("Fecha hora recojo: " + fecha2 + " " + Util.sdfHora.format(hora));
-//                                    p.escribir("");
-//                                    p.escribir("           *****:::::::******");
-//                                    p.escribir("");
-//                                    p.escribir("NOTA: Una vez retirada la prenda no hay lugar a reclamo. "
-//                                            + "Pasado 30 dias de no retirar su ropa esta sera rematada "
-//                                            + "para recuperar los gastos del servicio dado."
-//                                            + "Prendas gastadas que no soporten el lavado seran "
-//                                            + "responsabilidad del cliente. En este caso la lavenderia "
-//                                            + "no se responsabiliza");
-//    //                                p.setFormato(24);
-//    //                                p.escribir("esto es negro con formato");
-//    //                                p.setFormato(1);
-//    //                                p.escribir("esto es negro con formato");
-//                                    p.correr(10);
-//                                    p.cortar();
-//                                    p.cerrarDispositivo();
-
-//                                }
-                                //imprimir ticket
-                                jlblEstado.setText("Enviando comprobante...");
-                                    RespuestaPSE resultEnvioPSE = null;
-                                    ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0); 
+                                jlblEstado.setText("Imprimiendo ticket...");
+                                List<Parametros> datosEmpresa;
+                                try {
+                                    datosEmpresa = ParametrosADN.Lista();
+                                    ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
                                     List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-                                    if (!datosVenta.getTipoDoc().getValue().equals("00") && !datosVenta.getTipoPago().equals("POR PAGAR")) {
+                                    String resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle, true);
+                                    if (!resultImpr.equals("")) {
+                                        JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
+                                    }
+                                } catch (Exception ex) {
+                                    Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                jlblEstado.setText("Enviando comprobante...");
+                                RespuestaPSE resultEnvioPSE = null;
+                                ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
+                                List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+                                if (!datosVenta.getTipoPago().equals("POR PAGAR")) {
+                                    if (!datosVenta.getTipoDoc().getValue().equals("00")) {
                                         try {
                                             //enviar a pse
 
                                             EnvioPSE envioPSE = new EnvioPSE();
                                             String jsonBody = envioPSE.paramToJson(datosVenta, datosVentaDetalle);
-                                            resultEnvioPSE =  envioPSE.envioJsonPSE(jsonBody);
+                                            resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
 
                                             if (resultEnvioPSE.isResult()) {
                                                 Ventas doc = new Ventas();
@@ -1045,44 +947,42 @@ public class JIVentas extends javax.swing.JInternalFrame {
                                                 doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
                                                 doc.setXmlHash(resultEnvioPSE.getXmlHash());
                                                 VentasADN.updateFlagEnvioPSE(doc);
-                                            }else
-                                            {
+                                            } else {
                                                 Ventas doc = new Ventas();
-                                                doc.setIdventa(datosVenta.getIdDocumento());
+                                                doc.setIdventa(idVenta);
                                                 doc.setEnvioPseFlag("0");
-                                                doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode()+"-"+resultEnvioPSE.getErrMessage());
+                                                doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
                                                 VentasADN.updateFlagEnvioPSE(doc);
-                                                JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n"+doc.getEnvioPseMensaje());
+                                                JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
                                             }
                                             //obtenemos otra vez los datos por lo actualizado por el envío
                                             jlblEstado.setText("Comprobante enviado...");
                                         } catch (Exception e) {
                                             e.printStackTrace();
-                                            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al enviar el documento :( .:"+e.getMessage());
+                                            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al enviar el documento :( .:" + e.getMessage());
                                             jbtnNuevoActionPerformed(evt);
                                             estado = false;
                                             //imprimir pruebas demostracion facturacion electronica
-        //                                    return;
+                                            //                                    return;
                                         }
                                         if (resultEnvioPSE.isResult()) {
                                             try {
                                                 String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
                                                 if (rutaDoc.equals("")) {
                                                     JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
-                                                }else
-                                                {
+                                                } else {
                                                     if (resultEnvioPSE.getPdfRespuesta() != null) {
-                                                        Util.getPDF(resultEnvioPSE.getPdfRespuesta(),rutaDoc + "/PDF/"+datosVenta.getSerie()+"-"+
-                                                                String.format("%08d",Integer.parseInt(datosVenta.getNum()))+".pdf");
+                                                        Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerie() + "-"
+                                                                + String.format("%08d", Integer.parseInt(datosVenta.getNum())) + ".pdf");
                                                     }
                                                     if (resultEnvioPSE.getXmlRespuesta() != null) {
-                                                        Util.getPDF(resultEnvioPSE.getXmlRespuesta(),rutaDoc+"/XML/"+datosVenta.getSerie()+"-"+
-                                                                String.format("%08d",Integer.parseInt(datosVenta.getNum()))+".xml");
+                                                        Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerie() + "-"
+                                                                + String.format("%08d", Integer.parseInt(datosVenta.getNum())) + ".xml");
                                                     }
                                                 }
                                                 //imprimir reporte
                                                 jlblEstado.setText("Comprobante enviado...");
-                                                JDConfirmacion dialog = new JDConfirmacion(null, closable,idVenta);
+                                                JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
                                                 dialog.setLocationRelativeTo(this);
                                                 dialog.setVisible(true);
                                             } catch (Exception e) {
@@ -1090,34 +990,32 @@ public class JIVentas extends javax.swing.JInternalFrame {
                                                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + e.toString());
                                             }
 
-                                        }
-                                        //imprimir pruebas demostracion facturacion electronica
-                                        else
-                                        {
-                                            //imprimir reporte
-                                            JDConfirmacion dialog = new JDConfirmacion(null, closable,idVenta);
-                                            dialog.setLocationRelativeTo(this);
-                                            dialog.setVisible(true);
-                                        }
-                                        jlblEstado.setText("Comprobante enviado...");
-                                    } 
-//                                    else {
-//                                        JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
-//                                        dialog.setLocationRelativeTo(this);
-//                                        dialog.setVisible(true);
-//                                    }
-                                
+                                        } //imprimir pruebas demostracion facturacion electronica
+//                                        else {
+//                                            //imprimir reporte
+//                                            JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
+//                                            dialog.setLocationRelativeTo(this);
+//                                            dialog.setVisible(true);
+//                                        }
+                                        jlblEstado.setText("Comprobante NO enviado...");
+                                    } else if (!datosVenta.getTipoPago().equals("POR PAGAR")) {
+                                        JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
+                                        dialog.setLocationRelativeTo(this);
+                                        dialog.setVisible(true);
+                                    }
+                                }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 JOptionPane.showMessageDialog(rootPane, "No se imprimira el ticket");
                             }
                             jbtnNuevoActionPerformed(evt);
+                            cbxtipodocumentoEActionPerformed(evt);
                             jlblEstado.setText("");
                         }
                     }
                 }
             }
-
 
             if (estadoventa == false) {
                 for (int i = 0; i < jTable1.getRowCount(); i++) {
@@ -1143,7 +1041,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_formKeyPressed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        
+
         //        jbtnAgregar.setFocusable(true);
 //        jbtnAgregar.requestFocus();
 //        tbxnrodocumento.requestFocus();
@@ -1157,7 +1055,6 @@ public class JIVentas extends javax.swing.JInternalFrame {
 //        int minutos = calendario.get(Calendar.MINUTE);
 //        int segundos = calendario.get(Calendar.SECOND);
 //        jSpinner1.setValue(hor + ":" + minutos);
-
 
 
     }//GEN-LAST:event_formInternalFrameOpened
@@ -1226,29 +1123,28 @@ public class JIVentas extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbtnBCliente1ActionPerformed
 
     private void cbxServicios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxServicios1ActionPerformed
-        if(cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3){
+        if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
             cbxtipodocumentoE.setEnabled(true);
             int id;
             try {
-                if(cbxtipodocumentoE.getItemCount() > 0){
+                if (cbxtipodocumentoE.getItemCount() > 0) {
                     id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
                     NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
                     tbxserie1.setText(n.getSerie());
-                    jlblTotal1.setText(n.getSerie()+"-" + String.format("%08d", n.getUltimoNumero()+1));
-//                    if(this.cliente != null){
-//                        if(cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()){
-//                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
-//                        }
-//                    }
+                    jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
+                    if (this.cliente != null) {
+                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
+                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+                        }
+                    }
                 }
-
 
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
+        } else {
             jlblTotal1.setText(" ");
             cbxtipodocumentoE.setEnabled(false);
         }
@@ -1257,12 +1153,16 @@ public class JIVentas extends javax.swing.JInternalFrame {
     private void cbxClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxClientesActionPerformed
         try {
             this.cliente = ClientesADN.getByName(cbxClientes.getSelectedItem().toString());
+            if ((cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3)
+                    && cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_cbxClientesActionPerformed
 
     private void txtObservacionesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtObservacionesKeyPressed
@@ -1311,25 +1211,29 @@ public class JIVentas extends javax.swing.JInternalFrame {
     private void cbxtipodocumentoEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxtipodocumentoEActionPerformed
         int id;
         try {
-            if(cbxtipodocumentoE.getItemCount() > 0){
-                id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
-                NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
-                tbxserie1.setText(n.getSerie());
-                jlblTotal1.setText(n.getSerie()+"-" + String.format("%08d", n.getUltimoNumero()+1));
-                if(this.cliente != null){
-                    if(cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()){
-                        JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+            if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
+                if (cbxtipodocumentoE.getItemCount() > 0) {
+                    id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
+                    NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
+                    tbxserie1.setText(n.getSerie());
+                    jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
+                    if (this.cliente != null) {
+                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
+                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+                        }
                     }
                 }
+            } else {
+                jlblTotal1.setText(" ");
+                cbxtipodocumentoE.setEnabled(false);
             }
-            
-            
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
+
     }//GEN-LAST:event_cbxtipodocumentoEActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1395,7 +1299,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
 
     private void CargarClientes() throws SQLException {
         cbxClientes.removeAllItems();
-        
+
         Clientes ts = new Clientes();
         ts.setDni("");
         ts.setNombres("");
@@ -1405,12 +1309,12 @@ public class JIVentas extends javax.swing.JInternalFrame {
             int index = -1;
             for (Clientes ts2 : ClientesADN.Lista(ts)) {
                 cbxClientes.addItem(ts2.getNombres());
-                
+
 //                System.out.println("waaa");
             }
             for (Clientes ts2 : ClientesADN.Lista(ts)) {
-                index ++;
-                if(ts2.getIdCliente() == 1) {
+                index++;
+                if (ts2.getIdCliente() == 1) {
                     break;
                 }
 //                System.out.println("waaa");
@@ -1421,9 +1325,10 @@ public class JIVentas extends javax.swing.JInternalFrame {
         }
 
     }
+
     private void CargarTipoDocs() throws SQLException {
         cbxtipodocumentoE.removeAllItems();
-        
+
         TipoDoc ts = new TipoDoc();
         ts.setNombre("");
         ts.setEstado("1");
@@ -1431,12 +1336,13 @@ public class JIVentas extends javax.swing.JInternalFrame {
             for (TipoDoc ts2 : TipoDocADN.Lista(ts)) {
                 cbxtipodocumentoE.addItem(ts2.getNombre());
             }
-            
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
+
     private void Habilitar(boolean cs) {
         jbtnAgregar.setEnabled(cs);
         jbtnQuitar.setEnabled(cs);
@@ -1489,25 +1395,25 @@ public class JIVentas extends javax.swing.JInternalFrame {
 //        }
 
         float tot = 0;
-        if (doc.equals("Factura")) {
-            igv = 0;
-            tot = 0;
+//        if (doc.equals("Factura")) {
+        igv = 0;
+        tot = 0;
 //            igv = subtotal * 0.19f;
-            subtotal = subtotal / (1f + valorIGV);
+        subtotal = subtotal / (1f + valorIGV);
 //            subtotal = subtotal - igv;
-            igv = subtotal * valorIGV;
-            tot = subtotal + igv;
-            jtfdSubTotal.setText(Formatos.df.format(subtotal));
-            jtfdIGV.setText(Formatos.df.format(igv));
-            jlblTotal.setText("S/. " + Formatos.df.format(tot));
-        } else {
-            tot = subtotal;
-            jtfdSubTotal.setText(Formatos.df.format(0.00));
-            subtotal = tot;
-            jtfdIGV.setText(Formatos.df.format(0.00));
-            jlblTotal.setText("S/. " + Formatos.df.format(tot));
-//            tot=subtotal+igv;
-        }
+        igv = subtotal * valorIGV;
+        tot = subtotal + igv;
+        jtfdSubTotal.setText(Formatos.df.format(subtotal));
+        jtfdIGV.setText(Formatos.df.format(igv));
+        jlblTotal.setText("S/. " + Formatos.df.format(tot));
+//        } else {
+//            tot = subtotal;
+//            jtfdSubTotal.setText(Formatos.df.format(0.00));
+//            subtotal = tot;
+//            jtfdIGV.setText(Formatos.df.format(0.00));
+//            jlblTotal.setText("S/. " + Formatos.df.format(tot));
+////            tot=subtotal+igv;
+//        }
 
     }
 }
@@ -1588,7 +1494,6 @@ class Ticket {
         //Si no quieres ver el dialogo de seleccionar impresora usa esto
         //PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
 
-
         //Con esto mostramos el dialogo para seleccionar impresora
         //Si quieres ver el dialogo de seleccionar impresora usalo
         //Solo mostrara las impresoras que soporte arreglo de bits
@@ -1602,7 +1507,6 @@ class Ticket {
 
         //Aca convertimos el string(cuerpo del ticket) a bytes tal como
         //lo maneja la impresora(mas bien ticketera :p)
-
         bytes = this.contentTicket.getBytes();
 
         //Creamos un documento a imprimir, a el se le appendeara

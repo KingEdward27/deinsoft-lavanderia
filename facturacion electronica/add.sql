@@ -27,7 +27,7 @@ create table numeracion_documento
 
 INSERT INTO numeracion_documento values (null,1,'B001',0,'1',now()); 
 INSERT INTO numeracion_documento values (null,2,'F001',0,'1',now());
-INSERT INTO numeracion_documento values (null,3,'001',0,'1',now());
+INSERT INTO numeracion_documento values (null,3,'0001',0,'1',now());
 INSERT INTO numeracion_documento values (null,4,'B002',0,'1',now());
 
 alter table ventas
@@ -234,6 +234,7 @@ DELIMITER ;
 alter table detalleventas
 add afectacion_igv decimal(14,2);
 
+select * from ventas
 select * from detalleventas
 select * from clientes
 select * from numeracion_documento

@@ -41,6 +41,7 @@ public class ConsultaVentas2 {
     private String xmlHash;
     private TipoDoc tipoDoc;
     private Tipos_Servicio tipoServicio;
+    private float sumatoriaIGV;
     public int getIdventa() {
         return idventa;
     }
@@ -230,6 +231,14 @@ public class ConsultaVentas2 {
         this.tipoPago = tipoPago;
     }
 
+    public float getSumatoriaIGV() {
+        return sumatoriaIGV;
+    }
+
+    public void setSumatoriaIGV(float sumatoriaIGV) {
+        this.sumatoriaIGV = sumatoriaIGV;
+    }
+
     
     public ConsultaVentas2() {
     }
@@ -250,7 +259,7 @@ public class ConsultaVentas2 {
             float ventatotal,String tipo_venta,String dni,String direccion,
             String descripcionMonto,float descuento,String tipoIGV,
             String tipoCliente,String correoCliente,String codigoQR,
-            String xmlHash,TipoDoc tipoDoc, Tipos_Servicio tipoServicio) {
+            String xmlHash,TipoDoc tipoDoc, Tipos_Servicio tipoServicio,float sumatoriaIGV) {
         this.idventa = idventa;
         this.serie = serie;
         this.num = num;
@@ -269,6 +278,7 @@ public class ConsultaVentas2 {
         this.xmlHash = xmlHash;
         this.tipoDoc = tipoDoc;
         this.tipoServicio = tipoServicio;
+        this.sumatoriaIGV = sumatoriaIGV;
     }
     //anular ventas
 public ConsultaVentas2(int idventa, String serie,  String num, String cliente, Date fecha, float ventatotal) {

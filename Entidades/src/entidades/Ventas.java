@@ -277,4 +277,11 @@ public class Ventas {
     //<editor-fold defaultstate="collapsed" desc="ARREGLO DE DATOS">
     
     //</editor-fold>
+
+    @Override
+    public String toString() {
+        return "Ventas{" + "Idventa=" + Idventa + ", idcliente=" + idcliente + ", Serie=" + Serie + ", nro=" + nro + ", fecha=" + fecha + ", hora=" + hora + ", igv=" + igv + ", subtotal=" + subtotal + ", total=" + total + ", idusuario=" + idusuario + ", estado=" + estado + ", idtiposervicio=" + idtiposervicio + ", tipo_pago=" + tipo_pago + ", descripcion_servicio=" + descripcion_servicio + ", fecha_Entrega=" + fecha_Entrega + ", strfecha_Entrega=" + strfecha_Entrega + ", fecha_reg=" + fecha_reg + ", lista=" + lista + ", a_cuenta=" + a_cuenta + ", descuento=" + descuento + ", tipoDoc=" + tipoDoc + ", envioPseFlag=" + envioPseFlag + ", envioPseMensaje=" + envioPseMensaje + ", nroRespuesta=" + nroRespuesta + ", codigoQR=" + codigoQR + ", xmlHash=" + xmlHash + '}';
+    }
+    
+    
 }

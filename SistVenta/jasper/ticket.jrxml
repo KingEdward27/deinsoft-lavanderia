@@ -376,7 +376,7 @@
 			</textField>
 			<frame>
 				<reportElement stretchType="RelativeToTallestObject" x="0" y="1" width="205" height="141" isRemoveLineWhenBlank="true" uuid="c89070ff-5aba-40cb-a7a1-3be5e8c4b7a2">
-					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("1") || $P{idTipoDoc}.equals("2") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
 				</reportElement>
 				<textField>
 					<reportElement x="3" y="64" width="197" height="14" uuid="e7769181-79e8-4d3a-84e2-615f91b03ecb"/>

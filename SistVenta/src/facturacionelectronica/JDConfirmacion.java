@@ -5,8 +5,11 @@
 package facturacionelectronica;
 
 //import accesodatos.EmpresaADN;
+import accesodatos.ParametrosADN;
 import accesodatos.VentasADN;
 import entidades.ConsultaVentas;
+import entidades.ConsultaVentas2;
+import entidades.Parametros;
 //import entidades.Empresa;
 import facturacionelectronica.Impresion;
 import java.sql.SQLException;
@@ -141,20 +144,18 @@ public class JDConfirmacion extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btncobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncobrarActionPerformed
-//        List<Empresa> datosEmpresa;
-//        try {
-//            datosEmpresa = EmpresaADN.getDatosEmpresa();
-//            ConsultaVentas datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
-//            List<ConsultaVentas> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-//            String resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle);
-//            if (!resultImpr.equals("")) {
-//                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        List<Parametros> datosEmpresa;
+        try {
+            datosEmpresa = ParametrosADN.Lista();
+            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
+            List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            String resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle, false);
+            if (!resultImpr.equals("")) {
+                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_btncobrarActionPerformed
 
@@ -163,20 +164,18 @@ public class JDConfirmacion extends javax.swing.JDialog {
     }//GEN-LAST:event_btncancelarActionPerformed
 
     private void btncobrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncobrar1ActionPerformed
-//        List<Empresa> datosEmpresa;
-//        try {
-//            datosEmpresa = EmpresaADN.getDatosEmpresa();
-//            ConsultaVentas datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
-//            List<ConsultaVentas> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-//            String resultImpr = Impresion.Imprimir(1, datosEmpresa, datosVenta, datosVentaDetalle);
-//            if (!resultImpr.equals("")) {
-//                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        List<Parametros> datosEmpresa;
+        try {
+            datosEmpresa = ParametrosADN.Lista();
+            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
+            List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            String resultImpr = Impresion.Imprimir(1, datosEmpresa, datosVenta, datosVentaDetalle, false);
+            if (!resultImpr.equals("")) {
+                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btncobrar1ActionPerformed
 
     /**
@@ -210,7 +209,7 @@ public class JDConfirmacion extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDConfirmacion dialog = new JDConfirmacion(new javax.swing.JFrame(), true,idVenta);
+                JDConfirmacion dialog = new JDConfirmacion(new javax.swing.JFrame(), true, idVenta);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
