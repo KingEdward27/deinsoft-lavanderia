@@ -234,8 +234,8 @@ DELIMITER ;
 alter table detalleventas
 add afectacion_igv decimal(14,2);
 
-select * from ventas
-select * from detalleventas
 select * from clientes
+select * from detalleventas
+select * from ventas
 select * from numeracion_documento
 select * from tipodoc

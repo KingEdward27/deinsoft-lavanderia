@@ -30,18 +30,18 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jPanel1" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jtpeTablepanel" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Component id="jbtnNuevo" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jbtnActivar" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -51,13 +51,13 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jtpeTablepanel" min="-2" pref="199" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jbtnActivar" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbtnNuevo" min="-2" max="-2" attributes="0"/>
+              <Component id="jtpeTablepanel" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jbtnNuevo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbtnActivar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="35" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -141,7 +141,7 @@
               <Value id="SoloTexto"/>
             </Property>
             <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-              <Value id="nulo"/>
+              <Value id="null"/>
             </Property>
           </Properties>
           <Events>
@@ -201,12 +201,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="497" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="571" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="166" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="200" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -221,12 +221,13 @@
                 <Component class="javax.swing.JTable" name="jteLista">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="6" rowCount="0">
+                      <Table columnCount="7" rowCount="0">
                         <Column editable="true" title="IdCliente" type="java.lang.Object"/>
                         <Column editable="true" title="Nombres" type="java.lang.Object"/>
                         <Column editable="true" title="DNI" type="java.lang.Object"/>
                         <Column editable="true" title="Direcci&#xf3;n" type="java.lang.Object"/>
                         <Column editable="true" title="Telefono" type="java.lang.Object"/>
+                        <Column editable="true" title="Correo" type="java.lang.Object"/>
                         <Column editable="true" title="Estado" type="java.lang.Object"/>
                       </Table>
                     </Property>
@@ -298,37 +299,24 @@
                               <Component id="jtfdDireccion" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jtfdCorreo" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jtfdDni" max="32767" attributes="0"/>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <EmptySpace min="0" pref="53" max="32767" attributes="0"/>
-                                              <Component id="jbtnGuardar" min="-2" pref="102" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace pref="13" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="139" max="32767" attributes="0"/>
+                              <Component id="jbtnGuardar" min="-2" pref="102" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jtfdTelefono" alignment="1" pref="171" max="32767" attributes="0"/>
+                                  <Component id="jtfdTelefono" alignment="0" pref="171" max="32767" attributes="0"/>
+                                  <Component id="jtfdDni" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -363,9 +351,20 @@
                               <Component id="jtfdDni" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jbtnGuardar" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jbtnGuardar" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jtfdCorreo" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="27" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -385,7 +384,7 @@
                   <Value id="SoloTexto"/>
                 </Property>
                 <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-                  <Value id="nulo"/>
+                  <Value id="null"/>
                 </Property>
               </Properties>
             </Component>
@@ -398,7 +397,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="DNI:"/>
+                <Property name="text" type="java.lang.String" value="DNI/RUC:"/>
               </Properties>
             </Component>
             <Component class="org.swing.componet.JTextBoxHintDS" name="jtfdDireccion">
@@ -407,10 +406,10 @@
                 <Property name="hint" type="java.lang.String" value="Ingrese su Direcci&#xf3;n"/>
                 <Property name="primeraMayus" type="java.lang.Boolean" value="true"/>
                 <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-                  <Value id="nulo"/>
+                  <Value id="null"/>
                 </Property>
                 <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-                  <Value id="nulo"/>
+                  <Value id="null"/>
                 </Property>
               </Properties>
             </Component>
@@ -447,6 +446,27 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtnGuardarActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="org.swing.componet.JTextBoxHintDS" name="jtfdCorreo">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="hint" type="java.lang.String" value="Ingrese su Correo"/>
+                <Property name="primeraMayus" type="java.lang.Boolean" value="true"/>
+                <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
+                  <Value id="null"/>
+                </Property>
+                <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
+                  <Value id="null"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfdCorreoActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel7">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Correo electr&#xf3;nico:"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

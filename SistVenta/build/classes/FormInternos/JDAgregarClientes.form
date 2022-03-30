@@ -112,7 +112,7 @@
               <Value id="SoloTexto"/>
             </Property>
             <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-              <Value id="nulo"/>
+              <Value id="null"/>
             </Property>
           </Properties>
         </Component>

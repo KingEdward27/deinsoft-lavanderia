@@ -78,25 +78,28 @@ public class Clientes {
         this.Estado = Estado;
     }
     
-    public Clientes(int IdCliente, String Nombres, String dni, String Direccion, String Telefono, String Estado) {
+    public Clientes(int IdCliente, String Nombres, String dni, String Direccion, 
+            String Telefono, String Estado,String correo) {
         this.IdCliente = IdCliente;
         this.Nombres = Nombres;
         this.dni = dni;
         this.Direccion = Direccion;
         this.Telefono = Telefono;
         this.Estado = Estado;
+        this.correo = correo;
     }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="ARREGLO DE DATOS">
     public String[] ArregloDatos(){
-        String[] aux = new String[6];
+        String[] aux = new String[7];
         aux[0] = String.valueOf(IdCliente);
         aux[1] = Nombres;
         aux[2] = dni;
         aux[3] = Direccion;
         aux[4] = Telefono;
-        aux[5] = Estado;
+        aux[5] = correo;
+        aux[6] = Estado;
         return aux;
     }
     //</editor-fold>
