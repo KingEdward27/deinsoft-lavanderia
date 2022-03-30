@@ -1,0 +1,39 @@
+m
+LAVANDERIA CHICK
+AV PRIMAVERA 1146 - SURCO
+Telefono: 3443404
+==================================
+Ticket: 001 - 155095
+Cliente: ABDELAATI
+Le atendio: admin
+Fecha venta: 25/03/2022
+Cant.    Descripcion            Imp.
+==================================
+5.00   PANTALON ABERCROMBIE ACERO DIBUJO GATA            35.00
+
+==================================
+SUBTOTAL: S/. 35.00
+Descuento: 0.00
+IGV: 0.00
+TOTAL: POR PAGAR
+
+Recibido: 0.0 Cambio: 0.0
+A cuenta: 0.00
+Saldo: 0.00
+==================================
+Fecha hora actual: 2022-03-25 19:44:04.0
+Fecha hora recojo: 27/03/2022 16:55
+
+           *****:::::::******
+
+NOTA: Una vez retirada la prenda no hay lugar a reclamo. Pasado 30 dias de no retirar su ropa esta sera rematada para recuperar los gastos del servicio dado.Prendas gastadas que no soporten el lavado seran responsabilidad del cliente. En este caso la lavenderia no se responsabiliza
+
+
+
+
+
+
+
+
+
+
