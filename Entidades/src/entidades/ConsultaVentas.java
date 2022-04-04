@@ -27,6 +27,7 @@ public class ConsultaVentas {
     private String estado;
     private float a_cuenta;
     private float descuento;
+    private String dniCliente;
     public int getIdventa() {
         return idventa;
     }
@@ -193,6 +194,14 @@ public class ConsultaVentas {
         this.a_cuenta = a_cuenta;
     }
 
+    public String getDniCliente() {
+        return dniCliente;
+    }
+
+    public void setDniCliente(String dniCliente) {
+        this.dniCliente = dniCliente;
+    }
+
     public ConsultaVentas() {
     }
     //consultaventas no se sabe donde
@@ -254,7 +263,8 @@ public class ConsultaVentas {
     }
  public ConsultaVentas(int idventa, String cliente, String tipodoc, String serie, String num, Date fecha, String hora,float igv, float subtotal, 
                         String nomusuario,  float ventatotal,String tipo_pago,
-                        String descripcion_servicio,String fecha_entrega,String estado,float a_cuenta,float descuento) {
+                        String descripcion_servicio,String fecha_entrega,String estado,
+                        float a_cuenta,float descuento,String dniCliente) {
         this.idventa = idventa;
         this.tipodoc = tipodoc;
         this.serie = serie;
@@ -272,6 +282,7 @@ public class ConsultaVentas {
         this.estado = estado;
         this.a_cuenta=a_cuenta;
         this.descuento=descuento;
+        this.dniCliente = dniCliente;
     }
     
     

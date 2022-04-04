@@ -4,6 +4,7 @@
  */
 package FormInternos;
 
+import Adicional.SystemOutToLog4j;
 import Adicional.Util;
 import accesodatos.*;
 import com.itextpdf.text.BaseColor;
@@ -38,7 +39,9 @@ public class JITotalCaja extends javax.swing.JInternalFrame {
         initComponents();
         this.setSize(899, 385);
     }
-
+    static {
+        SystemOutToLog4j.enableForClass(JITotalCaja.class);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -26,13 +26,18 @@ public class Ventas {
      private LinkedList <Detalle_Venta> lista;
     private float a_cuenta;
     private float descuento;
-    
+    private float recibido;
+    private float vuelto;
     private TipoDoc tipoDoc;
     private String envioPseFlag;
     private String envioPseMensaje ;
     private String nroRespuesta ;
     private String codigoQR;
     private String xmlHash; 
+    private String serieDocE;
+    private int numDocE;
+    private int indClienteE;
+    
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdventa() {
         return Idventa;
@@ -234,6 +239,47 @@ public class Ventas {
         this.xmlHash = xmlHash;
     }
 
+    public String getSerieDocE() {
+        return serieDocE;
+    }
+
+    public void setSerieDocE(String serieDocE) {
+        this.serieDocE = serieDocE;
+    }
+
+    public int getNumDocE() {
+        return numDocE;
+    }
+
+    public void setNumDocE(int numDocE) {
+        this.numDocE = numDocE;
+    }
+
+    public int getIndClienteE() {
+        return indClienteE;
+    }
+
+    public void setIndClienteE(int indClienteE) {
+        this.indClienteE = indClienteE;
+    }
+
+    public float getRecibido() {
+        return recibido;
+    }
+
+    public void setRecibido(float recibido) {
+        this.recibido = recibido;
+    }
+
+    public float getVuelto() {
+        return vuelto;
+    }
+
+    public void setVuelto(float vuelto) {
+        this.vuelto = vuelto;
+    }
+
+
     
     //</editor-fold>
 
@@ -280,8 +326,11 @@ public class Ventas {
 
     @Override
     public String toString() {
-        return "Ventas{" + "Idventa=" + Idventa + ", idcliente=" + idcliente + ", Serie=" + Serie + ", nro=" + nro + ", fecha=" + fecha + ", hora=" + hora + ", igv=" + igv + ", subtotal=" + subtotal + ", total=" + total + ", idusuario=" + idusuario + ", estado=" + estado + ", idtiposervicio=" + idtiposervicio + ", tipo_pago=" + tipo_pago + ", descripcion_servicio=" + descripcion_servicio + ", fecha_Entrega=" + fecha_Entrega + ", strfecha_Entrega=" + strfecha_Entrega + ", fecha_reg=" + fecha_reg + ", lista=" + lista + ", a_cuenta=" + a_cuenta + ", descuento=" + descuento + ", tipoDoc=" + tipoDoc + ", envioPseFlag=" + envioPseFlag + ", envioPseMensaje=" + envioPseMensaje + ", nroRespuesta=" + nroRespuesta + ", codigoQR=" + codigoQR + ", xmlHash=" + xmlHash + '}';
+        return "Ventas{" + "Idventa=" + Idventa + ", idcliente=" + idcliente + ", Serie=" + Serie + ", nro=" + nro + ", fecha=" + fecha + ", hora=" + hora + ", igv=" + igv + ", subtotal=" + subtotal + ", total=" + total + ", idusuario=" + idusuario + ", estado=" + estado + ", idtiposervicio=" + idtiposervicio + ", tipo_pago=" + tipo_pago + ", descripcion_servicio=" + descripcion_servicio + ", fecha_Entrega=" + fecha_Entrega + ", strfecha_Entrega=" + strfecha_Entrega + ", fecha_reg=" + fecha_reg + ", lista=" + lista + ", a_cuenta=" + a_cuenta + ", descuento=" + descuento + ", tipoDoc=" + tipoDoc + ", envioPseFlag=" + envioPseFlag + ", envioPseMensaje=" + envioPseMensaje + ", nroRespuesta=" + nroRespuesta + ", codigoQR=" + codigoQR + ", xmlHash=" + xmlHash + ", serieDocE=" + serieDocE + ", numDocE=" + numDocE + ", indClienteE=" + indClienteE + '}';
     }
+
+    
+    
     
     
 }

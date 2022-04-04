@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  *
@@ -28,11 +29,14 @@ public class JDConfirmacion extends javax.swing.JDialog {
      * Creates new form JDCobrar
      */
     private static int idVenta = 0;
-
-    public JDConfirmacion(java.awt.Frame parent, boolean modal, int idVenta) {
+    private static boolean isTicket = false;
+    private static String nombreImpresora = "";
+    public JDConfirmacion(java.awt.Frame parent, boolean modal, int idVenta,boolean isTicket,String nombreImpresora) {
         super(parent, modal);
         initComponents();
         this.idVenta = idVenta;
+        this.isTicket = isTicket;
+        this.nombreImpresora = nombreImpresora;
     }
 
     /**
@@ -147,12 +151,13 @@ public class JDConfirmacion extends javax.swing.JDialog {
         List<Parametros> datosEmpresa;
         try {
             datosEmpresa = ParametrosADN.Lista();
-            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
+            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(null, null, idVenta, !isTicket).get(0);
             List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-            String resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle, false);
-            if (!resultImpr.equals("")) {
+            JasperPrint resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle, isTicket);
+            if (resultImpr == null) {
                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
             }
+            Impresion.sendToPrinter(resultImpr, nombreImpresora);
         } catch (Exception ex) {
             Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,12 +172,13 @@ public class JDConfirmacion extends javax.swing.JDialog {
         List<Parametros> datosEmpresa;
         try {
             datosEmpresa = ParametrosADN.Lista();
-            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
+            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(null, null, idVenta, !isTicket).get(0);
             List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-            String resultImpr = Impresion.Imprimir(1, datosEmpresa, datosVenta, datosVentaDetalle, false);
-            if (!resultImpr.equals("")) {
+            JasperPrint resultImpr = Impresion.Imprimir(1, datosEmpresa, datosVenta, datosVentaDetalle, isTicket);
+            if (resultImpr == null) {
                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
             }
+            Impresion.sendToPrinter(resultImpr, nombreImpresora);
         } catch (Exception ex) {
             Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -209,7 +215,7 @@ public class JDConfirmacion extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDConfirmacion dialog = new JDConfirmacion(new javax.swing.JFrame(), true, idVenta);
+                JDConfirmacion dialog = new JDConfirmacion(new javax.swing.JFrame(), true, idVenta,isTicket,nombreImpresora);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

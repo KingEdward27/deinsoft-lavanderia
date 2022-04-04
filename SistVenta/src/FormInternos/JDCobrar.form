@@ -84,12 +84,12 @@
                               <Component id="jtfdMonto" alignment="0" pref="139" max="32767" attributes="0"/>
                               <Component id="jtfdBillete" max="32767" attributes="0"/>
                               <Component id="jtfdVuelto" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jtfdBillete1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jtfdAcuenta" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                          <Component id="jtfdBillete2" min="-2" pref="52" max="-2" attributes="0"/>
+                          <Component id="jtfdDescuento" min="-2" pref="52" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jLabel5" min="-2" pref="29" max="-2" attributes="0"/>
                       </Group>
@@ -110,12 +110,12 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jtfdBillete2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jtfdDescuento" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jtfdBillete1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jtfdAcuenta" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="19" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -212,7 +212,7 @@
             <Property name="text" type="java.lang.String" value="A cuenta:"/>
           </Properties>
         </Component>
-        <Component class="org.swing.componet.JTextBoxHintDS" name="jtfdBillete1">
+        <Component class="org.swing.componet.JTextBoxHintDS" name="jtfdAcuenta">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="hint" type="java.lang.String" value="S/. 0.00"/>
@@ -221,13 +221,13 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfdBillete1ActionPerformed"/>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfdBillete1FocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfdBillete1FocusLost"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfdBillete1KeyTyped"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfdAcuentaFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfdAcuentaFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfdAcuentaActionPerformed"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfdAcuentaKeyTyped"/>
           </Events>
         </Component>
-        <Component class="org.swing.componet.JTextBoxHintDS" name="jtfdBillete2">
+        <Component class="org.swing.componet.JTextBoxHintDS" name="jtfdDescuento">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="0"/>
@@ -236,9 +236,9 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfdBillete2ActionPerformed"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfdBillete2FocusLost"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfdBillete2KeyTyped"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jtfdDescuentoActionPerformed"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jtfdDescuentoFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtfdDescuentoKeyTyped"/>
           </Events>
         </Component>
       </SubComponents>

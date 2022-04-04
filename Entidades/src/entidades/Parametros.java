@@ -22,6 +22,7 @@ public class Parametros {
     private String rutaPse;
     private String token;
     private String rutadocs;
+    private String nombreImpresora;
     
     public int getIdparametro() {
         return idparametro;
@@ -118,12 +119,21 @@ public class Parametros {
     public void setRutadocs(String rutadocs) {
         this.rutadocs = rutadocs;
     }
+
+    public String getNombreImpresora() {
+        return nombreImpresora;
+    }
+
+    public void setNombreImpresora(String nombreImpresora) {
+        this.nombreImpresora = nombreImpresora;
+    }
     
     public Parametros() {
     }
 
     public Parametros(int idparametro, String nombre_empresa, String direccion, String telefono, 
-            String ruc, float monto_kilo, String estado,int num_venta,String ruta_dump,String rutaPse,String token,String rutadocs) {
+            String ruc, float monto_kilo, String estado,int num_venta,String ruta_dump,String rutaPse,
+            String token,String rutadocs,String nombreImpresora) {
         this.idparametro = idparametro;
         this.nombre_empresa = nombre_empresa;
         this.direccion = direccion;
@@ -136,6 +146,7 @@ public class Parametros {
         this.rutaPse = rutaPse;
         this.token = token;
         this.rutadocs = rutadocs;
+        this.nombreImpresora = nombreImpresora;
     }
     
     

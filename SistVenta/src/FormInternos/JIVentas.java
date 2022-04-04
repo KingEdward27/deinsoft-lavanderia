@@ -5,19 +5,15 @@
 package FormInternos;
 
 import Adicional.AutoCompletion;
-import Adicional.AutocompleteJComboBox;
-import Adicional.StringSearchable;
+import Adicional.SystemOutToLog4j;
 import Adicional.Ticket2;
 import Adicional.Util;
-import JRibbonForm.JFLogin;
 import accesodatos.IngresosADN;
 import accesodatos.ProductosADN;
 import accesodatos.TiposServicioADN;
 import accesodatos.VentasADN;
 import accesodatos.ClientesADN;
-import accesodatos.NumeracionDocumentoADN;
 import accesodatos.ParametrosADN;
-import accesodatos.TipoDocADN;
 import entidades.Detalle_Venta;
 import entidades.Formatos;
 import entidades.ProductoDetalle;
@@ -25,27 +21,17 @@ import entidades.Productos;
 import entidades.Tipos_Servicio;
 import entidades.Ventas;
 import entidades.Clientes;
-import entidades.ConsultaVentas;
-import entidades.ConsultaVentas2;
-import entidades.NumeracionDocumento;
 import entidades.Parametros;
-import entidades.TipoDoc;
-import facturacionelectronica.EnvioPSE;
-import facturacionelectronica.Impresion;
 import facturacionelectronica.JDConfirmacion;
-import facturacionelectronica.RespuestaPSE;
-import java.awt.Color;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
-import javax.print.ServiceUI;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
@@ -55,10 +41,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
 
 /**
@@ -82,6 +65,11 @@ public class JIVentas extends javax.swing.JInternalFrame {
         getRootPane().setDefaultButton(jbtnAgregar);
 
     }
+
+    static {
+        SystemOutToLog4j.enableForClass(JIVentas.class);
+    }
+//    Logger logger = LoggerFactory.getLogger(JIVentas.class);
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -112,9 +100,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
         jSpinner1 = new javax.swing.JSpinner(sm);
         tbxnrodocumento1 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        cbxtipodocumentoE = new javax.swing.JComboBox();
-        jLabel13 = new javax.swing.JLabel();
-        jlblTotal1 = new javax.swing.JLabel();
+        jbtnBCliente2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jtfdIGV = new javax.swing.JTextField();
@@ -128,15 +114,12 @@ public class JIVentas extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jlblTotal = new javax.swing.JLabel();
-        jbtnBCliente2 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         tbxserie = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         cbxtipodocumento = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
         jdprFecVenta = new com.michaelbaranov.microba.calendar.DatePicker();
-        tbxserie1 = new javax.swing.JTextField();
-        jLabel14 = new javax.swing.JLabel();
         jlblEstado = new javax.swing.JLabel();
 
         setClosable(true);
@@ -232,7 +215,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
 
         jLabel10.setText("Tipo Pago:");
 
-        cbxServicios1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EFECTIVO", "POR PAGAR", "TARJETA VISA", "TARJETA MASTERCARD" }));
+        cbxServicios1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "POR PAGAR" }));
         cbxServicios1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         cbxServicios1.setNextFocusableComponent(cbxClientes);
         cbxServicios1.addActionListener(new java.awt.event.ActionListener() {
@@ -266,19 +249,13 @@ public class JIVentas extends javax.swing.JInternalFrame {
 
         jLabel12.setText("Nº Documento:");
 
-        cbxtipodocumentoE.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nota de Venta", "Boleta", "Factura" }));
-        cbxtipodocumentoE.addActionListener(new java.awt.event.ActionListener() {
+        jbtnBCliente2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/Print2.png"))); // NOI18N
+        jbtnBCliente2.setNextFocusableComponent(txtObservaciones);
+        jbtnBCliente2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxtipodocumentoEActionPerformed(evt);
+                jbtnBCliente2ActionPerformed(evt);
             }
         });
-
-        jLabel13.setText("Tipo Documento:");
-
-        jlblTotal1.setFont(new java.awt.Font("Cambria Math", 1, 14)); // NOI18N
-        jlblTotal1.setForeground(new java.awt.Color(153, 0, 0));
-        jlblTotal1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlblTotal1.setText("X-000000");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -286,7 +263,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbxnrodocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -302,59 +279,45 @@ public class JIVentas extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
-                            .addComponent(tbxnrodocumento1)))
+                            .addComponent(tbxnrodocumento1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(cbxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jbtnBCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(cbxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jbtnBCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jdprFecVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(7, 7, 7)))
+                            .addComponent(jdprFecVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+                        .addComponent(jbtnBCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13)
-                    .addComponent(cbxtipodocumentoE, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jlblTotal1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(91, 91, 91))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jlblTotal1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel9)
-                                .addComponent(jLabel13)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbxnrodocumento1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbxtipodocumentoE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel9))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbxnrodocumento1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel3)
@@ -364,16 +327,25 @@ public class JIVentas extends javax.swing.JInternalFrame {
                                     .addComponent(tbxnrodocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cbxServicios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(11, 11, 11)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jbtnBCliente1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jdprFecVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jdprFecVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jbtnBCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(2, 2, 2))))
+                    .addComponent(jbtnBCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(48, 48, 48))
         );
 
@@ -492,22 +464,12 @@ public class JIVentas extends javax.swing.JInternalFrame {
         jlblTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jlblTotal.setText("S/. 0.00");
 
-        jbtnBCliente2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/Print2.png"))); // NOI18N
-        jbtnBCliente2.setNextFocusableComponent(txtObservaciones);
-        jbtnBCliente2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnBCliente2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jbtnBCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(59, 59, 59)
                 .addComponent(jlblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -517,15 +479,16 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jlblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(42, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jbtnBCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33))
         );
 
         jLabel8.setText("Serie Ticket:");
 
         tbxserie.setEnabled(false);
+        tbxserie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbxserieActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Nota Atención:");
 
@@ -545,11 +508,6 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 jdprFecVentaActionPerformed(evt);
             }
         });
-
-        tbxserie1.setText("BB01");
-        tbxserie1.setEnabled(false);
-
-        jLabel14.setText("Serie Doc:");
 
         jlblEstado.setFont(new java.awt.Font("Cambria Math", 1, 14)); // NOI18N
         jlblEstado.setForeground(new java.awt.Color(153, 0, 0));
@@ -588,11 +546,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxtipodocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tbxserie1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(23, 23, 23)
+                                .addGap(164, 164, 164)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jdprFecVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -617,18 +571,14 @@ public class JIVentas extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel2)
                                 .addComponent(cbxtipodocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel7)
-                                .addComponent(jdprFecVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
+                                .addComponent(jdprFecVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel14)
-                                        .addComponent(tbxserie1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jlblEstado))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(jlblEstado)
+                                .addGap(0, 25, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -700,8 +650,8 @@ public class JIVentas extends javax.swing.JInternalFrame {
 //                    }
 
                     ProX.setImporte(preA * canA);
-                    subtotal -= impA;
-                    subtotal += ProX.getImporte();
+                    total -= impA;
+                    total += ProX.getImporte();
                     dtm.setValueAt(String.valueOf(canA), f, 1);
                     dtm.setValueAt(String.valueOf(ProX.getImporte()), f, 4);
 //                    jbtnAgregar.requestFocus();
@@ -710,7 +660,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
             }
             if (estado == false) {
                 dtm.addRow(ProX.DatosToArray());
-                subtotal += ProX.getImporte();
+                total += ProX.getImporte();
             }
             VerTotales();
 //            tbxnrodocumento.requestFocus();
@@ -721,7 +671,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
 //        tbxnrodocumento.requestFocus();
         try {
-            txtObservaciones.setVisible(false);
+//            txtObservaciones.setVisible(false);
 //            Habilitar(false);
             dtm = (DefaultTableModel) jTable1.getModel();
             if (IngresosADN.EvaluarApertura(Hoy()) == false) {
@@ -736,7 +686,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
             jbtnNuevoActionPerformed(null);
             if (is_open) {
                 CargarClientes();
-                CargarTipoDocs();
+//                CargarTipoDocs();
                 AutoCompletion.enable(cbxClientes);
                 is_open = false;
             }
@@ -751,23 +701,24 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 }
 
             } catch (SQLException ex) {
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("");
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ex: " + ex.toString());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(rootPane, e.toString());
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+            System.out.println("ex: " + ex.toString());
+            JOptionPane.showMessageDialog(rootPane, ex.toString());
 
         }
         try {
             try {
                 jdprFecVenta1.setDate(sumarRestarDiasFecha(jdprFecVenta.getDate(), 2));
             } catch (PropertyVetoException ex) {
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ex: " + ex.toString());
             }
         } catch (ParseException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ex: " + ex.toString());
         }
         Util.OcultarColumnaJtable(jTable1, 5);
         Util.OcultarColumnaJtable(jTable1, 6);
@@ -793,6 +744,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
             }
             Limpiar();
             VerDocumento();
+            total = 0;
             subtotal = 0;
             VerTotales();
             idcli = 1;
@@ -816,7 +768,8 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 p.setStock(Float.parseFloat(dtm.getValueAt(f, 1).toString()));
                 ProductosADN.AñadirStock(p);
                 float impA = Float.parseFloat(dtm.getValueAt(f, 4).toString());
-                subtotal -= impA;
+                System.out.println("impA: " + impA);
+                total -= impA;
                 VerTotales();
                 dtm.removeRow(f);
             }
@@ -827,8 +780,8 @@ public class JIVentas extends javax.swing.JInternalFrame {
 
     private void jbtnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVenderActionPerformed
         try {
-
             if (jTable1.getRowCount() > 0) {
+                List<Parametros> datosEmpresa = ParametrosADN.Lista();
                 estado_cobro = false;
                 total = Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length()));
                 if (cbxServicios1.getSelectedIndex() == 0) {
@@ -849,27 +802,28 @@ public class JIVentas extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(rootPane, ":.  El número de documento ingresado ya existe .:");
                             return;
                         }
-                        TipoDoc td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
-                        
-                        if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
-                            if(td.getValue().equals("01") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 11)){
-                                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene RUC para generar documento electrónico");
-                                return;
-                            }
-                            if(td.getValue().equals("03") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 8)){
-                                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene DNI para generar documento electrónico");
-                                return;
-                            }
-                        }
+//                        TipoDoc td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
+
+//                        if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
+//                            if(td.getValue().equals("01") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 11)){
+//                                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene RUC para generar documento electrónico");
+//                                return;
+//                            }
+//                            if(td.getValue().equals("03") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 8)){
+//                                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene DNI para generar documento electrónico");
+//                                return;
+//                            }
+//                        }
 //                        hora = hor + ":" + minutos + ":" + segundos;
                         Ventas aux = new Ventas();
                         aux.setIdventa(0);
                         Clientes c = new Clientes();
                         c.setNombres(cbxClientes.getSelectedItem().toString());
                         aux.setIdcliente(ClientesADN.CapturaIDCliente(c));
-                        aux.setTipoDoc(td);
-                        aux.setSerie(tbxserie1.getText().trim());
+                        aux.setTipoDoc(null);
+                        aux.setSerie(tbxserie.getText().trim());
                         aux.setNro(tbxnrodocumento.getText().trim());
+//                        aux.setSerieDocE(tbxserie1.getText().trim());
                         String fecha = Formatos.sdfFecha.format(jdprFecVenta.getDate());
                         String fecha2 = Formatos.sdfFecha.format(jdprFecVenta1.getDate());
                         java.util.Date hora = (java.util.Date) jSpinner1.getValue();
@@ -902,7 +856,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
 
                             d.setIdmarca(Integer.parseInt(dtm.getValueAt(f, 5).toString()));
                             d.setIdcolor(Integer.parseInt(dtm.getValueAt(f, 6).toString()));
-                            d.setAfectacionIgv(d.getImporte() * valorIGV);
+                            d.setAfectacionIgv(d.getImporte() - (d.getImporte() / (1 + valorIGV)));
                             d.setIdcaracteristica(Integer.parseInt(dtm.getValueAt(f, 7).toString()));
                             dv.add(d);
                         }
@@ -913,104 +867,14 @@ public class JIVentas extends javax.swing.JInternalFrame {
                             JOptionPane.showMessageDialog(rootPane, ":. Venta Efectuada .:");
                             try {
                                 jlblEstado.setText("Imprimiendo ticket...");
-                                List<Parametros> datosEmpresa;
-                                try {
-                                    datosEmpresa = ParametrosADN.Lista();
-                                    ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
-                                    List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-                                    String resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle, true);
-                                    if (!resultImpr.equals("")) {
-                                        JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
-                                    }
-                                } catch (Exception ex) {
-                                    Logger.getLogger(JDConfirmacion.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                jlblEstado.setText("Enviando comprobante...");
-                                RespuestaPSE resultEnvioPSE = null;
-                                ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(idVenta).get(0);
-                                List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-                                if (!datosVenta.getTipoPago().equals("POR PAGAR")) {
-                                    if (!datosVenta.getTipoDoc().getValue().equals("00")) {
-                                        try {
-                                            //enviar a pse
-
-                                            EnvioPSE envioPSE = new EnvioPSE();
-                                            String jsonBody = envioPSE.paramToJson(datosVenta, datosVentaDetalle);
-                                            resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
-
-                                            if (resultEnvioPSE.isResult()) {
-                                                Ventas doc = new Ventas();
-                                                doc.setIdventa(idVenta);
-                                                doc.setEnvioPseFlag("1");
-                                                doc.setEnvioPseMensaje("Recibido correctamente");
-                                                doc.setNroRespuesta(resultEnvioPSE.getId());
-                                                doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
-                                                doc.setXmlHash(resultEnvioPSE.getXmlHash());
-                                                VentasADN.updateFlagEnvioPSE(doc);
-                                            } else {
-                                                Ventas doc = new Ventas();
-                                                doc.setIdventa(idVenta);
-                                                doc.setEnvioPseFlag("0");
-                                                doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
-                                                VentasADN.updateFlagEnvioPSE(doc);
-                                                JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
-                                            }
-                                            //obtenemos otra vez los datos por lo actualizado por el envío
-                                            jlblEstado.setText("Comprobante enviado...");
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al enviar el documento :( .:" + e.getMessage());
-                                            jbtnNuevoActionPerformed(evt);
-                                            estado = false;
-                                            //imprimir pruebas demostracion facturacion electronica
-                                            //                                    return;
-                                        }
-                                        if (resultEnvioPSE.isResult()) {
-                                            try {
-                                                String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
-                                                if (rutaDoc.equals("")) {
-                                                    JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
-                                                } else {
-                                                    if (resultEnvioPSE.getPdfRespuesta() != null) {
-                                                        Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerie() + "-"
-                                                                + String.format("%08d", Integer.parseInt(datosVenta.getNum())) + ".pdf");
-                                                    }
-                                                    if (resultEnvioPSE.getXmlRespuesta() != null) {
-                                                        Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerie() + "-"
-                                                                + String.format("%08d", Integer.parseInt(datosVenta.getNum())) + ".xml");
-                                                    }
-                                                }
-                                                //imprimir reporte
-                                                jlblEstado.setText("Comprobante enviado...");
-                                                JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
-                                                dialog.setLocationRelativeTo(this);
-                                                dialog.setVisible(true);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + e.toString());
-                                            }
-
-                                        } //imprimir pruebas demostracion facturacion electronica
-//                                        else {
-//                                            //imprimir reporte
-//                                            JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
-//                                            dialog.setLocationRelativeTo(this);
-//                                            dialog.setVisible(true);
-//                                        }
-                                        jlblEstado.setText("Comprobante NO enviado...");
-                                    } else if (!datosVenta.getTipoPago().equals("POR PAGAR")) {
-                                        JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
-                                        dialog.setLocationRelativeTo(this);
-                                        dialog.setVisible(true);
-                                    }
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                JOptionPane.showMessageDialog(rootPane, "No se imprimira el ticket");
+                                JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta, true,ParametrosADN.Lista().get(0).getNombreImpresora());
+                                dialog.setLocationRelativeTo(this);
+                                dialog.setVisible(true);
+                            } catch (Exception ex) {
+                                System.out.println(Util.exceptionToString(ex));
+                                ex.printStackTrace(System.out);
                             }
                             jbtnNuevoActionPerformed(evt);
-                            cbxtipodocumentoEActionPerformed(evt);
                             jlblEstado.setText("");
                         }
                     }
@@ -1028,9 +892,9 @@ public class JIVentas extends javax.swing.JInternalFrame {
 
             }
 
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            JOptionPane.showMessageDialog(rootPane, exception.toString());
+        } catch (Exception ex) {
+            System.out.println(Util.exceptionToString(ex));
+            JOptionPane.showMessageDialog(rootPane, ex.toString());
         }
     }//GEN-LAST:event_jbtnVenderActionPerformed
 
@@ -1084,6 +948,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
 
             }
         } catch (Exception e) {
+            System.out.println(Util.exceptionToString(e));
             JOptionPane.showMessageDialog(rootPane, e.toString());
         }
         is_open = true;
@@ -1117,51 +982,54 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 cbxClientes.setSelectedItem(nuevo_cliente);
                 cbxClientes.requestFocus();
             } catch (SQLException ex) {
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ex: " + ex.toString());
             }
         }
     }//GEN-LAST:event_jbtnBCliente1ActionPerformed
 
     private void cbxServicios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxServicios1ActionPerformed
-        if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
-            cbxtipodocumentoE.setEnabled(true);
-            int id;
-            try {
-                if (cbxtipodocumentoE.getItemCount() > 0) {
-                    id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
-                    NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
-                    tbxserie1.setText(n.getSerie());
-                    jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
-                    if (this.cliente != null) {
-                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
-                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
-                        }
-                    }
-                }
-
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            jlblTotal1.setText(" ");
-            cbxtipodocumentoE.setEnabled(false);
-        }
+//        if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
+//            cbxtipodocumentoE.setEnabled(true);
+//            int id;
+//            try {
+//                if (cbxtipodocumentoE.getItemCount() > 0) {
+//                    id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
+//                    NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
+//                    tbxserie1.setText(n.getSerie());
+//                    jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
+//                    if (this.cliente != null) {
+//                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
+//                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+//                        }
+//                    }
+//                }
+//
+//            } catch (ClassNotFoundException ex) {
+//               System.out.println("ex: "+ex.toString());
+//            } catch (SQLException ex) {
+//               System.out.println("ex: "+ex.toString());
+//            }
+//        } else {
+//            jlblTotal1.setText(" ");
+//            cbxtipodocumentoE.setEnabled(false);
+//        }
     }//GEN-LAST:event_cbxServicios1ActionPerformed
 
     private void cbxClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxClientesActionPerformed
-        try {
-            this.cliente = ClientesADN.getByName(cbxClientes.getSelectedItem().toString());
-            if ((cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3)
-                    && cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
-                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            this.cliente = ClientesADN.getByName(cbxClientes.getSelectedItem().toString());
+//            if ((cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3)
+//                    && !cbxtipodocumentoE.getSelectedItem().toString().equals("NOTA DE VENTA") && this.cliente.getDni().isEmpty()) {
+////                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+//                jLabel1.setText("Cliente (SIN DNI O RUC!):");
+//            }else{
+//                jLabel1.setText("Cliente: ");
+//            }
+//        } catch (SQLException ex) {
+//           System.out.println("ex: "+ex.toString());
+//        } catch (ClassNotFoundException ex) {
+//            System.out.println("ex: "+ex.toString());
+//        }
 
     }//GEN-LAST:event_cbxClientesActionPerformed
 
@@ -1180,10 +1048,10 @@ public class JIVentas extends javax.swing.JInternalFrame {
             try {
                 jdprFecVenta1.setDate(sumarRestarDiasFecha(jdprFecVenta.getDate(), 2));
             } catch (PropertyVetoException ex) {
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ex: " + ex.toString());
             }
         } catch (ParseException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ex: " + ex.toString());
         }
 
     }//GEN-LAST:event_jdprFecVentaActionPerformed
@@ -1208,46 +1076,19 @@ public class JIVentas extends javax.swing.JInternalFrame {
         p.cerrarDispositivo();
     }//GEN-LAST:event_jbtnBCliente2ActionPerformed
 
-    private void cbxtipodocumentoEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxtipodocumentoEActionPerformed
-        int id;
-        try {
-            if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
-                if (cbxtipodocumentoE.getItemCount() > 0) {
-                    id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
-                    NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
-                    tbxserie1.setText(n.getSerie());
-                    jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
-                    if (this.cliente != null) {
-                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
-                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
-                        }
-                    }
-                }
-            } else {
-                jlblTotal1.setText(" ");
-                cbxtipodocumentoE.setEnabled(false);
-            }
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_cbxtipodocumentoEActionPerformed
+    private void tbxserieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxserieActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbxserieActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbxClientes;
     private javax.swing.JComboBox cbxServicios;
     private javax.swing.JComboBox cbxServicios1;
     private javax.swing.JComboBox cbxtipodocumento;
-    private javax.swing.JComboBox cbxtipodocumentoE;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1273,13 +1114,11 @@ public class JIVentas extends javax.swing.JInternalFrame {
     private com.michaelbaranov.microba.calendar.DatePicker jdprFecVenta1;
     private javax.swing.JLabel jlblEstado;
     private javax.swing.JLabel jlblTotal;
-    private javax.swing.JLabel jlblTotal1;
     private javax.swing.JTextField jtfdIGV;
     private javax.swing.JTextField jtfdSubTotal;
     private javax.swing.JTextField tbxnrodocumento;
     private javax.swing.JTextField tbxnrodocumento1;
     private javax.swing.JTextField tbxserie;
-    private javax.swing.JTextField tbxserie1;
     private javax.swing.JTextArea txtObservaciones;
     // End of variables declaration//GEN-END:variables
     // Suma los días recibidos a la fecha  
@@ -1321,28 +1160,28 @@ public class JIVentas extends javax.swing.JInternalFrame {
             }
             cbxClientes.setSelectedIndex(index);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ex: " + ex.toString());
         }
 
     }
 
-    private void CargarTipoDocs() throws SQLException {
-        cbxtipodocumentoE.removeAllItems();
-
-        TipoDoc ts = new TipoDoc();
-        ts.setNombre("");
-        ts.setEstado("1");
-        try {
-            for (TipoDoc ts2 : TipoDocADN.Lista(ts)) {
-                cbxtipodocumentoE.addItem(ts2.getNombre());
-            }
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
+//    private void CargarTipoDocs() throws SQLException {
+//        cbxtipodocumentoE.removeAllItems();
+//
+//        TipoDoc ts = new TipoDoc();
+//        ts.setNombre("");
+//        ts.setEstado("1");
+//        try {
+//            for (TipoDoc ts2 : TipoDocADN.Lista(ts)) {
+//                cbxtipodocumentoE.addItem(ts2.getNombre());
+//            }
+//
+//        } catch (ClassNotFoundException ex) {
+//            System.out.println("ex: "+ex.toString());
+//            
+//        }
+//
+//    }
     private void Habilitar(boolean cs) {
         jbtnAgregar.setEnabled(cs);
         jbtnQuitar.setEnabled(cs);
@@ -1394,18 +1233,17 @@ public class JIVentas extends javax.swing.JInternalFrame {
 //            tot =subtotal+igv;
 //        }
 
-        float tot = 0;
 //        if (doc.equals("Factura")) {
         igv = 0;
-        tot = 0;
+//        total = 0;
 //            igv = subtotal * 0.19f;
-        subtotal = subtotal / (1f + valorIGV);
+        subtotal = total / (1f + valorIGV);
 //            subtotal = subtotal - igv;
-        igv = subtotal * valorIGV;
-        tot = subtotal + igv;
+        igv = total - subtotal;
+//        total = subtotal + igv;
         jtfdSubTotal.setText(Formatos.df.format(subtotal));
         jtfdIGV.setText(Formatos.df.format(igv));
-        jlblTotal.setText("S/. " + Formatos.df.format(tot));
+        jlblTotal.setText("S/. " + Formatos.df.format(total));
 //        } else {
 //            tot = subtotal;
 //            jtfdSubTotal.setText(Formatos.df.format(0.00));

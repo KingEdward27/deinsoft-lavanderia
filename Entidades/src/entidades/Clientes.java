@@ -9,6 +9,15 @@ public class Clientes {
     private String Telefono;       
     private String Estado;
     private String correo;   
+    private String tipoDoc;
+
+    public String getTipoDoc() {
+        return tipoDoc;
+    }
+
+    public void setTipoDoc(String tipoDoc) {
+        this.tipoDoc = tipoDoc;
+    }
     
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdCliente() {
@@ -79,7 +88,7 @@ public class Clientes {
     }
     
     public Clientes(int IdCliente, String Nombres, String dni, String Direccion, 
-            String Telefono, String Estado,String correo) {
+            String Telefono, String Estado,String correo,String tipo) {
         this.IdCliente = IdCliente;
         this.Nombres = Nombres;
         this.dni = dni;
@@ -87,19 +96,21 @@ public class Clientes {
         this.Telefono = Telefono;
         this.Estado = Estado;
         this.correo = correo;
+        this.tipoDoc = tipo;
     }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="ARREGLO DE DATOS">
     public String[] ArregloDatos(){
-        String[] aux = new String[7];
+        String[] aux = new String[8];
         aux[0] = String.valueOf(IdCliente);
         aux[1] = Nombres;
         aux[2] = dni;
         aux[3] = Direccion;
         aux[4] = Telefono;
         aux[5] = correo;
-        aux[6] = Estado;
+        aux[6] = tipoDoc;
+        aux[7] = Estado;
         return aux;
     }
     //</editor-fold>

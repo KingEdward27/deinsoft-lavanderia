@@ -17,8 +17,8 @@ public class Ticket2 {
 
     /**
      * Class declaration
-     *     
-*
+     *
+     *
      * @author
      * @version 1.10, 08/04/00
      */
@@ -36,7 +36,7 @@ public class Ticket2 {
         if (texto.trim().length() <= 0) {
             dispositivo = "pantalla.txt";
         }
-        
+
 //        if (texto.trim().length() <= 0) {//Si el    dispositivo viene en  blanco el  sistema tratara de definirlo
 //            Session misession = new Session();
 //            dispositivo = misession.impresora_tiquets();
@@ -56,7 +56,7 @@ public class Ticket2 {
 //    }
 //    }
 //    }
-    try {
+        try {
             fw = new FileWriter(dispositivo);
             bw = new BufferedWriter(fw);
             pw = new PrintWriter(bw);
@@ -64,6 +64,7 @@ public class Ticket2 {
             System.out.print(e);
         }
     }
+
     public void escribir(String texto) {
         try {
             pw.println(texto);
@@ -107,67 +108,69 @@ public class Ticket2 {
     public void setNegro() {
         try {
             char[] ESC_CUT_PAPER = new char[]{0x1B, 'r', 1};
-        if (!this.dispositivo.trim().equals("pantalla.txt")) {
-    pw.write(ESC_CUT_PAPER);
+            if (!this.dispositivo.trim().equals("pantalla.txt")) {
+                pw.write(ESC_CUT_PAPER);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
         }
     }
-    catch(Exception e
 
-    
-        ){
-    System.out.print(e);
+    public void setTipoCaracterLatino() {
+        try {
+            char[] ESC_CUT_PAPER = new char[]{0x1B, 'R', 18};
+            if (!this.dispositivo.trim().equals("pantalla.txt")) {
+                pw.write(ESC_CUT_PAPER);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
     }
-}
-public  void setTipoCaracterLatino( ) {
-    try{
-    char[] ESC_CUT_PAPER = new char[] { 0x1B, 'R',18};
-    if(!this.dispositivo.trim().equals("pantalla.txt")){
-    pw.write(ESC_CUT_PAPER);
+
+    public void setFormato(int formato) {
+        try {
+            char[] ESC_CUT_PAPER = new char[]{0x1B, '!', (char) formato};
+            if (!this.dispositivo.trim().equals("pantalla.txt")) {
+                pw.write(ESC_CUT_PAPER);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
     }
-    }catch(Exception e){
-    System.out.print(e);
+
+    public void correr(int fin) {
+        try {
+            int i = 0;
+            for (i = 1; i <= fin; i++) {
+                this.salto();
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
     }
+
+    public void salto() {
+        try {
+            pw.println("");
+        } catch (Exception e) {
+            System.out.print(e);
+        }
     }
-    public  void setFormato(int formato ) {
-    try{
-    char[] ESC_CUT_PAPER = new char[] { 0x1B, '!',(char)formato};
-    if(!this.dispositivo.trim().equals("pantalla.txt")){
-    pw.write(ESC_CUT_PAPER);
+
+    public void dividir() {
+        escribir("==================================");
     }
-    }catch(Exception e){
-    System.out.print(e);
-    }
-    }
-    public  void correr(int fin){
-    try{
-    int i=0;
-    for(i=1;i<=fin;i++){
-    this.salto();
-    }
-    }catch(Exception e){
-    System.out.print(e);
-    }
-    }
-    public  void salto() {
-    try{
-    pw.println("");
-    }catch(Exception e){
-    System.out.print(e);
-    }
-    }
-    public void dividir(){
-    escribir("==================================");
-    }
-    public  void cerrarDispositivo(  ){
-    try{
-    pw.close();
-    if(this.dispositivo.trim().equals("pantalla.txt")){
-    java.io.File archivo=new java.io.File("pantalla.txt");
-    java.awt.Desktop.getDesktop().open(archivo);
-    }
-    }catch(Exception e){
-    System.out.print(e);
-    }
+
+    public void cerrarDispositivo() {
+        try {
+            pw.close();
+            if (this.dispositivo.trim().equals("pantalla.txt")) {
+                java.io.File archivo = new java.io.File("pantalla.txt");
+                java.awt.Desktop.getDesktop().open(archivo);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
     }
 //    public static void main(String args[]) {
 //    impresora p=new impresora();
@@ -186,5 +189,5 @@ public  void setTipoCaracterLatino( ) {
 //    p.cortar();
 //    p.cerrarDispositivo();
 //    }
-    
+
 }

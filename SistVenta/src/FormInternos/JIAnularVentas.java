@@ -4,12 +4,14 @@
  */
 package FormInternos;
 
+import Adicional.Util;
 import accesodatos.ProductosADN;
 import accesodatos.VentasADN;
 import entidades.ConsultaVentas;
 import entidades.*;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -192,6 +194,21 @@ public class JIAnularVentas extends javax.swing.JInternalFrame {
                 int id = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
                 v.setIdventa(id);
                 v.setEstado("0");
+                ConsultaVentas2 datosVenta = null;
+//                List<ConsultaVentas2> datosVentaDetalle = null;
+                try {
+                    datosVenta = VentasADN.getDatosVenta(null, null, id, true).get(0);
+//                    datosVentaDetalle = VentasADN.Detalle_Ventas(id);
+                } catch (SQLException ex) {
+                    System.out.println(Util.exceptionToString(ex));
+                } catch (ClassNotFoundException ex) {
+                    System.out.println(Util.exceptionToString(ex));
+                }
+                if(datosVenta.getEnvioPseFlag().equals("1")){
+                    JOptionPane.showMessageDialog(rootPane, "No se puede anular una venta enviada a SUNAT. Comprobante: "+
+                            datosVenta.getSerieDocE()+"-"+ String.format("%08d", datosVenta.getNumDocE()));
+                    return;
+                }
                 int r = JOptionPane.showConfirmDialog(rootPane, "¿Esta seguro que desea anular esta venta?");
                 if (r == 0) {
                     boolean anu = VentasADN.CambiarEstado(v);
@@ -265,14 +282,13 @@ public class JIAnularVentas extends javax.swing.JInternalFrame {
             String fec2 = Formatos.sdfFecha.format(jdprFecha.getDate());
             Date fechasql1 = Formatos.FechaSQL(fec1);
             Date fechasql2 = Formatos.FechaSQL(fec2);
-            String estado="";
+            String estado = "";
             if (jrbncobradas.isSelected()) {
-                estado="1";
-            }else
-            {
-                estado="P";
+                estado = "2";
+            } else {
+                estado = "1";
             }
-            for (ConsultaVentas la : VentasADN.ConsultaVentas2(fechasql1, fechasql2,estado)) {
+            for (ConsultaVentas la : VentasADN.ConsultaVentas2(fechasql1, fechasql2, estado)) {
                 dtm.addRow(la.ArregloDatos2());
             }
         } catch (Exception e) {

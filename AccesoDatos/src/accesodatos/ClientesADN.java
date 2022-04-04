@@ -13,8 +13,8 @@ public class ClientesADN {
 
     private static boolean Nuevo(Clientes ent) throws ClassNotFoundException, SQLException {
         int r = 0;
-        String sql = "insert into clientes(nombres, dni, direccion, telefono, estado,correo) "
-                + "values(?, ?, ?, ?, ?,?)";
+        String sql = "insert into clientes(nombres, dni, direccion, telefono, estado,correo,tipo) "
+                + "values(?, ?, ?, ?, ?,?,?)";
         try (Connection cn = Conexion.Conexion();
                 PreparedStatement pst = cn.prepareStatement(sql)) {
             pst.setString(1, ent.getNombres());
@@ -23,6 +23,7 @@ public class ClientesADN {
             pst.setString(4, ent.getTelefono());
             pst.setString(5, ent.getEstado());
             pst.setString(6, ent.getCorreo());
+            pst.setString(7, ent.getTipoDoc());
             r = pst.executeUpdate();
         }
         return r == 1 ? true : false;
@@ -31,7 +32,7 @@ public class ClientesADN {
     private static boolean Actualizar(Clientes ent) throws ClassNotFoundException, SQLException {
         int r = 0;
         String sql = "update clientes set nombres = ?, dni = ?, direccion = ?, telefono = ?, "
-                + "estado = ?,correo = ? where idcliente = ?";
+                + "estado = ?,correo = ?,tipo = ? where idcliente = ?";
         try (Connection cn = Conexion.Conexion();
                 PreparedStatement pst = cn.prepareStatement(sql)) {
             pst.setString(1, ent.getNombres());
@@ -40,7 +41,8 @@ public class ClientesADN {
             pst.setString(4, ent.getTelefono());
             pst.setString(5, ent.getEstado());
             pst.setString(6, ent.getCorreo());
-            pst.setInt(7, ent.getIdCliente());
+            pst.setString(7, ent.getTipoDoc());
+            pst.setInt(8, ent.getIdCliente());
             r = pst.executeUpdate();
         }
         return r == 1 ? true : false;
@@ -125,14 +127,14 @@ public class ClientesADN {
             // leer el siguiente valor:
             try (ResultSet rs = pst.executeQuery()) {
                 rs.next();
-                r = new Clientes(rs.getInt(1), rs.getString(2), rs.getString(3), null, null, null,null);
+                r = new Clientes(rs.getInt(1), rs.getString(2), rs.getString(3), null, null, null,null,null);
             }
         }
         return r;
     }
     private static LinkedList<Clientes> ListaClientes(Clientes c) throws SQLException, ClassNotFoundException {
         LinkedList<Clientes> aux = new LinkedList<>();
-        String sql = "select idcliente,nombres,dni,direccion,telefono,estado,ifnull(correo,'') correo "
+        String sql = "select idcliente,nombres,dni,direccion,telefono,estado,ifnull(correo,''),ifnull(tipo,'') correo "
                 + "from clientes where dni like concat(?,'%') and "
                 + "nombres like concat(?,'%') and estado like ? order by nombres";
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
@@ -142,7 +144,7 @@ public class ClientesADN {
             try (ResultSet rs = ps.executeQuery()) { //leer el valor
                 while (rs.next()) {//leer los valores devuelto
                     aux.add(new Clientes(rs.getInt(1), rs.getString(2), rs.getString(3), 
-                            rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+                            rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)));
                 }
                 
             }catch(SQLException ex){

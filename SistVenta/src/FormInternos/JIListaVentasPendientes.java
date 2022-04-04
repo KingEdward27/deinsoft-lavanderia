@@ -4,21 +4,33 @@
  */
 package FormInternos;
 
+import Adicional.AutoCompletion;
+import Adicional.SystemOutToLog4j;
 import Adicional.Ticket2;
 import Adicional.Util;
+import static FormInternos.JIVentas.estado;
 import static FormInternos.JIVentas.recidido;
 import static FormInternos.JIVentas.vuelto;
 import JRibbonForm.JFLogin;
+import accesodatos.ClientesADN;
+import accesodatos.NumeracionDocumentoADN;
 import accesodatos.VentasADN;
 import accesodatos.ParametrosADN;
+import accesodatos.TipoDocADN;
 import entidades.*;
+import facturacionelectronica.EnvioPSE;
+import facturacionelectronica.Impresion;
+import facturacionelectronica.JDConfirmacion;
+import facturacionelectronica.RespuestaPSE;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  *
@@ -45,8 +57,6 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jtbelista = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jbtnNuevo = new javax.swing.JButton();
-        jbtnAgregar = new javax.swing.JButton();
         jbtnQuitar = new javax.swing.JButton();
         jbtnVender = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
@@ -57,8 +67,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        tbxserie = new javax.swing.JTextField();
-        jtfdCliente = new org.swing.componet.JTextBoxHintDS();
+        tbxACuenta = new javax.swing.JTextField();
         tbxtipodoc = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         tbxFechaEntrega = new javax.swing.JTextField();
@@ -66,6 +75,8 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         tbxTipoServicio1 = new javax.swing.JTextField();
         tbxserie1 = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
+        cbxClientes = new javax.swing.JComboBox();
+        jbtnBCliente1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jlblTotal = new javax.swing.JLabel();
         jtfdIGV = new javax.swing.JTextField();
@@ -77,6 +88,12 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         lblEstado = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         lblpagado = new javax.swing.JLabel();
+        cbxtipodocumentoE = new javax.swing.JComboBox();
+        jLabel17 = new javax.swing.JLabel();
+        jlblTotal1 = new javax.swing.JLabel();
+        jbtnGenerarComprobante = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        cbxServicios1 = new javax.swing.JComboBox();
 
         setClosable(true);
         setMaximizable(true);
@@ -118,49 +135,31 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(jtbelista);
-        jtbelista.getColumnModel().getColumn(0).setMinWidth(0);
-        jtbelista.getColumnModel().getColumn(0).setPreferredWidth(0);
-        jtbelista.getColumnModel().getColumn(0).setMaxWidth(0);
-        jtbelista.getColumnModel().getColumn(2).setMinWidth(0);
-        jtbelista.getColumnModel().getColumn(2).setPreferredWidth(0);
-        jtbelista.getColumnModel().getColumn(2).setMaxWidth(0);
-        jtbelista.getColumnModel().getColumn(3).setMinWidth(0);
-        jtbelista.getColumnModel().getColumn(3).setPreferredWidth(0);
-        jtbelista.getColumnModel().getColumn(3).setMaxWidth(0);
-        jtbelista.getColumnModel().getColumn(4).setMinWidth(0);
-        jtbelista.getColumnModel().getColumn(4).setPreferredWidth(0);
-        jtbelista.getColumnModel().getColumn(4).setMaxWidth(0);
-        jtbelista.getColumnModel().getColumn(5).setMinWidth(0);
-        jtbelista.getColumnModel().getColumn(5).setPreferredWidth(0);
-        jtbelista.getColumnModel().getColumn(5).setMaxWidth(0);
-        jtbelista.getColumnModel().getColumn(7).setMinWidth(0);
-        jtbelista.getColumnModel().getColumn(7).setPreferredWidth(0);
-        jtbelista.getColumnModel().getColumn(7).setMaxWidth(0);
-        jtbelista.getColumnModel().getColumn(8).setMinWidth(0);
-        jtbelista.getColumnModel().getColumn(8).setPreferredWidth(0);
-        jtbelista.getColumnModel().getColumn(8).setMaxWidth(0);
+        if (jtbelista.getColumnModel().getColumnCount() > 0) {
+            jtbelista.getColumnModel().getColumn(0).setMinWidth(0);
+            jtbelista.getColumnModel().getColumn(0).setPreferredWidth(0);
+            jtbelista.getColumnModel().getColumn(0).setMaxWidth(0);
+            jtbelista.getColumnModel().getColumn(2).setMinWidth(0);
+            jtbelista.getColumnModel().getColumn(2).setPreferredWidth(0);
+            jtbelista.getColumnModel().getColumn(2).setMaxWidth(0);
+            jtbelista.getColumnModel().getColumn(3).setMinWidth(0);
+            jtbelista.getColumnModel().getColumn(3).setPreferredWidth(0);
+            jtbelista.getColumnModel().getColumn(3).setMaxWidth(0);
+            jtbelista.getColumnModel().getColumn(4).setMinWidth(0);
+            jtbelista.getColumnModel().getColumn(4).setPreferredWidth(0);
+            jtbelista.getColumnModel().getColumn(4).setMaxWidth(0);
+            jtbelista.getColumnModel().getColumn(5).setMinWidth(0);
+            jtbelista.getColumnModel().getColumn(5).setPreferredWidth(0);
+            jtbelista.getColumnModel().getColumn(5).setMaxWidth(0);
+            jtbelista.getColumnModel().getColumn(7).setMinWidth(0);
+            jtbelista.getColumnModel().getColumn(7).setPreferredWidth(0);
+            jtbelista.getColumnModel().getColumn(7).setMaxWidth(0);
+            jtbelista.getColumnModel().getColumn(8).setMinWidth(0);
+            jtbelista.getColumnModel().getColumn(8).setPreferredWidth(0);
+            jtbelista.getColumnModel().getColumn(8).setMaxWidth(0);
+        }
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        jbtnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/ven2_result.png"))); // NOI18N
-        jbtnNuevo.setMnemonic('n');
-        jbtnNuevo.setText("Nuevo");
-        jbtnNuevo.setEnabled(false);
-        jbtnNuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnNuevoActionPerformed(evt);
-            }
-        });
-
-        jbtnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/ven3_result.png"))); // NOI18N
-        jbtnAgregar.setMnemonic('a');
-        jbtnAgregar.setText("Agregar");
-        jbtnAgregar.setEnabled(false);
-        jbtnAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnAgregarActionPerformed(evt);
-            }
-        });
 
         jbtnQuitar.setMnemonic('q');
         jbtnQuitar.setText("Imprimir ticket");
@@ -184,26 +183,19 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jbtnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jbtnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jbtnQuitar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addComponent(jbtnQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jbtnVender)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jbtnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jbtnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jbtnVender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jbtnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbtnQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbtnVender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -237,17 +229,6 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 
         jLabel8.setText("A cuenta:");
 
-        jtfdCliente.setEditable(false);
-        jtfdCliente.setText("PUBLICO EN GENERAL");
-        jtfdCliente.setFont(new java.awt.Font("Segoe UI", 2, 10)); // NOI18N
-        jtfdCliente.setTipoTextBox(null);
-        jtfdCliente.setTiponumero(null);
-        jtfdCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfdClienteActionPerformed(evt);
-            }
-        });
-
         tbxtipodoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbxtipodocActionPerformed(evt);
@@ -266,23 +247,40 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 
         jLabel15.setText("Saldo:");
 
+        cbxClientes.setEditable(true);
+        cbxClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxClientesActionPerformed(evt);
+            }
+        });
+
+        jbtnBCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/agregar.png"))); // NOI18N
+        jbtnBCliente1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnBCliente1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jtfdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbtnBCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tbxtipodoc, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
-                    .addComponent(tbxserie, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbxACuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel15)
@@ -296,8 +294,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbxTipoServicio1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(tbxFechaEntrega, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                        .addComponent(tbxFechaEntrega, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,13 +319,15 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtfdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(4, 4, 4)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jbtnBCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbxserie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbxACuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbxTipoServicio1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
         );
@@ -379,6 +378,38 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         lblpagado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lblpagado.setText("-");
 
+        cbxtipodocumentoE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxtipodocumentoEActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Tipo Documento:");
+
+        jlblTotal1.setFont(new java.awt.Font("Cambria Math", 1, 14)); // NOI18N
+        jlblTotal1.setForeground(new java.awt.Color(153, 0, 0));
+        jlblTotal1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlblTotal1.setText("X-000000");
+
+        jbtnGenerarComprobante.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/ven3_result.png"))); // NOI18N
+        jbtnGenerarComprobante.setMnemonic('a');
+        jbtnGenerarComprobante.setText("Generar comprobante");
+        jbtnGenerarComprobante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnGenerarComprobanteActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("Tipo Pago:");
+
+        cbxServicios1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EFECTIVO", "TARJETA VISA", "TARJETA MASTERCARD" }));
+        cbxServicios1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        cbxServicios1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxServicios1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -386,21 +417,6 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6))
-                        .addGap(4, 4, 4)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfdSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtfdIGV, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -422,8 +438,41 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(lblpagado, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 16, Short.MAX_VALUE))
-                                    .addComponent(lblEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(lblEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel16)
+                            .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addGap(157, 157, 157))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbxtipodocumentoE, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addComponent(jlblTotal1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(jbtnGenerarComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel6))
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtfdSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtfdIGV, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(24, 24, 24)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -434,45 +483,64 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     .addComponent(tbxNroVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10)
                     .addComponent(jLabel9))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(jLabel14)
-                                .addGap(8, 8, 8))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblpagado)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(jLabel12))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(lblEstado)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(17, 17, 17)
+                                        .addComponent(jLabel14)
+                                        .addGap(8, 8, 8))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblpagado)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jLabel12))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(lblEstado)))))
+                        .addGap(13, 13, 13)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jtfdSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(6, 6, 6)
-                            .addComponent(jtfdIGV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel4)
-                            .addGap(12, 12, 12)
-                            .addComponent(jLabel6))))
-                .addContainerGap(65, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cbxtipodocumentoE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jlblTotal1)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jbtnGenerarComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jtfdSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(6, 6, 6)
+                                    .addComponent(jtfdIGV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addGap(12, 12, 12)
+                                    .addComponent(jLabel6))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -481,20 +549,93 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     DefaultTableModel dtm2 = null;
 //    public static ProductoDetalle ProX = new ProductoDetalle();
     public static int idventa = 0;
-    public static boolean llamada = false, apertura = false, estado = false,is_acuenta=false;
+    public static boolean llamada = false, apertura = false, estado = false, is_acuenta = false;
     public static float total = 0f, montopagado = 0f, recidido = 0, vuelto = 0,
-            a_cuenta=0,descuento=0f;
-    
+            a_cuenta = 0, descuento = 0f;
+//    private String dniCliente = "";
+    private Clientes cliente = null;
+    static {
+        SystemOutToLog4j.enableForClass(JIListaVentasPendientes.class);
+    }
+    private void CargarTipoDocs() throws SQLException {
+        cbxtipodocumentoE.removeAllItems();
+
+        TipoDoc ts = new TipoDoc();
+        ts.setNombre("");
+        ts.setEstado("1");
+        try {
+            for (TipoDoc ts2 : TipoDocADN.Lista(ts)) {
+                cbxtipodocumentoE.addItem(ts2.getNombre());
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    void limpiar() {
+        int filas = jtbelista.getRowCount();
+        for (int i = 0; i < filas; i++) {
+            dtm.removeRow(0);
+        }
+        int filas2 = jtbelistaproductos.getRowCount();
+        for (int i = 0; i < filas2; i++) {
+            dtm2.removeRow(0);
+        }
+        tbxNroVenta.setText("");
+        tbxNroVenta.requestFocus();
+        cbxClientes.setSelectedItem("");
+        tbxFechaEntrega.setText("");
+        tbxTipoServicio1.setText("");
+        lblEstado.setText("-");
+        this.cliente = null;
+    }
+
+    private void CargarClientes() throws SQLException {
+        cbxClientes.removeAllItems();
+
+        Clientes ts = new Clientes();
+        ts.setDni("");
+        ts.setNombres("");
+        ts.setEstado("1");
+        try {
+//            System.out.println("wtf");
+            int index = -1;
+            for (Clientes ts2 : ClientesADN.Lista(ts)) {
+                cbxClientes.addItem(ts2.getNombres());
+
+//                System.out.println("waaa");
+            }
+            for (Clientes ts2 : ClientesADN.Lista(ts)) {
+                index++;
+                if (ts2.getIdCliente() == 1) {
+                    break;
+                }
+//                System.out.println("waaa");
+            }
+            cbxClientes.setSelectedIndex(index);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ex: " + ex.toString());
+        }
+
+    }
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         dtm = (DefaultTableModel) jtbelista.getModel();
         dtm2 = (DefaultTableModel) jtbelistaproductos.getModel();
-        Util.ModificarTamañoJtable(jtbelista,5,100);
-        Util.ModificarTamañoJtable(jtbelista,6,90);
-        Util.OcultarColumnaJtable(jtbelista,12);
-        Util.OcultarColumnaJtable(jtbelista,13);
-        Util.OcultarColumnaJtable(jtbelista,14);
-        Util.OcultarColumnaJtable(jtbelista,15);
-        
+        Util.ModificarTamañoJtable(jtbelista, 5, 100);
+        Util.ModificarTamañoJtable(jtbelista, 6, 90);
+        Util.OcultarColumnaJtable(jtbelista, 12);
+        Util.OcultarColumnaJtable(jtbelista, 13);
+        Util.OcultarColumnaJtable(jtbelista, 14);
+        Util.OcultarColumnaJtable(jtbelista, 15);
+        try {
+            CargarTipoDocs();
+            CargarClientes();
+            AutoCompletion.enable(cbxClientes);
+        } catch (SQLException ex) {
+            Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void jtbelistaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbelistaMouseClicked
@@ -506,329 +647,416 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jtbelistaMouseClicked
 
-    private void jbtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnNuevoActionPerformed
-        int filas = jtbelista.getRowCount();
-        for (int i = 0; i < filas; i++) {
-            dtm.removeRow(0);
-        }  
-        int filas2 = jtbelistaproductos.getRowCount();
-        for (int i = 0; i < filas2; i++) {
-            dtm2.removeRow(0);
-        }
-        tbxNroVenta.setText("");
-        tbxNroVenta.requestFocus();
-        jtfdCliente.setText("");
-        tbxFechaEntrega.setText("");
-        tbxTipoServicio1.setText("");
-        lblEstado.setText("-");
-    }//GEN-LAST:event_jbtnNuevoActionPerformed
+    private void jbtnGenerarComprobanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGenerarComprobanteActionPerformed
+        if (lblpagado.getText().equals("POR PAGAR") || lblpagado.getText().equals("POR CANCELAR")) {
+            int fila = jtbelista.getSelectedRow();
+            int id = 0;
+            if (fila >= 0) {
+                id = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
+            }
+            TipoDoc td = null;
+            try {
+                td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
+            } catch (SQLException ex) {
+                System.out.println(Util.exceptionToString(ex));
+            } catch (ClassNotFoundException ex) {
+                System.out.println(Util.exceptionToString(ex));
+            }
+//            td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
+            if (td.getValue().equals("01") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 11)) {
+                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene RUC para generar documento electrónico");
+                return;
+            }
+            if (td.getValue().equals("03") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 8)) {
+                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene DNI para generar documento electrónico");
+                return;
+            }
+            estado = false;
+            total = Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length()));
+            float a_cuenta = 0;
+            if (cbxServicios1.getSelectedIndex() == 0) {
+                a_cuenta = Float.parseFloat(tbxACuenta.getText().toString());
+                //float descuento = Float.parseFloat(dtm.getValueAt(fila, 0).toString());
+                total = total - a_cuenta - descuento;
+                is_acuenta = true;
+                JDCobrar c = new JDCobrar(null, closable);
+                c.setLocationRelativeTo(this);
+                c.setVisible(true);
+            } else {
 
-    private void jbtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnAgregarActionPerformed
-//        ProX = new ProductoDetalle();
-//        llamada = true;
-//        VerDocumento();
-//        VerTotales();
-//        JDBuscarProductos v = new JDBuscarProductos(null, closable);
-//        v.setLocationRelativeTo(this);
-//        v.setVisible(true);
-//
-//        if (ProX.getIdProducto() > 0) {
-//            int nro = jtbelistaproductos.getRowCount();
-//            int aux = 0;
-//            float impA = 0f, preA = 0f, canA = 0f;
-//            //            JOptionPane.showMessageDialog(rootPane, "waaaa");
-//            boolean estado = false;
-//            for (int f = 0; f < nro; f++) {
-//                aux = Integer.parseInt(dtm.getValueAt(f, 0).toString());
-//                if (aux == ProX.getIdProducto()) {
-//                    estado = true;
-//                    preA = Float.parseFloat(dtm.getValueAt(f, 3).toString());
-//                    canA = Float.parseFloat(dtm.getValueAt(f, 1).toString());
-//                    impA = Float.parseFloat(dtm.getValueAt(f, 4).toString());
-//                    canA += ProX.getCantidad();
-//                    try {
-//                        if (canA > ProductosADN.CapturaStock(ProX)) {
-//                            JOptionPane.showMessageDialog(rootPane, canA);
-//                            JOptionPane.showMessageDialog(rootPane, String.valueOf(ProductosADN.CapturaStock(ProX)));
-//                            canA = ProductosADN.CapturaStock(ProX);
-//                            JOptionPane.showMessageDialog(rootPane, "Cantidad a vender supera el stock del producto");
-//                        }
-//                    } catch (Exception e) {
-//                        JOptionPane.showMessageDialog(rootPane, "Error en capturar el stock" + e.toString());
-//                    }
-//
-//                    ProX.setImporte(preA * canA);
-//                    subtotal -= impA;
-//                    subtotal += ProX.getImporte();
-//                    dtm.setValueAt(String.valueOf(canA), f, 1);
-//                    dtm.setValueAt(String.valueOf(ProX.getImporte()), f, 4);
-//                    break;
-//                }
-//            }
-//            if (estado == false) {
-//                dtm.addRow(ProX.DatosToArray());
-//                subtotal += ProX.getImporte();
-//            }
-//            VerTotales();
-//        }
-//        llamada = false;
-    }//GEN-LAST:event_jbtnAgregarActionPerformed
+                estado = true;
+            }
+
+            if (estado) {
+                Ventas v = new Ventas();
+                v.setIdventa(id);
+                v.setTipoDoc(td);
+                Clientes c = new Clientes();
+                c.setNombres(cbxClientes.getSelectedItem().toString());
+                v.setTipo_pago(cbxServicios1.getSelectedItem().toString());
+                v.setDescuento(descuento);
+                v.setSerieDocE(jlblTotal1.getText().split("-")[0]);
+                v.setEstado("1");
+                v.setRecibido(recidido);
+                v.setVuelto(vuelto);
+                boolean ven = false;
+                try {
+                    int idc = ClientesADN.CapturaIDCliente(c);
+                    System.out.println("idc: " + idc);
+                    //                Clientes cli = new Clientes(ClientesADN.CapturaIDCliente(c),null);
+                    v.setIndClienteE(idc);
+                    System.out.println("ventas: " + v.toString());
+                    ven = VentasADN.generarComprobante(v);
+                } catch (ClassNotFoundException ex) {
+                    System.out.println(Util.exceptionToString(ex));
+                } catch (Exception ex) {
+                    System.out.println(Util.exceptionToString(ex));
+                }
+                if (ven) {
+                    JOptionPane.showMessageDialog(rootPane, "Venta cancelada correctamente");
+                }
+                if (!td.getValue().equals("00")) {
+                    RespuestaPSE resultEnvioPSE = null;
+                    ConsultaVentas2 datosVenta = null;
+                    List<ConsultaVentas2> datosVentaDetalle = null;
+                    try {
+                        //enviar a pse
+
+                        try {
+                            datosVenta = VentasADN.getDatosVenta(null, null, id, true).get(0);
+                            datosVentaDetalle = VentasADN.Detalle_Ventas(id);
+                        } catch (SQLException ex) {
+                            System.out.println(Util.exceptionToString(ex));
+                        } catch (ClassNotFoundException ex) {
+                            System.out.println(Util.exceptionToString(ex));
+                        }
+                        EnvioPSE envioPSE = new EnvioPSE();
+                        String jsonBody = envioPSE.paramToJson(datosVenta, datosVentaDetalle);
+                        resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
+
+                        if (resultEnvioPSE.isResult()) {
+                            Ventas doc = new Ventas();
+                            doc.setIdventa(id);
+                            doc.setEnvioPseFlag("1");
+                            doc.setEnvioPseMensaje("Recibido correctamente");
+                            doc.setNroRespuesta(resultEnvioPSE.getId());
+                            doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
+                            doc.setXmlHash(resultEnvioPSE.getXmlHash());
+                            VentasADN.updateFlagEnvioPSE(doc);
+                        } else {
+                            Ventas doc = new Ventas();
+                            doc.setIdventa(id);
+                            doc.setEnvioPseFlag("0");
+                            doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
+                            VentasADN.updateFlagEnvioPSE(doc);
+                            JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
+                        }
+                        //obtenemos otra vez los datos por lo actualizado por el envío
+                        //                                            jlblEstado.setText("Comprobante enviado...");
+                    } catch (Exception ex) {
+                        System.out.println(Util.exceptionToString(ex));
+                        JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al enviar el documento :( .:" + ex.getMessage());
+                        limpiar();
+                        estado = false;
+                        //imprimir pruebas demostracion facturacion electronica
+                        //                                    return;
+                    }
+                    if (resultEnvioPSE.isResult()) {
+                        try {
+                            String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
+                            if (rutaDoc.equals("")) {
+                                JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
+                            } else {
+                                if (resultEnvioPSE.getPdfRespuesta() != null) {
+                                    Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerieDocE() + "-"
+                                            + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
+                                }
+                                if (resultEnvioPSE.getXmlRespuesta() != null) {
+                                    Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerieDocE() + "-"
+                                            + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
+                                }
+                            }
+                            //imprimir reporte
+                            //                                                jlblEstado.setText("Comprobante enviado...");
+                            JDConfirmacion dialog = new JDConfirmacion(null, closable, id, false, ParametrosADN.Lista().get(0).getNombreImpresora());
+                            dialog.setLocationRelativeTo(this);
+                            dialog.setVisible(true);
+
+                        } catch (Exception ex) {
+                            System.out.println(Util.exceptionToString(ex));
+                            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + ex.toString());
+                        }
+
+                    }
+                } else {
+                    JDConfirmacion dialog = null;
+                    try {
+                        dialog = new JDConfirmacion(null, closable, id, false, ParametrosADN.Lista().get(0).getNombreImpresora());
+                    } catch (SQLException ex) {
+                        System.out.println(Util.exceptionToString(ex));
+                    } catch (ClassNotFoundException ex) {
+                        System.out.println(Util.exceptionToString(ex));
+                    }
+                    dialog.setLocationRelativeTo(this);
+                    dialog.setVisible(true);
+                }
+
+                tbxNroVentaActionPerformed(evt);
+            }
+
+        }
+    }//GEN-LAST:event_jbtnGenerarComprobanteActionPerformed
 
     private void jbtnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnQuitarActionPerformed
-        String productos = "";
-                            int filas = jtbelistaproductos.getRowCount();
+        int fila = jtbelista.getSelectedRow();
+        int id = 0;
+        if (fila >= 0) {
+            id = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
+            JDConfirmacion dialog = null;
+            try {
+                dialog = new JDConfirmacion(null, closable, id, true, ParametrosADN.Lista().get(0).getNombreImpresora());
+            } catch (SQLException ex) {
+                Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+//            List<Parametros> datosEmpresa;
+//            try {
+//                datosEmpresa = ParametrosADN.Lista();
+//                ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(null, null, id).get(0);
+//                List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(id);
+//                JasperPrint resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle, true);
+//                if (resultImpr == null) {
+//                    JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
+//                }
+//            } catch (Exception ex) {
+//                Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+        }
 
-                            int espacio1 = 7;
-                            int espacio2 = 50;
-                            int espacio3 = 8;
-
-                            int resta1 = 0;
-                            int resta2 = 0;
-
-                            String espacios1 = "";
-                            String espacios2 = "";
-
-                            String can = "";
-                            String pro = "";
-                            String pre = "";
-
-                            for (int i = 0; i < filas; i++) {
-                                if (dtm2.getValueAt(i, 1).toString().length() < espacio1) {
-                                    can = dtm2.getValueAt(i, 1).toString();
-                                    resta1 = espacio1 - dtm2.getValueAt(i, 1).toString().length();
-
-                                } else {
-                                    can = dtm2.getValueAt(i, 1).toString().substring(0, espacio1 - 1);
-                                }
-                                if (dtm2.getValueAt(i, 2).toString().length() < espacio2) {
-                                    resta2 = espacio2 - dtm2.getValueAt(i, 2).toString().length();
-                                    pro = dtm2.getValueAt(i, 2).toString();
-                                } else {
-                                    pro = dtm2.getValueAt(i, 2).toString().substring(0, espacio2 - 1);
-                                    pro += " ";
-                                }
-                                if (dtm2.getValueAt(i, 4).toString().length() < espacio3) {
-                                    pre = dtm2.getValueAt(i, 4).toString();
-                                } else {
-                                    pre = dtm2.getValueAt(i, 4).toString().substring(0, espacio3 - 1);
-                                }
-                                for (int j = 0; j < resta1; j++) {
-                                    espacios1 += " ";
-                                }
-                                for (int j = 0; j < resta2; j++) {
-                                    espacios2 += " ";
-                                }
-                                productos += can + espacios1 + pro + espacios2 + pre + "\n";
-                                espacios1 = "";
-                                espacios2 = "";
-                            }
-                            try {
-                                String nombre_empresa = "",direccion = "",telefono="";
-                                for (Parametros object : ParametrosADN.Lista()) {
-                                    nombre_empresa = object.getNombre_empresa();
-                                    direccion = object.getDireccion();
-                                    telefono = object.getTelefono();
-                                    
-                                }
-    
-////                                Ticket tk = new Ticket(nombre_empresa,direccion, 
-////                                                        direccion, 
-////                                                        tbxserie.getText() + " - " + tbxNroVenta.getText(), 
-////                                                        JFLogin.nom_usuario, 
-////                                                        VentasADN.fecha_hora(), 
-////                                                        VentasADN.fecha_hora(),
-////                                                        tbxFechaEntrega.getText(),
-////                                                        productos, jlblTotal.getText(), 
-////                                                        jtfdIGV.getText(), jlblTotal.getText(), 
-////                                                        String.valueOf(recidido), String.valueOf(vuelto),"-",Formatos.df.format(descuento),
-                                                            //jtfdCliente.getText().toString());
-////                                //                                JOptionPane.showMessageDialog(rootPane, productos);
-////                                //                                llamando al metodo
-////                                tk.Imprimir();
-                                float tot = Float.parseFloat(jlblTotal.getText().toString().substring(4, jlblTotal.getText().length()));
-                                tot = tot - descuento;
-                                 Ticket2 p=new Ticket2();
-                                p.setDispositivo("LPT1");
-                                p.escribir((char)27+"m");
-                                p.setTipoCaracterLatino();
-                                p.setFormato(9);
-////                                p.setRojo();
-                                p.escribir(nombre_empresa);
-                                p.escribir(direccion);
-                                p.escribir("Telefono: "+telefono);
-                                p.dividir();
-                                p.escribir("Ticket: "+tbxserie.getText() + " - " + tbxNroVenta.getText());
-                                p.escribir("Cliente: "+jtfdCliente.getText().toString());
-                                p.escribir("Le atendio: "+JFLogin.nom_usuario);
-                                p.escribir("Fecha venta: "+VentasADN.fecha_hora());
-////                                p.setNegro();
-                                //p.escribir("esto es negro"+(char)130);
-                                p.escribir("Cant.    Descripcion            Imp.");
-                                p.dividir();
-                                p.escribir(productos);
-                                p.dividir();
-                                p.escribir("SUBTOTAL: "+jlblTotal.getText());
-                                p.escribir("Descuento: "+Formatos.df.format(descuento));
-                                p.escribir("IGV: "+jtfdIGV.getText());
-                                p.escribir("TOTAL: "+Formatos.df.format(Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length())) - descuento));
-                                p.escribir("");
-                                p.escribir("Recibido: "+String.valueOf(recidido)+" Cambio: "+ String.valueOf(vuelto));
-                                p.escribir("A cuenta: "+"-");
-                                p.escribir("Saldo: "+Formatos.df.format(Float.parseFloat(tbxserie.getText().toString())>0? tot-
-                                                                            Float.parseFloat(tbxserie.getText().toString()):0));
-                                p.dividir();
-                                p.escribir("Fecha hora actual: "+VentasADN.fecha_hora());
-                                p.escribir("Fecha hora recojo: "+tbxFechaEntrega.getText());
-                                p.escribir("");
-                                p.escribir("            *****:::::::******");
-                                p.escribir("");
-                                p.escribir("NOTA: Una vez retirada la prenda no hay lugar a reclamo. "
-                                        + "Pasado 30 dias de no retirar su ropa esta sera rematada "
-                                        + "para recuperar los gastos del servicio dado."
-                                        + "Prendas gastadas que no soporten el lavado serán "
-                                        + "responsabilidad del cliente. En este caso la lavenderia "
-                                        + "no se responsabiliza");
-//                                p.setFormato(24);
-//                                p.escribir("esto es negro con formato");
-//                                p.setFormato(1);
-//                                p.escribir("esto es negro con formato");
-                                p.correr(10);
-                                p.cortar();
-                                p.cerrarDispositivo();
-                                
-                                
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(rootPane, "No se imprimira el ticket: "+e.toString());
-                            }
+//        String productos = "";
+//        int filas = jtbelistaproductos.getRowCount();
+//
+//        int espacio1 = 7;
+//        int espacio2 = 50;
+//        int espacio3 = 8;
+//
+//        int resta1 = 0;
+//        int resta2 = 0;
+//
+//        String espacios1 = "";
+//        String espacios2 = "";
+//
+//        String can = "";
+//        String pro = "";
+//        String pre = "";
+//
+//        for (int i = 0; i < filas; i++) {
+//            if (dtm2.getValueAt(i, 1).toString().length() < espacio1) {
+//                can = dtm2.getValueAt(i, 1).toString();
+//                resta1 = espacio1 - dtm2.getValueAt(i, 1).toString().length();
+//
+//            } else {
+//                can = dtm2.getValueAt(i, 1).toString().substring(0, espacio1 - 1);
+//            }
+//            if (dtm2.getValueAt(i, 2).toString().length() < espacio2) {
+//                resta2 = espacio2 - dtm2.getValueAt(i, 2).toString().length();
+//                pro = dtm2.getValueAt(i, 2).toString();
+//            } else {
+//                pro = dtm2.getValueAt(i, 2).toString().substring(0, espacio2 - 1);
+//                pro += " ";
+//            }
+//            if (dtm2.getValueAt(i, 4).toString().length() < espacio3) {
+//                pre = dtm2.getValueAt(i, 4).toString();
+//            } else {
+//                pre = dtm2.getValueAt(i, 4).toString().substring(0, espacio3 - 1);
+//            }
+//            for (int j = 0; j < resta1; j++) {
+//                espacios1 += " ";
+//            }
+//            for (int j = 0; j < resta2; j++) {
+//                espacios2 += " ";
+//            }
+//            productos += can + espacios1 + pro + espacios2 + pre + "\n";
+//            espacios1 = "";
+//            espacios2 = "";
+//        }
+//        try {
+//            String nombre_empresa = "", direccion = "", telefono = "";
+//            for (Parametros object : ParametrosADN.Lista()) {
+//                nombre_empresa = object.getNombre_empresa();
+//                direccion = object.getDireccion();
+//                telefono = object.getTelefono();
+//
+//            }
+//            float tot = Float.parseFloat(jlblTotal.getText().toString().substring(4, jlblTotal.getText().length()));
+//            tot = tot - descuento;
+//            Ticket2 p = new Ticket2();
+//            p.setDispositivo("LPT1");
+//            p.escribir((char) 27 + "m");
+//            p.setTipoCaracterLatino();
+//            p.setFormato(9);
+//            p.escribir(nombre_empresa);
+//            p.escribir(direccion);
+//            p.escribir("Telefono: " + telefono);
+//            p.dividir();
+//            p.escribir("Ticket: " + tbxserie.getText() + " - " + tbxNroVenta.getText());
+//            p.escribir("Cliente: " + jtfdCliente.getText().toString());
+//            p.escribir("Le atendio: " + JFLogin.nom_usuario);
+//            p.escribir("Fecha venta: " + VentasADN.fecha_hora());
+//            p.escribir("Cant.    Descripcion            Imp.");
+//            p.dividir();
+//            p.escribir(productos);
+//            p.dividir();
+//            p.escribir("SUBTOTAL: " + jlblTotal.getText());
+//            p.escribir("Descuento: " + Formatos.df.format(descuento));
+//            p.escribir("IGV: " + jtfdIGV.getText());
+//            p.escribir("TOTAL: " + Formatos.df.format(Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length())) - descuento));
+//            p.escribir("");
+//            p.escribir("Recibido: " + String.valueOf(recidido) + " Cambio: " + String.valueOf(vuelto));
+//            p.escribir("A cuenta: " + "-");
+//            p.escribir("Saldo: " + Formatos.df.format(Float.parseFloat(tbxserie.getText().toString()) > 0 ? tot
+//                    - Float.parseFloat(tbxserie.getText().toString()) : 0));
+//            p.dividir();
+//            p.escribir("Fecha hora actual: " + VentasADN.fecha_hora());
+//            p.escribir("Fecha hora recojo: " + tbxFechaEntrega.getText());
+//            p.escribir("");
+//            p.escribir("            *****:::::::******");
+//            p.escribir("");
+//            p.escribir("NOTA: Una vez retirada la prenda no hay lugar a reclamo. "
+//                    + "Pasado 30 dias de no retirar su ropa esta sera rematada "
+//                    + "para recuperar los gastos del servicio dado."
+//                    + "Prendas gastadas que no soporten el lavado serán "
+//                    + "responsabilidad del cliente. En este caso la lavenderia "
+//                    + "no se responsabiliza");
+//            p.correr(10);
+//            p.cortar();
+//            p.cerrarDispositivo();
+//    
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(rootPane, "No se imprimira el ticket: " + e.toString());
+//        }
     }//GEN-LAST:event_jbtnQuitarActionPerformed
 
     private void jbtnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnVenderActionPerformed
         try {
             if (jtbelista.getRowCount() > 0) {
                 total = Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length()));
-                if (lblpagado.getText().equals("POR PAGAR")) {
-                    JDCobrar c = new JDCobrar(null, closable);
-                    c.setLocationRelativeTo(this);
-                    c.setVisible(true);
-                }else if (lblpagado.getText().equals("POR CANCELAR")) {
-                    float a_cuenta = Float.parseFloat(tbxserie.getText().toString());
-                    //float descuento = Float.parseFloat(dtm.getValueAt(fila, 0).toString());
-                    total = total - a_cuenta -descuento;
-                    is_acuenta = true;
-                    JDCobrar c = new JDCobrar(null, closable);
-                    c.setLocationRelativeTo(this);
-                    c.setVisible(true);
-                }else
-                {
+                boolean isForPayment = false;
+                estado = true;
+                if (lblpagado.getText().equals("POR PAGAR") || lblpagado.getText().equals("POR CANCELAR")) {
+                    isForPayment = true;
+                } else {
                     estado = true;
                 }
-                
                 if (estado) {
                     if (jtbelista.getRowCount() > 0) {
+                        if (isForPayment) {
+                            JOptionPane.showMessageDialog(rootPane, "Primero debe generar el comprobante");
+                            return;
+                        }
+
                         Ventas v = new Ventas();
                         int fila = jtbelista.getSelectedRow();
+                        int id = 0;
                         if (fila >= 0) {
-                            int id = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
+                            id = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
+
                             v.setIdventa(id);
                             v.setDescuento(descuento);
                             v.setEstado("1");
-                            boolean ven = VentasADN.Entregar(v);
+                            boolean ven = VentasADN.entregarProducto(v);
                             if (ven) {
                                 JOptionPane.showMessageDialog(rootPane, "Venta Registrada");
+//                                if (isForPayment) {
+//                                    RespuestaPSE resultEnvioPSE = null;
+//                                    ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(null, null, id).get(0);
+//                                    List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(id);
+//                                    if (!datosVenta.getTipoDoc().getValue().equals("00")) {
+//                                        try {
+//                                            //enviar a pse
+//
+//                                            EnvioPSE envioPSE = new EnvioPSE();
+//                                            String jsonBody = envioPSE.paramToJson(datosVenta, datosVentaDetalle);
+//                                            resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
+//
+//                                            if (resultEnvioPSE.isResult()) {
+//                                                Ventas doc = new Ventas();
+//                                                doc.setIdventa(id);
+//                                                doc.setEnvioPseFlag("1");
+//                                                doc.setEnvioPseMensaje("Recibido correctamente");
+//                                                doc.setNroRespuesta(resultEnvioPSE.getId());
+//                                                doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
+//                                                doc.setXmlHash(resultEnvioPSE.getXmlHash());
+//                                                VentasADN.updateFlagEnvioPSE(doc);
+//                                            } else {
+//                                                Ventas doc = new Ventas();
+//                                                doc.setIdventa(id);
+//                                                doc.setEnvioPseFlag("0");
+//                                                doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
+//                                                VentasADN.updateFlagEnvioPSE(doc);
+//                                                JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
+//                                            }
+//                                            //obtenemos otra vez los datos por lo actualizado por el envío
+//                                            //                                            jlblEstado.setText("Comprobante enviado...");
+//                                        } catch (Exception e) {
+//                                            e.printStackTrace();
+//                                            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al enviar el documento :( .:" + e.getMessage());
+//                                            limpiar();
+//                                            estado = false;
+//                                            //imprimir pruebas demostracion facturacion electronica
+//                                            //                                    return;
+//                                        }
+//                                        if (resultEnvioPSE.isResult()) {
+//                                            try {
+//                                                String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
+//                                                if (rutaDoc.equals("")) {
+//                                                    JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
+//                                                } else {
+//                                                    if (resultEnvioPSE.getPdfRespuesta() != null) {
+//                                                        Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerieDocE() + "-"
+//                                                                + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
+//                                                    }
+//                                                    if (resultEnvioPSE.getXmlRespuesta() != null) {
+//                                                        Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerieDocE() + "-"
+//                                                                + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
+//                                                    }
+//                                                }
+//                                                //imprimir reporte
+//                                                //                                                jlblEstado.setText("Comprobante enviado...");
+//                                                JDConfirmacion dialog = new JDConfirmacion(null, closable, id);
+//                                                dialog.setLocationRelativeTo(this);
+//                                                dialog.setVisible(true);
+//                                            } catch (Exception e) {
+//                                                e.printStackTrace();
+//                                                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + e.toString());
+//                                            }
+//
+//                                        } //imprimir pruebas demostracion facturacion electronica
+//                                        //                                        else {
+//                                        //                                            //imprimir reporte
+//                                        //                                            JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta);
+//                                        //                                            dialog.setLocationRelativeTo(this);
+//                                        //                                            dialog.setVisible(true);
+//                                        //                                        }
+//                                        //                                        jlblEstado.setText("Comprobante NO enviado...");
+//                                    }
+//                                }
 
+//                                else if (!datosVenta.getTipoPago().equals("POR PAGAR")) {
+//                                    JDConfirmacion dialog = new JDConfirmacion(null, closable, id);
+//                                    dialog.setLocationRelativeTo(this);
+//                                    dialog.setVisible(true);
+//                                }
+                                limpiar();
+                                cbxtipodocumentoEActionPerformed(evt);
+                                idventa = 0;
                             }
 
                         }
 
-                        if (estado) {
-
-//                            JOptionPane.showMessageDialog(rootPane, ":. Venta Efectuada .:");
-//                            for (int f = 0; f < nr; f++) {
-//                                Productos p = new Productos();
-//                                p.setStock(Float.parseFloat(dtm.getValueAt(f, 1).toString()));
-//                                p.setIdProducto(Integer.parseInt(dtm.getValueAt(f, 0).toString()));
-//                                boolean act_stock = ProductosADN.QuitarStock(p);
-//                            }
-                            String productos = "";
-                            int filas = jtbelistaproductos.getRowCount();
-
-                            int espacio1 = 7;
-                            int espacio2 = 23;
-                            int espacio3 = 8;
-
-                            int resta1 = 0;
-                            int resta2 = 0;
-
-                            String espacios1 = "";
-                            String espacios2 = "";
-
-                            String can = "";
-                            String pro = "";
-                            String pre = "";
-
-                            for (int i = 0; i < filas; i++) {
-                                if (dtm2.getValueAt(i, 1).toString().length() < espacio1) {
-                                    can = dtm2.getValueAt(i, 1).toString();
-                                    resta1 = espacio1 - dtm2.getValueAt(i, 1).toString().length();
-
-                                } else {
-                                    can = dtm2.getValueAt(i, 1).toString().substring(0, espacio1 - 1);
-                                }
-                                if (dtm2.getValueAt(i, 2).toString().length() < espacio2) {
-                                    resta2 = espacio2 - dtm2.getValueAt(i, 2).toString().length();
-                                    pro = dtm2.getValueAt(i, 2).toString();
-                                } else {
-                                    pro = dtm2.getValueAt(i, 2).toString().substring(0, espacio2 - 1);
-                                    pro += " ";
-                                }
-                                if (dtm2.getValueAt(i, 4).toString().length() < espacio3) {
-                                    pre = dtm2.getValueAt(i, 4).toString();
-                                } else {
-                                    pre = dtm2.getValueAt(i, 4).toString().substring(0, espacio3 - 1);
-                                }
-                                for (int j = 0; j < resta1; j++) {
-                                    espacios1 += " ";
-                                }
-                                for (int j = 0; j < resta2; j++) {
-                                    espacios2 += " ";
-                                }
-                                productos += can + espacios1 + pro + espacios2 + pre + "\n    ";
-                                espacios1 = "";
-                                espacios2 = "";
-                            }
-                            try {
-                                String nombre_empresa = "",direccion = "",telefono="";
-                                for (Parametros object : ParametrosADN.Lista()) {
-                                    nombre_empresa = object.getNombre_empresa();
-                                    direccion = object.getDireccion();
-                                    telefono = object.getTelefono();
-                                    
-                                }
-    
-//                                Ticket tk = new Ticket(nombre_empresa,direccion, 
-//                                                        direccion, 
-//                                                        jtbelista.getValueAt(jtbelista.getSelectedRow(), 3).toString()+ " - " + tbxNroVenta.getText(), 
-//                                                        JFLogin.nom_usuario, 
-//                                                        VentasADN.fecha_hora(), 
-//                                                        VentasADN.fecha_hora(),
-//                                                        VentasADN.fecha_hora(),
-//                                                        productos, jtfdSubTotal.getText(), 
-//                                                        jtfdIGV.getText(), jlblTotal.getText(), 
-//                                                        String.valueOf(recidido), String.valueOf(vuelto),tbxserie.getText());
-                                //                                JOptionPane.showMessageDialog(rootPane, productos);
-                                //                                llamando al metodo
-//                                tk.Imprimir();
-                                
-                               
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(rootPane, "No se imprimira el ticket");
-                            }
-                            
-                            jbtnNuevoActionPerformed(evt);
-//                            VerDatos();
-                            idventa = 0;
-//                            VerDatosProductos();
-                        }
                     }
                     estado = false;
                 }
@@ -845,11 +1073,11 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 int fila = jtbelista.getSelectedRow();
                 idventa = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
                 if (fila >= 0) {
-                    jtfdCliente.setText(jtbelista.getValueAt(fila, 1).toString());
+                    cbxClientes.setSelectedItem(jtbelista.getValueAt(fila, 1).toString());
                     jtfdIGV.setText(jtbelista.getValueAt(fila, 7).toString());
                     jtfdSubTotal.setText(jtbelista.getValueAt(fila, 8).toString());
                     tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
-                    tbxserie.setText(jtbelista.getValueAt(fila, 3).toString());
+                    tbxACuenta.setText(jtbelista.getValueAt(fila, 3).toString());
                     jlblTotal.setText("S/. " + jtbelista.getValueAt(fila, 10).toString());
                     VerDatosProductos();
                 }
@@ -881,70 +1109,110 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 
     private void tbxNroVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxNroVentaActionPerformed
         try {
-                VerDatos();
-                if (jtbelista.getRowCount() > 0) {
-                    jtbelista.setRowSelectionInterval(0, 0);
-                    jtbelista.requestFocus();
-                    
-                    int fila = jtbelista.getSelectedRow();
-                    idventa = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
-                    if (fila >= 0) {
-                        jtfdCliente.setText(jtbelista.getValueAt(fila, 1).toString());
-                        jtfdIGV.setText(jtbelista.getValueAt(fila, 7).toString());
-                        jtfdSubTotal.setText(jtbelista.getValueAt(fila, 8).toString());
-                        tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
-                        tbxserie.setText(jtbelista.getValueAt(fila, 16).toString());
-                        float a_cuentaa = Float.parseFloat( jtbelista.getValueAt(fila, 16).toString());
-                        descuento = Float.parseFloat( jtbelista.getValueAt(fila, 10).toString());
-                        float saldo = 0f;
-                        if (a_cuentaa>0) {
-                            saldo = Float.parseFloat( jtbelista.getValueAt(fila, 11).toString())-
-                                    Float.parseFloat( jtbelista.getValueAt(fila, 16).toString())-descuento;
-                        }else
-                        {
-                          saldo = 0;
-                        } 
-                        tbxserie1.setText(Formatos.df.format(saldo));
-                        jlblTotal.setText("S/. " + jtbelista.getValueAt(fila, 11).toString());
-                        
-                        tbxTipoServicio1.setText(jtbelista.getValueAt(fila, 13).toString());
-                        tbxFechaEntrega.setText(jtbelista.getValueAt(fila, 14).toString()); 
-                        lblEstado.setText(jtbelista.getValueAt(fila, 15).toString());
-                        String estado_v="";
-                        if (!jtbelista.getValueAt(fila, 12).toString().equals("POR PAGAR")) {
-                            if (Float.parseFloat(tbxserie.getText().toString())>0) {
-                                estado_v = "POR CANCELAR";
-                            }else
-                            {
-                                estado_v = "PAGADO";
-                            }
-                        }else{
-                            if (!lblEstado.getText().equals("ENTREGADO")) {
-                                estado_v = "POR PAGAR";
-                            }else{
-                                estado_v = "PAGADO";
-                            }
-                            
-                        }
-                            
-      
-                        lblpagado.setText(estado_v);
-                        VerDatosProductos();
-                        tbxNroVenta.requestFocus();
-                        if (lblEstado.getText().equals("ENTREGADO") || lblEstado.getText().equals("ANULADO")) {
-                            jbtnVender.setEnabled(false);
-                        }else
-                        {
-                            jbtnVender.setEnabled(true);
-                        }
+            VerDatos();
+            if (jtbelista.getRowCount() > 0) {
+                jtbelista.setRowSelectionInterval(0, 0);
+                jtbelista.requestFocus();
+
+                int fila = jtbelista.getSelectedRow();
+                idventa = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
+                if (fila >= 0) {
+                    cbxClientes.setSelectedItem(this.cliente.getNombres());
+                    jtfdIGV.setText(jtbelista.getValueAt(fila, 7).toString());
+                    jtfdSubTotal.setText(jtbelista.getValueAt(fila, 8).toString());
+                    tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
+                    tbxACuenta.setText(jtbelista.getValueAt(fila, 16).toString());
+                    float a_cuentaa = Float.parseFloat(jtbelista.getValueAt(fila, 16).toString());
+                    descuento = Float.parseFloat(jtbelista.getValueAt(fila, 10).toString());
+                    float saldo = 0f;
+                    if (a_cuentaa > 0) {
+                        saldo = Float.parseFloat(jtbelista.getValueAt(fila, 11).toString())
+                                - Float.parseFloat(jtbelista.getValueAt(fila, 16).toString()) - descuento;
+                    } else {
+                        saldo = 0;
+                    }
+                    tbxserie1.setText(Formatos.df.format(saldo));
+                    jlblTotal.setText("S/. " + jtbelista.getValueAt(fila, 11).toString());
+
+                    tbxTipoServicio1.setText(jtbelista.getValueAt(fila, 13).toString());
+                    tbxFechaEntrega.setText(jtbelista.getValueAt(fila, 14).toString());
+
+                    String estadoCancelado = jtbelista.getValueAt(fila, 15).toString();
+                    String estadoEntregado;
+//                    String estadoEntregado = jtbelista.getValueAt(fila, 15).toString();
+
+//                    String estado_v = "";
+//                    if(estadoCancelado.equals("PAGADO")){
+//                        estado_v = "PAGADO";
+//                    }
+                    System.out.println("estadoCancelado: " + estadoCancelado);
+                    switch (estadoCancelado) {
+                        case "p":
+                            estadoCancelado = "POR CANCELAR";
+                            estadoEntregado = "POR ENTREGAR";
+                            break;
+                        case "1":
+//                            if (Float.parseFloat(tbxACuenta.getText().toString()) > 0) {
+//                                estadoCancelado = "POR CANCELAR";
+//                            } else {
+//                                estadoCancelado = "PAGADO";
+//                            }
+                            estadoCancelado = "PAGADO";
+                            estadoEntregado = "POR ENTREGAR";
+                            break;
+                        case "0":
+                            estadoCancelado = "ANULADO";
+                            estadoEntregado = "ANULADO";
+                            break;
+                        default:
+                            estadoCancelado = "PAGADO";
+                            estadoEntregado = "ENTREGADO";
+                            break;
+                    }
+//                    if (!estadoCancelado.equals("POR PAGAR")) {
+//                        if (Float.parseFloat(tbxACuenta.getText().toString()) > 0) {
+//                            estadoCancelado = "POR CANCELAR";
+//                        } else {
+//                            estadoCancelado = "PAGADO";
+//                        }
+//                    } else {
+//                        if (!lblEstado.getText().equals("ENTREGADO")) {
+//                            estadoCancelado = "POR PAGAR";
+//                        } else {
+//                            estadoCancelado = "PAGADO";
+//                        }
+//
+//                    }
+                    lblEstado.setText(estadoEntregado);
+                    lblpagado.setText(estadoCancelado);
+                    VerDatosProductos();
+                    tbxNroVenta.requestFocus();
+                    if (lblEstado.getText().equals("ENTREGADO") || lblEstado.getText().equals("ANULADO")) {
+                        jbtnVender.setEnabled(false);
+                    } else {
+                        jbtnVender.setEnabled(true);
+                    }
+                    if (lblpagado.getText().equals("PAGADO")) {
+                        jLabel17.setEnabled(false);
+                        cbxtipodocumentoE.setEnabled(false);
+                        jlblTotal1.setEnabled(false);
+                        jbtnGenerarComprobante.setEnabled(false);
+                        cbxServicios1.setEnabled(false);
+                    } else {
+                        jLabel17.setEnabled(true);
+                        cbxtipodocumentoE.setEnabled(true);
+                        jlblTotal1.setEnabled(true);
+                        jbtnGenerarComprobante.setEnabled(true);
+                        cbxServicios1.setEnabled(true);
                     }
                 }
-                
+            }
+            cbxtipodocumentoEActionPerformed(evt);
         } catch (SQLException ex) {
             Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }//GEN-LAST:event_tbxNroVentaActionPerformed
 
     private void tbxtipodocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxtipodocActionPerformed
@@ -955,11 +1223,88 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tbxFechaEntregaActionPerformed
 
-    private void jtfdClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdClienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtfdClienteActionPerformed
+    private void cbxtipodocumentoEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxtipodocumentoEActionPerformed
+        int id;
+        try {
+            if (cbxtipodocumentoE.getItemCount() > 0) {
+                id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
+                NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
+                tbxserie1.setText(n.getSerie());
+                jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
+//                    if (this.cliente != null) {
+//                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
+//                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+//                        }
+//                    }
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cbxtipodocumentoEActionPerformed
+
+    private void cbxClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxClientesActionPerformed
+        try {
+            this.cliente = ClientesADN.getByName(cbxClientes.getSelectedItem().toString());
+            if (lblpagado.getText().equals("POR PAGAR")
+                    && !cbxtipodocumentoE.getSelectedItem().toString().equals("NOTA DE VENTA") && this.cliente.getDni().isEmpty()) {
+                //                JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+                jLabel1.setText("Cliente (SIN DNI O RUC!):");
+            } else {
+                jLabel1.setText("Cliente: ");
+            }
+        } catch (SQLException ex) {
+            System.out.println("ex: " + ex.toString());
+        } catch (ClassNotFoundException ex) {
+            System.out.println("ex: " + ex.toString());
+        }
+    }//GEN-LAST:event_cbxClientesActionPerformed
+
+    private void jbtnBCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBCliente1ActionPerformed
+//        JDAgregarClientes v = new JDAgregarClientes(null, closable);
+//        v.setLocationRelativeTo(this);
+//        v.setVisible(true);
+//            try {
+//                CargarClientes();
+//                cbxClientes.setSelectedItem(nuevo_cliente);
+//                cbxClientes.requestFocus();
+//            } catch (SQLException ex) {
+//                System.out.println("ex: "+ex.toString());
+//            }
+    }//GEN-LAST:event_jbtnBCliente1ActionPerformed
+
+    private void cbxServicios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxServicios1ActionPerformed
+        //        if (cbxServicios1.getSelectedIndex() == 0 || cbxServicios1.getSelectedIndex() == 2 || cbxServicios1.getSelectedIndex() == 3) {
+        //            cbxtipodocumentoE.setEnabled(true);
+        //            int id;
+        //            try {
+        //                if (cbxtipodocumentoE.getItemCount() > 0) {
+        //                    id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
+        //                    NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
+        //                    tbxserie1.setText(n.getSerie());
+        //                    jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
+        //                    if (this.cliente != null) {
+        //                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
+        //                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
+        //                        }
+        //                    }
+        //                }
+        //
+        //            } catch (ClassNotFoundException ex) {
+        //               System.out.println("ex: "+ex.toString());
+        //            } catch (SQLException ex) {
+        //               System.out.println("ex: "+ex.toString());
+        //            }
+        //        } else {
+        //            jlblTotal1.setText(" ");
+        //            cbxtipodocumentoE.setEnabled(false);
+        //        }
+    }//GEN-LAST:event_cbxServicios1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox cbxClientes;
+    private javax.swing.JComboBox cbxServicios1;
+    private javax.swing.JComboBox cbxtipodocumentoE;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -967,6 +1312,8 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
@@ -977,35 +1324,38 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JButton jbtnAgregar;
-    private javax.swing.JButton jbtnNuevo;
+    private javax.swing.JButton jbtnBCliente1;
+    private javax.swing.JButton jbtnGenerarComprobante;
     private javax.swing.JButton jbtnQuitar;
     private javax.swing.JButton jbtnVender;
     private javax.swing.JLabel jlblTotal;
+    private javax.swing.JLabel jlblTotal1;
     private javax.swing.JTable jtbelista;
     private javax.swing.JTable jtbelistaproductos;
-    private org.swing.componet.JTextBoxHintDS jtfdCliente;
     private javax.swing.JTextField jtfdIGV;
     private javax.swing.JTextField jtfdSubTotal;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblpagado;
+    private javax.swing.JTextField tbxACuenta;
     private javax.swing.JTextField tbxFechaEntrega;
     private javax.swing.JTextField tbxNroVenta;
     private javax.swing.JTextField tbxTipoServicio1;
-    private javax.swing.JTextField tbxserie;
     private javax.swing.JTextField tbxserie1;
     private javax.swing.JTextField tbxtipodoc;
     // End of variables declaration//GEN-END:variables
 
     private void VerDatos() throws SQLException, ClassNotFoundException {
 //        try {
-            int filas = jtbelista.getRowCount();
-            for (int i = 0; i < filas; i++) {
-                dtm.removeRow(0);
-            }
-            for (ConsultaVentas la : VentasADN.ListaVentasPendientes(tbxNroVenta.getText())) {
-                dtm.addRow(la.ArregloDatos3());
-            }
+        int filas = jtbelista.getRowCount();
+        for (int i = 0; i < filas; i++) {
+            dtm.removeRow(0);
+        }
+        for (ConsultaVentas la : VentasADN.ListaVentasPendientes(tbxNroVenta.getText())) {
+//            dniCliente = la.getDniCliente();
+            idventa = la.getIdventa();
+            dtm.addRow(la.ArregloDatos3());
+            this.cliente = ClientesADN.getByName(la.getCliente());
+        }
 //        } catch (Exception e) {
 //            JOptionPane.showMessageDialog(rootPane,"waa: "+ e.toString());
 //        }

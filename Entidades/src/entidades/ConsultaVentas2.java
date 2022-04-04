@@ -42,6 +42,16 @@ public class ConsultaVentas2 {
     private TipoDoc tipoDoc;
     private Tipos_Servicio tipoServicio;
     private float sumatoriaIGV;
+    
+    private String serieDocE;
+    private int numDocE;
+    
+    private String fechaEntrega;
+    private String envioPseFlag;
+    private String envioPseMensaje;
+    private float acuenta;
+    private float recibido;
+    private float vuelto;
     public int getIdventa() {
         return idventa;
     }
@@ -239,6 +249,71 @@ public class ConsultaVentas2 {
         this.sumatoriaIGV = sumatoriaIGV;
     }
 
+    public String getSerieDocE() {
+        return serieDocE;
+    }
+
+    public void setSerieDocE(String serieDocE) {
+        this.serieDocE = serieDocE;
+    }
+
+    public int getNumDocE() {
+        return numDocE;
+    }
+
+    public void setNumDocE(int numDocE) {
+        this.numDocE = numDocE;
+    }
+
+    public String getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(String fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public String getEnvioPseFlag() {
+        return envioPseFlag;
+    }
+
+    public void setEnvioPseFlag(String envioPseFlag) {
+        this.envioPseFlag = envioPseFlag;
+    }
+
+    public String getEnvioPseMensaje() {
+        return envioPseMensaje;
+    }
+
+    public void setEnvioPseMensaje(String envioPseMensaje) {
+        this.envioPseMensaje = envioPseMensaje;
+    }
+
+    public float getAcuenta() {
+        return acuenta;
+    }
+
+    public void setAcuenta(float acuenta) {
+        this.acuenta = acuenta;
+    }
+
+    public float getRecibido() {
+        return recibido;
+    }
+
+    public void setRecibido(float recibido) {
+        this.recibido = recibido;
+    }
+
+    public float getVuelto() {
+        return vuelto;
+    }
+
+    public void setVuelto(float vuelto) {
+        this.vuelto = vuelto;
+    }
+
+
     
     public ConsultaVentas2() {
     }
@@ -259,7 +334,9 @@ public class ConsultaVentas2 {
             float ventatotal,String tipo_venta,String dni,String direccion,
             String descripcionMonto,float descuento,String tipoIGV,
             String tipoCliente,String correoCliente,String codigoQR,
-            String xmlHash,TipoDoc tipoDoc, Tipos_Servicio tipoServicio,float sumatoriaIGV) {
+            String xmlHash,TipoDoc tipoDoc, Tipos_Servicio tipoServicio,
+            float sumatoriaIGV,String serieDocE,int numDocE,String fechaEntrega,
+            String envioPseFlag, String envioPseMensaje,float acuenta,float recibido,float vuelto) {
         this.idventa = idventa;
         this.serie = serie;
         this.num = num;
@@ -279,6 +356,14 @@ public class ConsultaVentas2 {
         this.tipoDoc = tipoDoc;
         this.tipoServicio = tipoServicio;
         this.sumatoriaIGV = sumatoriaIGV;
+        this.serieDocE = serieDocE;
+        this.numDocE = numDocE;
+        this.fechaEntrega = fechaEntrega;
+        this.envioPseFlag = envioPseFlag;
+        this.envioPseMensaje = envioPseMensaje;
+        this.acuenta = acuenta;
+        this.recibido = recibido;
+        this.vuelto = vuelto;
     }
     //anular ventas
 public ConsultaVentas2(int idventa, String serie,  String num, String cliente, Date fecha, float ventatotal) {
@@ -331,16 +416,18 @@ public ConsultaVentas2(int idventa, String serie,  String num, String cliente, D
         
         return aux;
     }
-    
-    public String[] ArregloDatosCC(){
-        String[] aux = new String[7];
+    public String[] arregloDatosMonitor(){
+        String[] aux = new String[9];
         aux[0] = String.valueOf(idventa);
-        aux[1] = serie;
-        aux[2] = num;
-        aux[3] = tipoPago;
-        aux[4] = cliente;
-        aux[5] = Formatos.sdfFecha.format(fecha);
+        aux[1] = tipoDoc.getNombre();
+        aux[2] = serieDocE + "-" + String.format("%08d", numDocE);
+//        aux[3] = tipoPago;
+        aux[3] = cliente;
+        aux[4] = Formatos.sdfFecha.format(fecha);
+        aux[5] = fechaEntrega;
         aux[6] = Formatos.df.format(ventatotal);
+        aux[7] = envioPseFlag.equals("1")?"SI":"NO";
+        aux[8] = envioPseMensaje;
         return aux;
     }
     

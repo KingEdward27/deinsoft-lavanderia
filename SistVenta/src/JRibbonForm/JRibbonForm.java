@@ -1,6 +1,8 @@
 
 package JRibbonForm;
 
+import Adicional.SystemOutToLog4j;
+import Adicional.Util;
 import FormInternos.JIAcerca;
 import FormInternos.JIAnularCompras;
 import FormInternos.JIAnularVentas;
@@ -18,6 +20,8 @@ import FormInternos.JIMarcas;
 import FormInternos.JIColores;
 import FormInternos.JICaracteristicas;
 import FormInternos.JIConsultaProductos2;
+import FormInternos.JIConsultaVentasMonitor;
+import FormInternos.JIConsultaVentasMonitor2;
 import FormInternos.JIProductos;
 import FormInternos.JIProveedores;
 import FormInternos.JIStockMinimo;
@@ -39,7 +43,9 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import org.apache.log4j.Logger;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
@@ -64,10 +70,14 @@ public class JRibbonForm extends JRibbonFrame{
     public static boolean esta = false;
     public static boolean admin = false;
     
+    final static Logger logger = Logger.getLogger(JRibbonForm.class.getName());
+    
     public JRibbonForm(){
         Components();
     }
-    
+    static {
+            SystemOutToLog4j.enableForClass(JRibbonForm.class);
+        }
     //<editor-fold defaultstate="collapsed" desc="Generar Codigo">
     private void Components(){
         jdpeContainer = new JDesktopPane();
@@ -95,6 +105,7 @@ public class JRibbonForm extends JRibbonFrame{
         jcbnVentasPendientes = new JCommandMenuButton("Entrega", getResizableIconFromResource("Imagen/acerca.png"));
         jcbnBackup = new JCommandMenuButton("Backup", getResizableIconFromResource("Imagen/venta.png"));
         jcbnRestauraBackup = new JCommandMenuButton("Restaurar", getResizableIconFromResource("Imagen/venta.png"));
+        jcbnVentasMonitorR = new JCommandMenuButton("Monitor", getResizableIconFromResource("Imagen/venta.png"));
         
         band1 = new JRibbonBand("Registros", null);
         band2 = new JRibbonBand("Articulos", null);
@@ -253,10 +264,16 @@ public class JRibbonForm extends JRibbonFrame{
                 jcbnVentasRActionPerformed(evt);
             }
         });
-        
+        jcbnVentasMonitorR.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbnVentasMonitorRActionPerformed(evt);
+            }
+        });
          band5.setResizePolicies((List) Arrays.asList(new CoreRibbonResizePolicies.None(band5.getControlPanel()),
                 new IconRibbonBandResizePolicy(band5.getControlPanel())));
          band5.addCommandButton(jcbnVentasR, RibbonElementPriority.TOP);
+         band5.addCommandButton(jcbnVentasMonitorR, RibbonElementPriority.TOP);
         //</editor-fold>    
 
         //<editor-fold defaultstate="collapsed" desc="JRibbonBand6">
@@ -360,10 +377,10 @@ public class JRibbonForm extends JRibbonFrame{
             
             @Override
             public void windowOpened(java.awt.event.WindowEvent evt) {
-                JIConsultaProductos2 v = new JIConsultaProductos2();
+//                JIConsultaProductos2 v = new JIConsultaProductos2();
                 try {
                     if (esta == true) {
-                        FormDS.FormControlCenter(v, jdpeContainer);
+//                        FormDS.FormControlCenter(v, jdpeContainer);
                         jcbnRestauraBackup.setEnabled(false);
                         if (admin == false) {
 //                            jcbnAnularCompra.setEnabled(false);
@@ -383,6 +400,7 @@ public class JRibbonForm extends JRibbonFrame{
                             jcbnTotalCaja.setEnabled(false);
 //                            jcbnUnidadMedida.setEnabled(false);
                             jcbnUsuarios.setEnabled(false);
+//                            jcbnVentasMonitorR.setEnabled(false);
 //                            jcbnVentas.setEnabled(false);
 //                            jcbnVentasR.setEnabled(false);
 //                            jcbnVentasPendientes.setEnabled(false);
@@ -572,6 +590,16 @@ public class JRibbonForm extends JRibbonFrame{
         } catch (Exception e) {
         }
       }
+      private void jcbnVentasMonitorRActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            JIConsultaVentasMonitor2 v = new JIConsultaVentasMonitor2();
+            FormDS.FormControlCenter(v, jdpeContainer);
+        } catch (Exception e) {
+            System.out.println(Util.exceptionToString(e));
+            JOptionPane.showMessageDialog(rootPane, e.toString());
+            e.printStackTrace();
+        }
+      }
       private void jcbnStockActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             JIConsultaProductos v = new JIConsultaProductos();
@@ -635,7 +663,7 @@ public class JRibbonForm extends JRibbonFrame{
             java.util.logging.Logger.getLogger(JRibbonForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
        SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -662,6 +690,7 @@ private org.pushingpixels.flamingo.api.common.JCommandButton jcbnUsuarios;
 private org.pushingpixels.flamingo.api.common.JCommandButton jcbnVentas;
 //private org.pushingpixels.flamingo.api.common.JCommandButton jcbnComprasR;
 private org.pushingpixels.flamingo.api.common.JCommandButton jcbnVentasR;
+private org.pushingpixels.flamingo.api.common.JCommandButton jcbnVentasMonitorR;
 private org.pushingpixels.flamingo.api.common.JCommandButton jcbnStock;
 private org.pushingpixels.flamingo.api.common.JCommandButton jcbnCierreCaja;
 private org.pushingpixels.flamingo.api.common.JCommandButton jcbnAnularVenta;

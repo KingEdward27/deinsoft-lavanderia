@@ -4,6 +4,7 @@
  */
 package FormInternos;
 
+import Adicional.Util;
 import Controles.PanelAC;
 import static FormInternos.JIVentas.llamada_venta;
 import javax.swing.JOptionPane;
@@ -48,8 +49,8 @@ public class JDCobrar extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jtfdBillete1 = new org.swing.componet.JTextBoxHintDS();
-        jtfdBillete2 = new org.swing.componet.JTextBoxHintDS();
+        jtfdAcuenta = new org.swing.componet.JTextBoxHintDS();
+        jtfdDescuento = new org.swing.componet.JTextBoxHintDS();
         jPanel2 = new javax.swing.JPanel();
         btncobrar = new javax.swing.JButton();
         btncancelar = new javax.swing.JButton();
@@ -100,45 +101,44 @@ public class JDCobrar extends javax.swing.JDialog {
         jLabel6.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
         jLabel6.setText("A cuenta:");
 
-        jtfdBillete1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfdBillete1.setText("0");
-        jtfdBillete1.setHint("S/. 0.00");
-        jtfdBillete1.setTiponumero(org.Interfaces.Enum.TiposNumeros.Decimal);
-        jtfdBillete1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfdBillete1ActionPerformed(evt);
-            }
-        });
-        jtfdBillete1.addFocusListener(new java.awt.event.FocusAdapter() {
+        jtfdAcuenta.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfdAcuenta.setHint("S/. 0.00");
+        jtfdAcuenta.setTiponumero(org.Interfaces.Enum.TiposNumeros.Decimal);
+        jtfdAcuenta.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jtfdBillete1FocusGained(evt);
+                jtfdAcuentaFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jtfdBillete1FocusLost(evt);
+                jtfdAcuentaFocusLost(evt);
             }
         });
-        jtfdBillete1.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtfdAcuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfdAcuentaActionPerformed(evt);
+            }
+        });
+        jtfdAcuenta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jtfdBillete1KeyTyped(evt);
+                jtfdAcuentaKeyTyped(evt);
             }
         });
 
-        jtfdBillete2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jtfdBillete2.setText("0");
-        jtfdBillete2.setTiponumero(org.Interfaces.Enum.TiposNumeros.Decimal);
-        jtfdBillete2.addActionListener(new java.awt.event.ActionListener() {
+        jtfdDescuento.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfdDescuento.setText("0");
+        jtfdDescuento.setTiponumero(org.Interfaces.Enum.TiposNumeros.Decimal);
+        jtfdDescuento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtfdBillete2ActionPerformed(evt);
+                jtfdDescuentoActionPerformed(evt);
             }
         });
-        jtfdBillete2.addFocusListener(new java.awt.event.FocusAdapter() {
+        jtfdDescuento.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jtfdBillete2FocusLost(evt);
+                jtfdDescuentoFocusLost(evt);
             }
         });
-        jtfdBillete2.addKeyListener(new java.awt.event.KeyAdapter() {
+        jtfdDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jtfdBillete2KeyTyped(evt);
+                jtfdDescuentoKeyTyped(evt);
             }
         });
 
@@ -162,10 +162,10 @@ public class JDCobrar extends javax.swing.JDialog {
                             .addComponent(jtfdMonto, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                             .addComponent(jtfdBillete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jtfdVuelto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jtfdBillete1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jtfdAcuenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(17, 17, 17)
-                        .addComponent(jtfdBillete2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jtfdDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -181,11 +181,11 @@ public class JDCobrar extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
-                    .addComponent(jtfdBillete2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtfdDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jtfdBillete1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtfdAcuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -278,9 +278,9 @@ public class JDCobrar extends javax.swing.JDialog {
 //            jtfdBillete1.setText(String.valueOf(JIVentas.total));
             
         }   
-        jtfdBillete2.requestFocus();
-        jtfdBillete2.setSelectionStart(0);
-        jtfdBillete2.setSelectionEnd(jtfdBillete2.getText().length());
+        jtfdDescuento.requestFocus();
+        jtfdDescuento.setSelectionStart(0);
+        jtfdDescuento.setSelectionEnd(jtfdDescuento.getText().length());
 //        if (JIListaVentasPendientes.is_acuenta) {
 //            
 //            jtfdBillete1.setEnabled(false);
@@ -289,35 +289,40 @@ public class JDCobrar extends javax.swing.JDialog {
 //            jtfdBillete1.setEnabled(true);
 //        }
         if (JIVentas.llamada_venta) {
-            jtfdBillete1.setEnabled(true);
-            jtfdBillete2.setEnabled(true);
+            jtfdAcuenta.setEnabled(true);
+            jtfdDescuento.setEnabled(true);
+            jtfdBillete.setEnabled(false);
+            jtfdVuelto.setEnabled(false);
+            jtfdBillete.setText("0");
+            jtfdVuelto.setText("0");
         }else
         {
-            jtfdBillete1.setEnabled(false);
+            jtfdAcuenta.setEnabled(false);
+            jtfdBillete.setEnabled(true);
+            jtfdVuelto.setEnabled(true);
             if (JIListaVentasPendientes.descuento>0) {
-                jtfdBillete2.setEnabled(false);
+                jtfdDescuento.setEnabled(false);
                 jtfdBillete.requestFocus();
             }else
             {
-                jtfdBillete2.setEnabled(true);
+                jtfdDescuento.setEnabled(true);
             }
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void btncobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncobrarActionPerformed
         try {
-            if (jtfdBillete.getText().trim().length() > 0) {
+            if ((!JIVentas.llamada_venta && jtfdBillete.getText().trim().length() > 0) || 
+                    (JIVentas.llamada_venta && jtfdAcuenta.getText().trim().length() > 0)) {
                 float b = Float.parseFloat(jtfdBillete.getText());
-                float descuento = Float.parseFloat(jtfdBillete2.getText())/100f;
-                float a_cuenta = Float.parseFloat(jtfdBillete1.getText());
-                if (a_cuenta>b) {
-                    JOptionPane.showMessageDialog(rootPane, "El monto a cuenta no puede ser mayor al total de la venta");
-                    return;
-                }
-                float a_pagar = 0f;
-                a_pagar = a_cuenta>0?a_cuenta:(Float.parseFloat(jtfdMonto.getText()) -descuento);
-                if (b >= a_pagar) {
+                float descuento = Float.parseFloat(jtfdDescuento.getText())/100f;
+                float a_cuenta = Float.parseFloat(jtfdAcuenta.getText());
+                float monto = Float.parseFloat(jtfdMonto.getText());
                     if (JIVentas.llamada_venta) {
+                        if (a_cuenta>monto) {
+                            JOptionPane.showMessageDialog(rootPane, "El monto a cuenta no puede ser mayor al total de la venta");
+                            return;
+                        }
                         JIVentas.montopagado = b;
                         JIVentas.recidido = b;
                         JIVentas.vuelto = Float.parseFloat(jtfdVuelto.getText());
@@ -328,22 +333,27 @@ public class JDCobrar extends javax.swing.JDialog {
                         dispose();
                     }else
                     {
-                        JIListaVentasPendientes.montopagado = b;
-                        JIListaVentasPendientes.recidido = b;
-                        JIListaVentasPendientes.vuelto = Float.parseFloat(jtfdVuelto.getText());
-                        JIListaVentasPendientes.estado = true;
-                        JIListaVentasPendientes.descuento=JIListaVentasPendientes.total*descuento;
-//                        if (a_cuenta>0 ) {
-//                            JOptionPane.showMessageDialog(rootPane, "Debe cancelar el total de la venta");
-//                            return;
-//                        }
-                        JIListaVentasPendientes.a_cuenta=a_cuenta;
-                        JIListaVentasPendientes.is_acuenta=false;
-                        dispose();
+                        if (a_cuenta>b) {
+                            JOptionPane.showMessageDialog(rootPane, "El monto a cuenta no puede ser mayor al total de la venta");
+                            return;
+                        }
+                        float a_pagar = a_cuenta>0?a_cuenta:(Float.parseFloat(jtfdMonto.getText()) -descuento);
+                        if (b >= a_pagar) {
+                            
+                            JIListaVentasPendientes.montopagado = b;
+                            JIListaVentasPendientes.recidido = b;
+                            JIListaVentasPendientes.vuelto = Float.parseFloat(jtfdVuelto.getText());
+                            JIListaVentasPendientes.estado = true;
+                            JIListaVentasPendientes.descuento=JIListaVentasPendientes.total*descuento;
+                            JIListaVentasPendientes.a_cuenta=a_cuenta;
+                            JIListaVentasPendientes.is_acuenta=false;
+                            dispose();
+                        }
                     }
-                }
+                
             }
         } catch (Exception e) {
+            System.out.println(Util.exceptionToString(e));
             JOptionPane.showMessageDialog(rootPane, "Ingrese nuevamente la cantidad");
         }
 
@@ -357,15 +367,29 @@ public class JDCobrar extends javax.swing.JDialog {
 
     private void jtfdBilleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdBilleteActionPerformed
         try {
-            if (jtfdBillete.getText().trim().length() > 0) {
-                float b = Float.valueOf(jtfdBillete.getText());
-                float d = b - (Float.parseFloat(Float.parseFloat(jtfdBillete1.getText().toString()) >0?jtfdBillete1.getText(): jtfdMonto.getText()));
-                double e = Math.rint(Double.valueOf(String.valueOf(d)) * 100) / 100;
-                jtfdVuelto.setText(String.valueOf(e));
-                btncobrar.requestFocus();
-                PanelAC.pintartext(jPanel1);
+            
+            if(JIVentas.llamada_venta){
+                if (jtfdBillete.getText().trim().length() > 0) {
+                    float b = Float.valueOf(jtfdBillete.getText());
+                    float d = b - (Float.parseFloat(Float.parseFloat(jtfdAcuenta.getText().toString()) >0?jtfdAcuenta.getText(): jtfdMonto.getText()));
+                    double e = Math.rint(Double.valueOf(String.valueOf(d)) * 100) / 100;
+                    jtfdVuelto.setText(String.valueOf(e));
+                    btncobrar.requestFocus();
+                    PanelAC.pintartext(jPanel1);
+                }
+            }else{
+                if (jtfdAcuenta.getText().trim().length() > 0) {
+//                    float b = Float.valueOf(jtfdBillete.getText());
+//                    float d = b - (Float.parseFloat(Float.parseFloat(jtfdAcuenta.getText().toString()) >0?jtfdAcuenta.getText(): jtfdMonto.getText()));
+//                    double e = Math.rint(Double.valueOf(String.valueOf(d)) * 100) / 100;
+                    jtfdVuelto.setText("0");
+                    btncobrar.requestFocus();
+                    PanelAC.pintartext(jPanel1);
+                }
             }
+            
         }catch (Exception e) {
+            System.out.println(Util.exceptionToString(e));
         }
 
     }//GEN-LAST:event_jtfdBilleteActionPerformed
@@ -377,7 +401,7 @@ public class JDCobrar extends javax.swing.JDialog {
         
     }//GEN-LAST:event_btncobrarKeyPressed
 
-    private void jtfdBillete1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdBillete1ActionPerformed
+    private void jtfdAcuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdAcuentaActionPerformed
 //        float total0 =  JIVentas.llamada_venta?JIVentas.total:JIListaVentasPendientes.total;
 //        float descuento = total0 * Float.parseFloat(jtfdBillete2.getText().toString())/100;
 //        float a_cuenta = Float.parseFloat(jtfdBillete1.getText().toString());
@@ -385,58 +409,58 @@ public class JDCobrar extends javax.swing.JDialog {
 //        if (jtfdBillete1.getText().length()==0) {
 //            jtfdBillete1.setText("0");
 //        }
-        jtfdBillete.requestFocus();
-    }//GEN-LAST:event_jtfdBillete1ActionPerformed
+        btncobrar.requestFocus();
+    }//GEN-LAST:event_jtfdAcuentaActionPerformed
 
-    private void jtfdBillete1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfdBillete1KeyTyped
+    private void jtfdAcuentaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfdAcuentaKeyTyped
         
-    }//GEN-LAST:event_jtfdBillete1KeyTyped
+    }//GEN-LAST:event_jtfdAcuentaKeyTyped
 
-    private void jtfdBillete2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdBillete2ActionPerformed
+    private void jtfdDescuentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdDescuentoActionPerformed
         float total =  JIVentas.llamada_venta?JIVentas.total:JIListaVentasPendientes.total;
-        float descuento = Float.parseFloat(jtfdBillete2.getText().toString())/100;
+        float descuento = Float.parseFloat(jtfdDescuento.getText().toString())/100;
         jtfdMonto.setText(Formatos.df.format(total - total*descuento));
-        jtfdBillete1.setSelectionStart(0);
-        jtfdBillete1.setSelectionEnd(jtfdBillete1.getText().length());
-        jtfdBillete1.setText("0");
-        jtfdBillete1.requestFocus();
-    }//GEN-LAST:event_jtfdBillete2ActionPerformed
+        jtfdAcuenta.setSelectionStart(0);
+        jtfdAcuenta.setSelectionEnd(jtfdAcuenta.getText().length());
+        jtfdAcuenta.setText("0");
+        jtfdAcuenta.requestFocus();
+    }//GEN-LAST:event_jtfdDescuentoActionPerformed
 
-    private void jtfdBillete2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfdBillete2KeyTyped
+    private void jtfdDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfdDescuentoKeyTyped
         
-    }//GEN-LAST:event_jtfdBillete2KeyTyped
+    }//GEN-LAST:event_jtfdDescuentoKeyTyped
 
-    private void jtfdBillete2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfdBillete2FocusLost
-         if (jtfdBillete2.getText().length()==0) {
-            jtfdBillete2.setText("0");
+    private void jtfdDescuentoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfdDescuentoFocusLost
+         if (jtfdDescuento.getText().length()==0) {
+            jtfdDescuento.setText("0");
         }else
         {
-            jtfdBillete2ActionPerformed(null);
+            jtfdDescuentoActionPerformed(null);
         }
         if (JIListaVentasPendientes.is_acuenta) {
             jtfdBillete.requestFocus();
             
             jtfdBillete.setSelectionStart(0);
-            jtfdBillete.setSelectionEnd(jtfdBillete2.getText().length());
+            jtfdBillete.setSelectionEnd(jtfdDescuento.getText().length());
         }else
         {
-            jtfdBillete1.requestFocus();
-            jtfdBillete1.setText("0");
-            jtfdBillete1.setSelectionStart(0);
-            jtfdBillete1.setSelectionEnd(jtfdBillete2.getText().length());
+            jtfdAcuenta.requestFocus();
+            jtfdAcuenta.setText("0");
+            jtfdAcuenta.setSelectionStart(0);
+            jtfdAcuenta.setSelectionEnd(jtfdDescuento.getText().length());
         }
         
-    }//GEN-LAST:event_jtfdBillete2FocusLost
+    }//GEN-LAST:event_jtfdDescuentoFocusLost
 
-    private void jtfdBillete1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfdBillete1FocusLost
-        if (jtfdBillete1.getText().length()==0) {
-            jtfdBillete1.setText("0");
+    private void jtfdAcuentaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfdAcuentaFocusLost
+        if (jtfdAcuenta.getText().length()==0) {
+            jtfdAcuenta.setText("0");
         }
-    }//GEN-LAST:event_jtfdBillete1FocusLost
+    }//GEN-LAST:event_jtfdAcuentaFocusLost
 
-    private void jtfdBillete1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfdBillete1FocusGained
+    private void jtfdAcuentaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtfdAcuentaFocusGained
 //        jtfdBillete1.setText("0"); 
-    }//GEN-LAST:event_jtfdBillete1FocusGained
+    }//GEN-LAST:event_jtfdAcuentaFocusGained
 
     /**
      * @param args the command line arguments
@@ -490,9 +514,9 @@ public class JDCobrar extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private org.swing.componet.JTextBoxHintDS jtfdAcuenta;
     private org.swing.componet.JTextBoxHintDS jtfdBillete;
-    private org.swing.componet.JTextBoxHintDS jtfdBillete1;
-    private org.swing.componet.JTextBoxHintDS jtfdBillete2;
+    private org.swing.componet.JTextBoxHintDS jtfdDescuento;
     private org.swing.componet.JTextBoxHintDS jtfdMonto;
     private org.swing.componet.JTextBoxHintDS jtfdVuelto;
     // End of variables declaration//GEN-END:variables

@@ -63,6 +63,8 @@ public class JIParametros extends javax.swing.JInternalFrame {
         jtfdTokenPSE = new org.swing.componet.JTextBoxHintDS();
         jLabel12 = new javax.swing.JLabel();
         tbxRutaDocs = new org.swing.componet.JTextBoxHintDS();
+        jLabel13 = new javax.swing.JLabel();
+        jtfdNombreImpresora = new org.swing.componet.JTextBoxHintDS();
 
         jbtnActivar.setText("...");
         jbtnActivar.setEnabled(false);
@@ -171,6 +173,12 @@ public class JIParametros extends javax.swing.JInternalFrame {
         tbxRutaDocs.setTipoTextBox(null);
         tbxRutaDocs.setTiponumero(null);
 
+        jLabel13.setText("Nombre impresora:");
+        jLabel13.setToolTipText("");
+
+        jtfdNombreImpresora.setHint("Ingrese el nombre de impresora");
+        jtfdNombreImpresora.setLength(11);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -194,10 +202,6 @@ public class JIParametros extends javax.swing.JInternalFrame {
                     .addComponent(jbtnGuardar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tbxRutaDocs, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jLabel11)
@@ -209,7 +213,15 @@ public class JIParametros extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel8)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jtfdnro, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jtfdnro, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel12))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbxRutaDocs, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jtfdNombreImpresora, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbtnActivar1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19))
@@ -263,7 +275,11 @@ public class JIParametros extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbxRutaDocs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(jtfdNombreImpresora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(jbtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -308,7 +324,7 @@ public class JIParametros extends javax.swing.JInternalFrame {
                 System.out.println("idcli a guardar:"+idcli);
                 if (idcli == 0) {
                     cli = new Parametros(0, nom, dir, tel,dn, monto_kilo, "1",nro,rutaDump,
-                    jtfdRutaPSE.getText(),jtfdTokenPSE.getText(),tbxRutaDocs.getText());
+                    jtfdRutaPSE.getText(),jtfdTokenPSE.getText(),tbxRutaDocs.getText(),jtfdNombreImpresora.getText());
                     mensaje = "Datos guardados correctamente";
                     if (ParametrosADN.Guardar(cli)) {
                         JOptionPane.showMessageDialog(rootPane,mensaje);
@@ -316,7 +332,7 @@ public class JIParametros extends javax.swing.JInternalFrame {
                     }
                 } else {
                     cli = new Parametros(idcli, nom, dir, tel,dn, monto_kilo, "1",nro,rutaDump,
-                    jtfdRutaPSE.getText(),jtfdTokenPSE.getText(),tbxRutaDocs.getText());
+                    jtfdRutaPSE.getText(),jtfdTokenPSE.getText(),tbxRutaDocs.getText(),jtfdNombreImpresora.getText());
                     mensaje = "Datos actualizados correctamente";
                     if (ParametrosADN.Actualizar(cli)) {
                         JOptionPane.showMessageDialog(rootPane,mensaje);
@@ -404,6 +420,7 @@ public class JIParametros extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -414,6 +431,7 @@ public class JIParametros extends javax.swing.JInternalFrame {
     private javax.swing.JButton jbtnActivar1;
     private javax.swing.JButton jbtnGuardar;
     private org.swing.componet.JTextBoxHintDS jtfdDireccion;
+    private org.swing.componet.JTextBoxHintDS jtfdNombreImpresora;
     private org.swing.componet.JTextBoxHintDS jtfdNombres;
     private org.swing.componet.JTextBoxHintDS jtfdRUC;
     private org.swing.componet.JTextBoxHintDS jtfdRutaPSE;
@@ -440,7 +458,7 @@ public class JIParametros extends javax.swing.JInternalFrame {
                 jtfdRutaPSE.setText(la.getRutaPse());
                 jtfdTokenPSE.setText(la.getToken());
                 tbxRutaDocs.setText(la.getRutadocs());
-                
+                jtfdNombreImpresora.setText(la.getNombreImpresora());
                 modif = true;
             }
         } catch (Exception e) {

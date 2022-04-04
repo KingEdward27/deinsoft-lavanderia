@@ -3,6 +3,8 @@ package Adicional;
 import entidades.Formatos;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -81,5 +83,11 @@ public class Util {
         } catch (Exception e) {
           e.printStackTrace();
         }
+    }
+    public static String exceptionToString(Exception ex){
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        return sw.toString();
     }
 }

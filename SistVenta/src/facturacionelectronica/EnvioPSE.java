@@ -51,13 +51,13 @@ public class EnvioPSE {
             Cabecera servicio = new Cabecera();
             String tipoDocSunat = datosVenta.getTipoDoc().getValue();
             servicio.setTipo(tipoDocSunat);
-            servicio.setSerie(datosVenta.getSerie());
-            servicio.setNumero(datosVenta.getNum());
+            servicio.setSerie(datosVenta.getSerieDocE());
+            servicio.setNumero(String.valueOf(datosVenta.getNumDocE()));
             servicio.setForma_pago("Contado");
             servicio.setFecha_emision(Util.sdfFecha2.format(datosVenta.getFecha()));
             servicio.setFecha_vencimiento(null);
             servicio.setTipo_operacion(Constantes.TIPO_OPERACION_WS);
-            servicio.setCliente_tipo(datosVenta.getTipoCliente().equals("1") ? "1" : "6");
+            servicio.setCliente_tipo(datosVenta.getTipoCliente().split("-")[0]);
             servicio.setCliente_documento(datosVenta.getDniCliente());
             servicio.setCliente_nombre(datosVenta.getCliente());
             servicio.setCliente_direccion(datosVenta.getDireccionCliente());
@@ -156,9 +156,11 @@ public class EnvioPSE {
 
             return respuesta;
         } catch (IOException e) {
+            System.out.println(Util.exceptionToString(e));
             e.printStackTrace();
             return respuesta;
         } catch (Exception e) {
+            System.out.println(Util.exceptionToString(e));
             e.printStackTrace();
             return respuesta;
         }

@@ -11,7 +11,7 @@ create table tipodoc
 
 INSERT INTO tipodoc values (1,'BOLETA','03','1',now());
 INSERT INTO tipodoc values (2,'FACTURA','01','1',now());
-INSERT INTO tipodoc values (3,'TICKET','00','1',now());
+INSERT INTO tipodoc values (3,'NOTA DE VENTA','00','1',now());
 INSERT INTO tipodoc values (4,'NOTA DE CREDITO','07','1',now());
 
 
@@ -60,7 +60,7 @@ alter table clientes
 add correo varchar(300);
 
 alter table clientes
-add tipo int default 1;
+add tipo varchar(100) default '1-DNI';
 
 alter table productos
 add codigo varchar(20) default '-';
@@ -234,8 +234,207 @@ DELIMITER ;
 alter table detalleventas
 add afectacion_igv decimal(14,2);
 
+alter table ventas
+add serieDocE varchar(4);
+
+alter table ventas
+add numDocE int;
+
+ALTER TABLE `dblavanderia`.`clientes` 
+CHANGE COLUMN `Dni` `Dni` VARCHAR(11) NULL DEFAULT NULL ;
+
+
+
 select * from clientes
 select * from detalleventas
 select * from ventas
 select * from numeracion_documento
 select * from tipodoc
+select * from parametros
+
+select v.idventa,v.seriedoc,v.numdoc,
+trim(concat(ifnull(cli.nombres,''))) cliente,
+v.fecha,
+v.total-ifnull(v.descuento,0) importe,
+ifnull(v.tipo_pago,'Contado') forma_pago,
+case when cli.dni= '11111111' then '00000000' 
+else cli.dni end nrodocumento,
+cli.direccion,
+f_descripcion_monto(v.total-ifnull(v.descuento,0),'SOLES') descripcion_monto,
+ifnull(v.descuento,0) descuento ,
+'10' tipo_igv,
+cli.tipo,
+ifnull(cli.correo,''),
+ifnull(v.codigoqr,''),
+ifnull(v.xmlhash,''),
+td.tipodoc_id,td.nombre,td.value,
+ts.idtiposervicio,ts.descripcion,v.igv,ifnull(serieDocE,'') serieDocE,ifnull(numDocE,0) numDocE, ifnull(fecha_entrega,'') fecha_entrega,ifnull(envio_pse_flag,'') envio_pse_flag, ifnull(envio_pse_mensaje,'') envio_pse_mensaje
+from ventas v 
+inner join clientes cli on v.idcliente=cli.idcliente
+left join tipodoc td on td.tipodoc_id = v.tipodoc_id
+inner join tipos_servicio ts on ts.idtiposervicio = v.idtiposervicio 
+where ((v.idventa  = 48792))
+
+select p.codigo,\n"
+                + "trim(concat(p.descripcion,' ',ifnull(m.nombre,''), ' ',ifnull(c.nombre,''),' ', ifnull(ca.nombre,''))) descripcion ,d.cantidad,\n"
+                + "d.precio as precio_venta,d.importe,p.idproducto,\n"
+                + "ifnull(d.afectacion_igv,0) afectacion_igv\n"
+                + "from productos p \n"
+                + "inner join detalleventas d\n"
+                + "on p.idproducto = d.idproducto\n"
+                + "left join marcas m on m.idmarca = d.idmarca\n"
+                + "left join colores c on c.idcolor = d.idcolor\n"
+                + "left join caracteristicas ca on ca.idcaracteristica = d.idcaracteristica\n"
+                + "where d.idventa = ?
+
+alter table parametros
+add nombre_impresora varchar(300);
+
+
+drop trigger if exists tia_ventas;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` TRIGGER tia_ventas
+AFTER INSERT ON ventas
+FOR EACH ROW
+BEGIN 
+    DECLARE ln_descuento decimal(8,2); 
+    DECLARE LN_MONTO decimal(8,2); 
+    
+    set ln_descuento =  new.descuento;
+    if new.tipo_pago <> 'POR PAGAR' then
+       if new.a_cuenta > 0 then
+            set LN_MONTO = new.a_cuenta;
+       else
+            set LN_MONTO = new.total - ln_descuento;
+       end if;
+       insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+       values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+       
+       if new.tipo_pago IN ('TARJETA VISA','TARJETA MASTERCARD') then
+            insert into egresos(idegreso,fecha,monto,motivo,idventa)
+            values (null,now(),LN_MONTO,'SALIDA POR TARJETA',new.idventa);
+       end if;
+    end if;
+END$$
+DELIMITER ;
+
+drop trigger if exists tua_ventas;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` TRIGGER tua_ventas
+AFTER UPDATE ON ventas
+FOR EACH ROW
+BEGIN 
+    DECLARE ln_descuento decimal(8,2); 
+    DECLARE LN_MONTO decimal(8,2); 
+    
+    if new.descuento > 0 then
+      set ln_descuento = new.descuento;
+    else
+      set ln_descuento = old.descuento;
+    end if;
+    
+    if new.estado = '1' and old.estado = 'p' then
+       if new.tipo_pago = 'POR PAGAR' then
+           set LN_MONTO = old.total - new.a_cuenta - ln_descuento;
+           insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+           values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+        else
+           if old.a_cuenta > 0 then
+                set LN_MONTO = new.total - ln_descuento - old.a_cuenta;
+                insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+           -- else
+                -- set LN_MONTO = new.total - ln_descuento;
+           end if;
+        end if;
+    else
+		if new.estado = '0' and old.estado <> '0' then
+        -- si anulan la venta
+			update ingresos set estado = '0' where idventa = new.idventa;
+			if new.tipo_pago IN ('TARJETA VISA','TARJETA MASTERCARD') then
+				update egresos set estado = '0' where idventa = new.idventa;
+			end if;
+        end if;
+    end if;
+END$$
+DELIMITER ;
+
+update ventas set estado = '2' where estado = '1' and numdoce = null 
+where idventa > 0;
+
+update ventas set estado = '1' where estado = 'p' and numdoce <> null;
+
+alter table ventas
+add clienteE_id INT;
+
+
+select * from clientes
+select * from detalleventas
+select * from ventas
+select * from numeracion_documento
+select * from tipodoc
+select * from parametros
+select * from ingresos
+
+
+CREATE DEFINER=`root`@`localhost` TRIGGER tua_ventas
+AFTER UPDATE ON ventas
+FOR EACH ROW
+BEGIN 
+    DECLARE ln_descuento decimal(8,2); 
+    DECLARE LN_MONTO decimal(8,2); 
+    
+    if new.descuento > 0 then
+      set ln_descuento = new.descuento;
+    else
+      set ln_descuento = old.descuento;
+    end if;
+    
+    if new.estado = '1' and old.estado = 'p' then
+        if old.a_cuenta > 0 then
+                set LN_MONTO = new.total - ln_descuento - old.a_cuenta;
+                insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+        else
+             set LN_MONTO = new.total - ln_descuento;
+             insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+        end if;
+       /*if new.tipo_pago = 'POR PAGAR' then
+           set LN_MONTO = old.total - new.a_cuenta - ln_descuento;
+           insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+           values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+        else
+           if old.a_cuenta > 0 then
+                set LN_MONTO = new.total - ln_descuento - old.a_cuenta;
+                insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+           -- else
+                -- set LN_MONTO = new.total - ln_descuento;
+           end if;
+        end if;*/
+    else
+		if new.estado = '0' and old.estado <> '0' then
+        -- si anulan la venta
+			update ingresos set estado = '0' where idventa = new.idventa;
+			if new.tipo_pago IN ('TARJETA VISA','TARJETA MASTERCARD') then
+				update egresos set estado = '0' where idventa = new.idventa;
+			end if;
+        end if;
+    end if;
+END
+
+alter table productos
+add orden int default 9999;
+
+select * from productos
+
+UPDATE `productos` SET `orden` = '1' WHERE (`IdProducto` = '86');
+UPDATE `productos` SET `orden` = '2' WHERE (`IdProducto` = '99');
+UPDATE `productos` SET `orden` = '3' WHERE (`IdProducto` = '169');
+UPDATE `productos` SET `orden` = '4' WHERE (`IdProducto` = '13');
+UPDATE `productos` SET `orden` = '4' WHERE (`IdProducto` = '174');
+UPDATE `productos` SET `orden` = '5' WHERE (`IdProducto` = '7');
+UPDATE `productos` SET `orden` = '6' WHERE (`IdProducto` = '4');
+UPDATE `productos` SET `orden` = '7' WHERE (`IdProducto` = '175');
+UPDATE `dblavanderia`.`productos` SET `orden` = '8' WHERE (`IdProducto` = '3');

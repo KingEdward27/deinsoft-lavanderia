@@ -1,0 +1,10 @@
+2022-03-31 21:20:29 DEBUG StackTraceElement:51 - Code Line No.: 351, Class Name: JRibbonForm.JRibbonForm$21, Text: sql Lista_productos: select  concat(v.seriedoc,'-',v.numdoc) numdoc,v.fecha,str_to_date(v.fecha_entrega,'%d/%m/%Y %H:%i') fec_entrega,cantidad,ifnull(descripcion_producto,''),dv.precio 
+from ventas v inner join detalleventas dv on v.idventa = dv.idventa
+inner join clientes ce on v.idcliente = ce.idcliente
+left join marcas m on dv.idmarca = m.idmarca
+left join colores c on dv.idcolor = c.idcolor
+left join caracteristicas ca on dv.idcaracteristica = ca.idcaracteristica
+where ifnull(m.nombre,'') like ? and ifnull(c.nombre,'') like ? and ifnull(ca.nombre,'') like ? and v.estado = 'p'
+and ifnull(STR_TO_DATE(v.fecha_entrega,'%d/%m/%Y %H:%i'),'-')  <> '-'  order by fec_entrega desc,numdoc desc
+2022-03-31 21:20:42 DEBUG StackTraceElement:51 - Code Line No.: 1368, Class Name: FormInternos.JIVentas, Text: GenerarNro: 155129
+2022-03-31 21:20:47 DEBUG StackTraceElement:51 - Code Line No.: 1368, Class Name: FormInternos.JIVentas, Text: GenerarNro: 155129

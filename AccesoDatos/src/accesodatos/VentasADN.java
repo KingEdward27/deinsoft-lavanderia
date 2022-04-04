@@ -17,27 +17,26 @@ public class VentasADN {
         int r = 0, r2 = 0, maxid = 0;
         boolean result = false;
         Connection cn = null;
-        PreparedStatement ps =null;
+        PreparedStatement ps = null;
         String sql;
         try {//manejador de recursos
             cn = Conexion.Conexion();
-            
-            sql = "select ultimo_numero + 1 "
-                    + "from numeracion_documento where "
-                    + "tipodoc_id = ? and serie = ?";
-            ps = cn.prepareStatement(sql);
-            ps.setInt(1, ent.getTipoDoc().getTipodocId());
-            ps.setString(2, ent.getSerie());
-            String numeroElectronico = "", serie = "";
-            try (ResultSet rs2 = ps.executeQuery()) {
-                rs2.next();
-                numeroElectronico = String.valueOf(rs2.getInt(1));
-//                serie = rs2.getString(2);
-            }
+
+//            sql = "select ultimo_numero + 1 "
+//                    + "from numeracion_documento where "
+//                    + "tipodoc_id = ? and serie = ?";
+//            ps = cn.prepareStatement(sql);
+//            ps.setInt(1, ent.getTipoDoc().getTipodocId());
+//            ps.setString(2, ent.getSerieDocE());
+//            String numeroElectronico = "", serie = "";
+//            try (ResultSet rs2 = ps.executeQuery()) {
+//                rs2.next();
+//                numeroElectronico = String.valueOf(rs2.getInt(1));
+//            }
             sql = "insert into ventas(idcliente, tipodoc, seriedoc, numdoc, fecha,hora, igv, subtotal, "
-                        + "total,idusuario,estado,tipo_pago,idtiposervicio,fecha_entrega,"
-                + "fecha_reg,a_cuenta,descuento,tipodoc_id,envio_pse_flag,envio_pse_mensaje) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,?,?,?)";
+                    + "total,idusuario,estado,tipo_pago,idtiposervicio,fecha_entrega,"
+                    + "fecha_reg,a_cuenta,descuento,tipodoc_id,envio_pse_flag,envio_pse_mensaje,serieDocE,numDocE) "
+                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,null,?,?,?,?)";
             ps = cn.prepareStatement(sql);
             if (ent.getIdcliente() == 0) {
                 ps.setString(1, null);
@@ -46,7 +45,7 @@ public class VentasADN {
             }
             ps.setString(2, "TICKET");
             ps.setString(3, ent.getSerie());
-            ps.setString(4, numeroElectronico);  
+            ps.setString(4, ent.getNro());
             ps.setDate(5, ent.getFecha());
             ps.setString(6, ent.getHora());
             ps.setFloat(7, ent.getIgv());
@@ -60,24 +59,31 @@ public class VentasADN {
             ps.setString(14, ent.getStrfecha_Entrega());
             ps.setFloat(15, ent.getA_cuenta());
             ps.setFloat(16, ent.getDescuento());
-            ps.setInt(17, ent.getTipoDoc().getTipodocId());
-            ps.setString(18, ent.getEnvioPseFlag());
-            ps.setString(19, ent.getEnvioPseMensaje());
-              
+//            ps.setInt(17, 0);
+            ps.setString(17, ent.getEnvioPseFlag());
+            ps.setString(18, ent.getEnvioPseMensaje());
+//            if (!ent.getTipo_pago().equals("POR PAGAR")) {
+//                ps.setString(19, ent.getSerieDocE());
+//                ps.setString(20, numeroElectronico);
+//            } else {
+            ps.setString(19, null);
+            ps.setString(20, null);
+//            }
+
             r = ps.executeUpdate();
-            
+
             sql = "select max(idventa) from ventas";
             PreparedStatement pst = cn.prepareStatement(sql);
             ResultSet rs = pst.executeQuery(sql);
             rs.next();
             maxid = rs.getInt(1);
-            
+
             for (Detalle_Venta ele : ent.getLista()) {
                 sql = "insert into detalleventas(idventa, idproducto, cantidad, precio,descuento,"
-                    + " importe,descripcion_producto,idmarca,idcolor,idcaracteristica,afectacion_igv) "
-                    + "values(?,?,?,?,?,?,?,(case "+ele.getIdmarca()+" when 0 then null else "+ele.getIdmarca()+" end),"
-                    + "                     (case "+ele.getIdcolor()+" when 0 then null else "+ele.getIdcolor()+" end),"
-                    + "                     (case "+ele.getIdcaracteristica()+" when 0 then null else "+ele.getIdcaracteristica()+" end),"
+                        + " importe,descripcion_producto,idmarca,idcolor,idcaracteristica,afectacion_igv) "
+                        + "values(?,?,?,?,?,?,?,(case " + ele.getIdmarca() + " when 0 then null else " + ele.getIdmarca() + " end),"
+                        + "                     (case " + ele.getIdcolor() + " when 0 then null else " + ele.getIdcolor() + " end),"
+                        + "                     (case " + ele.getIdcaracteristica() + " when 0 then null else " + ele.getIdcaracteristica() + " end),"
                         + "?)";
                 PreparedStatement ps2 = cn.prepareStatement(sql);
                 ps2.setInt(1, maxid);
@@ -90,35 +96,128 @@ public class VentasADN {
                 ps2.setFloat(8, ele.getAfectacionIgv());
                 r2 = ps2.executeUpdate();
             }
-//            sql = "update parametros set num_venta = num_venta+1";
-//                PreparedStatement ps3 = cn.prepareStatement(sql);
-//                ps3.executeUpdate();
+
             if (r == 1 && r2 == 1) {
+//                if (!ent.getTipo_pago().equals("POR PAGAR")) {
+//                    sql = "update numeracion_documento set ultimo_numero = ultimo_numero + 1 where "
+//                            + "tipodoc_id = ? and serie = ?";
+//                    ps = cn.prepareStatement(sql);
+//                    ps.setInt(1, ent.getTipoDoc().getTipodocId());
+//                    ps.setString(2, ent.getSerieDocE());
+//                    r2 = ps.executeUpdate();
+//                }
+
+                sql = "update parametros set num_venta = num_venta+1";
+                PreparedStatement ps3 = cn.prepareStatement(sql);
+                r2 = ps3.executeUpdate();
+            }
+//            cn.commit();
+            result = true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            result = false;
+            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + ex.toString());
+        } finally {
+            if (cn != null) {
+                cn.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+        }
+        return r == 1 && r2 == 1 ? maxid : 0;
+    }
+
+    private static boolean facturar(Ventas ent) throws ClassNotFoundException, SQLException {
+        int r = 0;
+        Connection cn = null;
+        PreparedStatement ps = null;
+        String sql;
+        try {
+            cn = Conexion.Conexion();
+            String numeroElectronico = "";
+            if (ent.getTipoDoc() != null) {
+                sql = "select ultimo_numero + 1 "
+                        + "from numeracion_documento where "
+                        + "tipodoc_id = ? and serie = ?";
+                ps = cn.prepareStatement(sql);
+                ps.setInt(1, ent.getTipoDoc().getTipodocId());
+                ps.setString(2, ent.getSerieDocE());
+                try (ResultSet rs2 = ps.executeQuery()) {
+                    rs2.next();
+                    numeroElectronico = String.valueOf(rs2.getInt(1));
+                }
+                sql = "update ventas set estado=1,clienteE_id = ?,"
+                        + "descuento=?,tipodoc_id=?, serieDocE = ?, numDocE = ?,"
+                        + "recibido = ?, vuelto = ? where idventa = ?";
+                ps = cn.prepareStatement(sql);
+//                ps.setString(1, ent.getEstado());
+//                ps.setFloat(1, ent.getDescuento());
+                ps.setInt(1, ent.getIndClienteE());
+                ps.setFloat(2, ent.getDescuento());
+                ps.setInt(3, ent.getTipoDoc().getTipodocId());
+                ps.setString(4, ent.getSerieDocE());
+                ps.setString(5, numeroElectronico);
+                ps.setFloat(6, ent.getRecibido());
+                ps.setFloat(7, ent.getVuelto());
+                ps.setInt(8, ent.getIdventa());
+                r = ps.executeUpdate();
+                if (r > 0) {
                     sql = "update numeracion_documento set ultimo_numero = ultimo_numero + 1 where "
                             + "tipodoc_id = ? and serie = ?";
                     ps = cn.prepareStatement(sql);
                     ps.setInt(1, ent.getTipoDoc().getTipodocId());
-                    ps.setString(2, ent.getSerie());
-                    r2 = ps.executeUpdate();
+                    ps.setString(2, ent.getSerieDocE());
+                    r = ps.executeUpdate();
+                }
             }
-//            cn.commit();
-            result=true;
-        }catch(SQLException ex)
-        {
-            ex.printStackTrace();
-//            cn.rollback();
-            ps.close();
-            cn.close();
-            result=false;
-            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: "+ex.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + e.toString());
+        } finally {
+            if (cn != null) {
+                cn.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
         }
-        return r == 1 && r2 == 1 ? maxid : 0;
+        return r == 1 ? true : false;
     }
+
+    private static boolean entregar(Ventas ent) throws ClassNotFoundException, SQLException {
+        int r = 0;
+        Connection cn = null;
+        PreparedStatement ps = null;
+        String sql;
+        try {
+            cn = Conexion.Conexion();
+            sql = "update ventas set estado=2,"
+                    + "fecha_entrega = date_format(now(),'%d/%m/%Y %H:%i') "
+                    + "where idventa = ?";
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, ent.getIdventa());
+            r = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + e.toString());
+        } finally {
+            if (cn != null) {
+                cn.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+        }
+
+        return r == 1 ? true : false;
+    }
+
     private static boolean flagEnvioPSE(Ventas ent) throws ClassNotFoundException, SQLException {
         int r = 0;
         String sql = "update ventas set envio_pse_flag=? , "
                 + "envio_pse_mensaje = ?,num_ticket = ?,"
-                + "codigoqr = ?,xmlhash =? " 
+                + "codigoqr = ?,xmlhash =? "
                 + "where idventa = ?";
         try (Connection cn = Conexion.Conexion();
                 PreparedStatement pst = cn.prepareStatement(sql)) {
@@ -132,6 +231,7 @@ public class VentasADN {
         }
         return r == 1 ? true : false;
     }
+
     private static boolean Existe(Clientes ent) throws ClassNotFoundException, SQLException {
         int r = 0;
         String sql = "select count(idventa) from ventas where idventa = ?";
@@ -201,6 +301,7 @@ public class VentasADN {
         }
         return nro;
     }
+
     public static String fecha_hora() {
         String r = "";
         String sql = "select now()";
@@ -215,7 +316,8 @@ public class VentasADN {
         }
         return r;
     }
-public static boolean ExisteNro(String nro) {
+
+    public static boolean ExisteNro(String nro) {
         int r = 0;
         String sql = "select count(*) from ventas where numdoc = ? and estado in ('p','1')";
         try (Connection cn = Conexion.Conexion()) {
@@ -228,63 +330,71 @@ public static boolean ExisteNro(String nro) {
             pst.close();
         } catch (Exception e) {
         }
-        return r>0?true:false;
+        return r > 0 ? true : false;
     }
-    private static LinkedList<ConsultaVentas> Lista(Date fec1, Date fec2, String estado,String cliente) throws SQLException, ClassNotFoundException {
+
+    private static LinkedList<ConsultaVentas> Lista(Date fec1, Date fec2, String estado, String cliente) throws SQLException, ClassNotFoundException {
         LinkedList<ConsultaVentas> aux = new LinkedList<>();
-        String sql = "select concat(v.seriedoc,'-',v.numdoc) numdoc,v.tipo_pago,ts.descripcion,cli.nombres,v.fecha,(case v.estado when '1' then 'ENTREGADO' when '0' then 'ANULADO' else 'POR ENTREGAR' end) estado,v.descuento,v.total\n"
+        String sql = "select concat(v.seriedoc,'-',v.numdoc) numdoc,v.tipo_pago,ts.descripcion,cli.nombres,v.fecha,"
+                + "(CASE v.estado when '1' then 'PAGADO Y POR ENTREGAR' "
+                + "                   when '2' then 'PAGADO Y ENTREGADO' "
+                + "                   when '0' then 'ANULADO' else 'POR ENTREGAR' end) estado,\n"
+                + "v.descuento,v.total\n"
                 + "from ventas v inner join clientes cli on v.idcliente=cli.idcliente\n"
                 + "              inner join tipos_servicio ts on v.idtiposervicio = ts.idtiposervicio\n"
                 + "where v.fecha >=? and v.fecha<=? and cli.nombres like ? and ("
-                + "                                         ('"+estado+"' = 't' and v.estado in ('p','1')) or \n"
-                + "                                         ('"+estado+"' = '0' and v.estado in ('0')) or \n"
-                + "                                         ('"+estado+"' = '1' and v.estado in ('1')) or \n"
-                + "                                         ('"+estado+"' = 'p' and v.estado in ('p')) \n"
+                + "                                         ('" + estado + "' = 't' and v.estado in ('p','1','2')) or \n"
+                + "                                         ('" + estado + "' = '0' and v.estado in ('0')) or \n"
+                + "                                         ('" + estado + "' = '1' and v.estado in ('1')) or \n"
+                + "                                         ('" + estado + "' = 'p' and v.estado in ('p')) \n"
                 + "                                      ) and\n"
                 + "ifnull(STR_TO_DATE(v.fecha_entrega,'%d/%m/%Y %H:%i'),'-')  <> '-' order by numdoc desc";
-        System.out.println("sql: "+sql);
+        System.out.println("sql: " + sql);
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
             ps.setDate(1, (Date) fec1);
             ps.setDate(2, fec2);
             ps.setString(3, cliente);
             try (ResultSet rs = ps.executeQuery()) { //leer el valor
                 while (rs.next()) {//leer los valores devuelto
-                    aux.add(new ConsultaVentas(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5),rs.getString(6), rs.getFloat(7), rs.getFloat(8)));
+                    aux.add(new ConsultaVentas(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5), rs.getString(6), rs.getFloat(7), rs.getFloat(8)));
                 }
             }
         }
         return aux;
     }
+
     private static LinkedList<ConsultaVentas> ListaTC(Date fec1, Date fec2, String estado) throws SQLException, ClassNotFoundException {
         LinkedList<ConsultaVentas> aux = new LinkedList<>();
-        String sql = 
-//                "select v.seriedoc,v.numdoc,cli.nombres,v.fecha, (case when v.estado = 'p' and ifnull(a_cuenta,0) > 0 then v.a_cuenta else (v.total - ifnull(v.descuento,0))  end) ,"
-//                + "(case v.estado when '1' then 'ENTREGADO' when '0' then 'ANULADO' else 'POR ENTREGAR' end) estado\n" +
-//                    "from ventas v inner join clientes cli on v.idcliente=cli.idcliente\n" +
-//                    "              inner join tipos_servicio ts on v.idtiposervicio = ts.idtiposervicio\n" +
-//                    "        where v.fecha >=? and v.fecha<=?   \n" +
-//                    "                                    and  (                                         \n" +
-//                    "                                         ('1' = 't' and v.estado in ('p','1')) or \n" +
-//                    "                                         ('1' = '0' and v.estado in ('0')) or \n" +
-//                    "                                         ('1' = '1' and (v.estado in ('1') or (tipo_pago = 'EFECTIVO' and v.estado in ('p')))) or \n" +
-//                    "                                         ('1' = 'p' and v.estado in ('p')) \n" +
-//                    "                                      ) and\n" +
-//                    "ifnull(STR_TO_DATE(v.fecha_entrega,'%d/%m/%Y %H:%i'),'-')  <> '-'\n" +
-//                    "and not exists (select * from ingresos s where s.idventa = v.idventa)\n" +
-//                    "union\n" +
-                    "select v.seriedoc,v.numdoc,cli.nombres,s.fecha, s.monto  ,"
-                + "(case v.estado when '1' then 'ENTREGADO' when '0' then 'ANULADO' else 'POR ENTREGAR' end) estado\n" +
-                    "from ventas v inner join clientes cli on v.idcliente=cli.idcliente\n" +
-                    "              inner join tipos_servicio ts on v.idtiposervicio = ts.idtiposervicio\n" +
-                    "inner join ingresos s on v.idventa = s.idventa where s.fecha >=? and s.fecha<=? \n" +
-                    "                                    and  (                                         \n" +
-                    "                                         ('"+estado+"' = 't' and v.estado in ('p','1')) or \n" +
-                    "                                         ('"+estado+"' = '0' and v.estado in ('0')) or \n" +
-                    "                                         ('"+estado+"' = '1' and (v.estado in ('1') or (tipo_pago <> 'POR PAGAR' and v.estado in ('p')))) or \n" +
-                    "                                         ('"+estado+"' = 'p' and v.estado in ('p')) \n" +
-                    "                                      ) and\n" +
-                    "ifnull(STR_TO_DATE(v.fecha_entrega,'%d/%m/%Y %H:%i'),'-')  <> '-'";
-        System.out.println("sql: "+sql);
+        String sql
+                = //                "select v.seriedoc,v.numdoc,cli.nombres,v.fecha, (case when v.estado = 'p' and ifnull(a_cuenta,0) > 0 then v.a_cuenta else (v.total - ifnull(v.descuento,0))  end) ,"
+                //                + "(case v.estado when '1' then 'ENTREGADO' when '0' then 'ANULADO' else 'POR ENTREGAR' end) estado\n" +
+                //                    "from ventas v inner join clientes cli on v.idcliente=cli.idcliente\n" +
+                //                    "              inner join tipos_servicio ts on v.idtiposervicio = ts.idtiposervicio\n" +
+                //                    "        where v.fecha >=? and v.fecha<=?   \n" +
+                //                    "                                    and  (                                         \n" +
+                //                    "                                         ('1' = 't' and v.estado in ('p','1')) or \n" +
+                //                    "                                         ('1' = '0' and v.estado in ('0')) or \n" +
+                //                    "                                         ('1' = '1' and (v.estado in ('1') or (tipo_pago = 'EFECTIVO' and v.estado in ('p')))) or \n" +
+                //                    "                                         ('1' = 'p' and v.estado in ('p')) \n" +
+                //                    "                                      ) and\n" +
+                //                    "ifnull(STR_TO_DATE(v.fecha_entrega,'%d/%m/%Y %H:%i'),'-')  <> '-'\n" +
+                //                    "and not exists (select * from ingresos s where s.idventa = v.idventa)\n" +
+                //                    "union\n" +
+                "select v.seriedoc,v.numdoc,cli.nombres,s.fecha, s.monto  ,"
+                + "(CASE v.estado when '1' then 'PAGADO Y POR ENTREGAR' "
+                + "                   when '2' then 'PAGADO Y ENTREGADO' "
+                + "                   when '0' then 'ANULADO' else 'POR ENTREGAR' end) estado\n"
+                + "from ventas v inner join clientes cli on v.idcliente=cli.idcliente\n"
+                + "              inner join tipos_servicio ts on v.idtiposervicio = ts.idtiposervicio\n"
+                + "inner join ingresos s on v.idventa = s.idventa where s.fecha >=? and s.fecha<=? \n"
+                + "                                    and  (                                         \n"
+                + "                                         ('" + estado + "' = 't' and v.estado in ('p','1','2')) or \n"
+                + "                                         ('" + estado + "' = '0' and v.estado in ('0')) or \n"
+                + "                                         ('" + estado + "' = '1' and (v.estado in ('p','1','2') or (tipo_pago <> 'POR PAGAR' and v.estado in ('p')))) or \n"
+                + "                                         ('" + estado + "' = 'p' and v.estado in ('p')) \n"
+                + "                                      ) and\n"
+                + "ifnull(STR_TO_DATE(v.fecha_entrega,'%d/%m/%Y %H:%i'),'-')  <> '-'";
+        System.out.println("sql: " + sql);
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
             ps.setDate(1, (Date) fec1);
             ps.setDate(2, fec2);
@@ -298,7 +408,8 @@ public static boolean ExisteNro(String nro) {
         }
         return aux;
     }
-    private static LinkedList<ConsultaVentas> Lista2(Date fec1, Date fec2,String est) throws SQLException, ClassNotFoundException {
+
+    private static LinkedList<ConsultaVentas> Lista2(Date fec1, Date fec2, String est) throws SQLException, ClassNotFoundException {
         LinkedList<ConsultaVentas> aux = new LinkedList<>();
         String sql = "select v.idventa,v.seriedoc,v.numdoc,cli.nombres,v.fecha,u.nombre,v.total\n"
                 + "from ventas v inner join clientes cli on v.idcliente=cli.idcliente\n"
@@ -316,24 +427,26 @@ public static boolean ExisteNro(String nro) {
         }
         return aux;
     }
-private static LinkedList<ConsultaVentas> Lista_productos(String marca,String color,String caracteristica) throws SQLException, ClassNotFoundException {
+
+    private static LinkedList<ConsultaVentas> Lista_productos(String marca, String color, String caracteristica) throws SQLException, ClassNotFoundException {
         LinkedList<ConsultaVentas> aux = new LinkedList<>();
-        String sql = "select  concat(v.seriedoc,'-',v.numdoc) numdoc,v.fecha,str_to_date(v.fecha_entrega,'%d/%m/%Y %H:%i') fec_entrega,cantidad,ifnull(descripcion_producto,''),dv.precio \n" +
-                    "from ventas v inner join detalleventas dv on v.idventa = dv.idventa\n" +
-                    "inner join clientes ce on v.idcliente = ce.idcliente\n" +
-                    "left join marcas m on dv.idmarca = m.idmarca\n" +
-                    "left join colores c on dv.idcolor = c.idcolor\n" +
-                    "left join caracteristicas ca on dv.idcaracteristica = ca.idcaracteristica\n"
-                + "where ifnull(m.nombre,'') like ? and ifnull(c.nombre,'') like ? and ifnull(ca.nombre,'') like ? and v.estado = 'p'\n"
+        String sql = "select  concat(v.seriedoc,'-',v.numdoc) numdoc,v.fecha,str_to_date(v.fecha_entrega,'%d/%m/%Y %H:%i') fec_entrega,cantidad,ifnull(descripcion_producto,''),dv.precio \n"
+                + "from ventas v inner join detalleventas dv on v.idventa = dv.idventa\n"
+                + "inner join clientes ce on v.idcliente = ce.idcliente\n"
+                + "left join marcas m on dv.idmarca = m.idmarca\n"
+                + "left join colores c on dv.idcolor = c.idcolor\n"
+                + "left join caracteristicas ca on dv.idcaracteristica = ca.idcaracteristica\n"
+                + "where ifnull(m.nombre,'') like ? and ifnull(c.nombre,'') like ? and ifnull(ca.nombre,'') like ? "
+                + "and v.estado in ('p','1') \n"
                 + "and ifnull(STR_TO_DATE(v.fecha_entrega,'%d/%m/%Y %H:%i'),'-')  <> '-'  order by fec_entrega desc,numdoc desc";
-        System.out.println("sql Lista_productos: "+sql);
+        System.out.println("sql Lista_productos: " + sql);
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
             ps.setString(1, marca);
             ps.setString(2, color);
             ps.setString(3, caracteristica);
             try (ResultSet rs = ps.executeQuery()) { //leer el valor
                 while (rs.next()) {//leer los valores devuelto
-                    aux.add(new ConsultaVentas( rs.getString(1),rs.getDate(2),rs.getString(3), rs.getFloat(4), rs.getString(5),rs.getFloat(6)));
+                    aux.add(new ConsultaVentas(rs.getString(1), rs.getDate(2), rs.getString(3), rs.getFloat(4), rs.getString(5), rs.getFloat(6)));
                 }
             }
         }
@@ -344,27 +457,29 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
         LinkedList<ConsultaVentas> aux = new LinkedList<>();
         String sql = "select v.idventa,c.nombres,v.tipodoc,v.seriedoc,v.numdoc,v.fecha,ifnull(v.hora,'00:00'),v.igv,v.subtotal,u.nombre,v.total ,"
                 + "         v.tipo_pago,ts.descripcion,ifnull(fecha_entrega,''),"
-                + "(case v.estado when '1' then 'ENTREGADO' when '0' then 'ANULADO' else 'POR ENTREGAR' end) estado,ifnull(a_cuenta,0),ifnull(descuento,0) \n"
+                + "v.estado estado,"
+                + "ifnull(a_cuenta,0),ifnull(descuento,0),c.dni \n"
                 + "from ventas v \n"
                 + "inner join usuarios u on u.idusuario=v.idusuario\n"
                 + "inner join clientes c on c.idcliente=v.idcliente\n"
                 + "inner join tipos_servicio ts on ts.idtiposervicio = v.idtiposervicio\n"
                 + "where v.numdoc = ? and v.estado <> '0'\n"
                 + "order by v.fecha,v.hora";
-        System.out.println("sql Lista pendientes: "+sql);
+        System.out.println("sql Lista pendientes: " + sql);
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
             ps.setString(1, numdoc);
             try (ResultSet rs = ps.executeQuery()) { //leer el valor
                 while (rs.next()) {//leer los valores devuelto
-                    aux.add(new ConsultaVentas(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6), rs.getString(7), 
-                                                rs.getFloat(8), rs.getFloat(9), rs.getString(10), rs.getFloat(11),
-                                                rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15), rs.getFloat(16), rs.getFloat(17)));
+                    aux.add(new ConsultaVentas(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDate(6), rs.getString(7),
+                            rs.getFloat(8), rs.getFloat(9), rs.getString(10), rs.getFloat(11),
+                            rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
+                            rs.getFloat(16), rs.getFloat(17), rs.getString(18)));
                 }
             }
         }
         return aux;
     }
-    
+
     private static LinkedList<ProductoDetalle> Detalle(int idventa) throws SQLException, ClassNotFoundException {
         LinkedList<ProductoDetalle> aux = new LinkedList<>();
         String sql = "select dv.idproducto,dv.cantidad,ifnull(dv.descripcion_producto,'') descripcion_producto,dv.precio,dv.importe \n"
@@ -382,33 +497,44 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
         }
         return aux;
     }
-    private static LinkedList<ConsultaVentas2> datosVentaPre(int idVenta) throws SQLException, ClassNotFoundException {
+
+    private static LinkedList<ConsultaVentas2> datosVentaPre(Date fecIni, Date fecFin, int idVenta) throws SQLException, ClassNotFoundException {
         LinkedList<ConsultaVentas2> aux = new LinkedList<>();
-        String sql = "select v.idventa,v.seriedoc,v.numdoc,\n" +
-                        "trim(concat(ifnull(cli.nombres,''))) cliente,\n" +
-                        "v.fecha,\n" +
-                        "v.total-ifnull(v.descuento,0) importe,\n" +
-                        "ifnull(v.tipo_pago,'Contado') forma_pago,\n" +
-                        "case when cli.dni= '11111111' then '00000000' \n" +
-                        "else cli.dni end nrodocumento,\n" +
-                        "cli.direccion,\n" +
-                        "f_descripcion_monto(v.total-ifnull(v.descuento,0),'SOLES') descripcion_monto,\n" +
-                        "ifnull(v.descuento,0) descuento ,\n" +
-                        "case when td.value = '03' then '10' else '20' end tipo_igv,\n" +
-                        "cli.tipo,\n" +
-                        "ifnull(cli.correo,''),\n" +
-                        "ifnull(v.codigoqr,''),\n" +
-                        "ifnull(v.xmlhash,''),\n" +
-                        "td.tipodoc_id,td.nombre,td.value,\n" +
-                        "ts.idtiposervicio,ts.descripcion,v.igv\n" +
-                        "from ventas v \n" +
-                        "inner join clientes cli on v.idcliente=cli.idcliente\n" +
-                        "inner join tipodoc td on td.tipodoc_id = v.tipodoc_id\n" +
-                        "inner join tipos_servicio ts on ts.idtiposervicio = v.idtiposervicio "
-                + "where v.idventa = ?";
+        String sql = "select v.idventa,v.seriedoc,v.numdoc,\n"
+                + "trim(concat(ifnull(cli.nombres,''))) cliente,\n"
+                + "v.fecha,\n"
+                + "v.total-ifnull(v.descuento,0) importe,\n"
+                + "ifnull(v.tipo_pago,'Contado') forma_pago,\n"
+                + "case when cli.dni= '11111111' then '00000000' \n"
+                + "else cli.dni end nrodocumento,\n"
+                + "cli.direccion,\n"
+                + "f_descripcion_monto(v.total-ifnull(v.descuento,0),'SOLES') descripcion_monto,\n"
+                + "ifnull(v.descuento,0) descuento ,\n"
+                + "'10' tipo_igv,\n"
+                + "cli.tipo,\n"
+                + "ifnull(cli.correo,''),\n"
+                + "ifnull(v.codigoqr,''),\n"
+                + "ifnull(v.xmlhash,''),\n"
+                + "td.tipodoc_id,td.nombre,td.value,\n"
+                + "ts.idtiposervicio,ts.descripcion,v.igv,ifnull(serieDocE,'') serieDocE,"
+                + "ifnull(numDocE,0) numDocE, ifnull(fecha_entrega,'') fecha_entrega,"
+                + "ifnull(envio_pse_flag,'') envio_pse_flag, ifnull(envio_pse_mensaje,'') envio_pse_mensaje,\n"
+                + "ifnull(v.a_cuenta,0) a_cuenta,"
+                + "ifnull(v.recibido,0) recibido,"
+                + "ifnull(v.vuelto,0) vuelto "
+                + "from ventas v \n"
+                + "inner join clientes cli on v.idcliente=cli.idcliente\n"
+                + "left join tipodoc td on td.tipodoc_id = v.tipodoc_id\n"
+                + "inner join tipos_servicio ts on ts.idtiposervicio = v.idtiposervicio "
+                + "where ((? = 0 and "
+                + "         v.fecha between ? and ? and v.estado = '1' and td.value <> '00') or (v.idventa  = ?)) "
+                + "order by v.idventa desc";
         System.out.println("VentasADN/datosVenta/sql:" + sql);
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
             ps.setInt(1, idVenta);
+            ps.setDate(2, fecIni);
+            ps.setDate(3, fecFin);
+            ps.setInt(4, idVenta);
             try (ResultSet rs = ps.executeQuery()) { //leer el valor
                 while (rs.next()) {//leer los valores devuelto
                     aux.add(new ConsultaVentas2(rs.getInt(1), rs.getString(2),
@@ -416,8 +542,65 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
                             rs.getFloat(6), rs.getString(7),
                             rs.getString(8), rs.getString(9), rs.getString(10), rs.getFloat(11),
                             rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
-                            rs.getString(16), new TipoDoc(rs.getInt(17), rs.getString(18), rs.getString(19), null), 
-                            new Tipos_Servicio( rs.getInt(20),  rs.getString(21), null), rs.getFloat(22)));
+                            rs.getString(16), new TipoDoc(rs.getInt(17), rs.getString(18), rs.getString(19), null),
+                            new Tipos_Servicio(rs.getInt(20), rs.getString(21), null), rs.getFloat(22),
+                            rs.getString(23), rs.getInt(24),
+                            rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
+                            rs.getFloat(30)));
+                }
+            }
+        }
+        return aux;
+    }
+    private static LinkedList<ConsultaVentas2> datosVentaPreE(Date fecIni, Date fecFin, int idVenta) throws SQLException, ClassNotFoundException {
+        LinkedList<ConsultaVentas2> aux = new LinkedList<>();
+        String sql = "select v.idventa,v.seriedoc,v.numdoc,\n"
+                + "trim(concat(ifnull(cli.nombres,''))) cliente,\n"
+                + "v.fecha,\n"
+                + "v.total-ifnull(v.descuento,0) importe,\n"
+                + "ifnull(v.tipo_pago,'Contado') forma_pago,\n"
+                + "case when cli.dni= '11111111' then '00000000' \n"
+                + "else cli.dni end nrodocumento,\n"
+                + "cli.direccion,\n"
+                + "f_descripcion_monto(v.total-ifnull(v.descuento,0),'SOLES') descripcion_monto,\n"
+                + "ifnull(v.descuento,0) descuento ,\n"
+                + "'10' tipo_igv,\n"
+                + "cli.tipo,\n"
+                + "ifnull(cli.correo,''),\n"
+                + "ifnull(v.codigoqr,''),\n"
+                + "ifnull(v.xmlhash,''),\n"
+                + "td.tipodoc_id,td.nombre,td.value,\n"
+                + "ts.idtiposervicio,ts.descripcion,v.igv,ifnull(serieDocE,'') serieDocE,"
+                + "ifnull(numDocE,0) numDocE, ifnull(fecha_entrega,'') fecha_entrega,"
+                + "ifnull(envio_pse_flag,'') envio_pse_flag, ifnull(envio_pse_mensaje,'') envio_pse_mensaje,\n"
+                + "ifnull(v.a_cuenta,0) a_cuenta,"
+                + "ifnull(v.recibido,0) recibido,"
+                + "ifnull(v.vuelto,0) vuelto "
+                + "from ventas v \n"
+                + "inner join clientes cli on v.clienteE_ID=cli.idcliente\n"
+                + "left join tipodoc td on td.tipodoc_id = v.tipodoc_id\n"
+                + "inner join tipos_servicio ts on ts.idtiposervicio = v.idtiposervicio "
+                + "where ((? = 0 and "
+                + "         v.fecha between ? and ? and v.estado in ('1','2') and td.value <> '00') or (v.idventa  = ?)) "
+                + "order by v.idventa desc";
+        System.out.println("VentasADN/datosVenta/sql:" + sql);
+        try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
+            ps.setInt(1, idVenta);
+            ps.setDate(2, fecIni);
+            ps.setDate(3, fecFin);
+            ps.setInt(4, idVenta);
+            try (ResultSet rs = ps.executeQuery()) { //leer el valor
+                while (rs.next()) {//leer los valores devuelto
+                    aux.add(new ConsultaVentas2(rs.getInt(1), rs.getString(2),
+                            rs.getString(3), rs.getString(4), rs.getDate(5),
+                            rs.getFloat(6), rs.getString(7),
+                            rs.getString(8), rs.getString(9), rs.getString(10), rs.getFloat(11),
+                            rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
+                            rs.getString(16), new TipoDoc(rs.getInt(17), rs.getString(18), rs.getString(19), null),
+                            new Tipos_Servicio(rs.getInt(20), rs.getString(21), null), rs.getFloat(22),
+                            rs.getString(23), rs.getInt(24),
+                            rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
+                            rs.getFloat(30)));
                 }
             }
         }
@@ -425,24 +608,24 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
     }
     private static LinkedList<ConsultaVentas2> ListaDetalle(int idventa) throws SQLException, ClassNotFoundException {
         LinkedList<ConsultaVentas2> aux = new LinkedList<>();
-        String sql = "select p.codigo,\n" +
-                    "trim(concat(p.descripcion,' ',ifnull(m.nombre,''), ' ',ifnull(c.nombre,''),' ', ifnull(ca.nombre,''))) descripcion ,d.cantidad,\n" +
-                    "d.precio as precio_venta,d.importe,p.idproducto,\n" +
-                    "ifnull(d.afectacion_igv,0) afectacion_igv\n" +
-                    "from productos p \n" +
-                    "inner join detalleventas d\n" +
-                    "on p.idproducto = d.idproducto\n" +
-                    "left join marcas m on m.idmarca = d.idmarca\n" +
-                    "left join colores c on c.idcolor = d.idcolor\n" +
-                    "left join caracteristicas ca on ca.idcaracteristica = d.idcaracteristica\n" +
-                    "where d.idventa = ?";
+        String sql = "select p.codigo,\n"
+                + "ifnull(d.descripcion_producto,'') descripcion ,d.cantidad,\n"
+                + "d.precio as precio_venta,d.importe,p.idproducto,\n"
+                + "ifnull(d.afectacion_igv,0) afectacion_igv\n"
+                + "from productos p \n"
+                + "inner join detalleventas d\n"
+                + "on p.idproducto = d.idproducto\n"
+                + "left join marcas m on m.idmarca = d.idmarca\n"
+                + "left join colores c on c.idcolor = d.idcolor\n"
+                + "left join caracteristicas ca on ca.idcaracteristica = d.idcaracteristica\n"
+                + "where d.idventa = ?";
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
 
             ps.setInt(1, idventa);
             try (ResultSet rs = ps.executeQuery()) { //leer el valor
                 while (rs.next()) {//leer los valores devuelto
                     aux.add(new ConsultaVentas2(rs.getString(1), rs.getString(2), rs.getFloat(3),
-                rs.getFloat(4), rs.getFloat(5), rs.getInt(6),rs.getFloat(7)));
+                            rs.getFloat(4), rs.getFloat(5), rs.getInt(6), rs.getFloat(7)));
                 }
             }
         }
@@ -466,6 +649,7 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
 //        }
 //        return aux;
 //    }
+
     private static boolean Estado(Ventas ent) throws ClassNotFoundException, SQLException {
         int r = 0;
         String sql = "update ventas set estado=? where idventa = ?";
@@ -477,25 +661,16 @@ private static LinkedList<ConsultaVentas> Lista_productos(String marca,String co
         }
         return r == 1 ? true : false;
     }
-private static boolean Estado2(Ventas ent) throws ClassNotFoundException, SQLException {
-        int r = 0;
-        String sql = "update ventas set estado=?,"
-                + "fecha_entrega = date_format(now(),'%d/%m/%Y %H:%i'),"
-                + "a_cuenta=0,descuento=? where idventa = ?";
-        try (Connection cn = Conexion.Conexion();
-                PreparedStatement pst = cn.prepareStatement(sql)) {
-            pst.setString(1, ent.getEstado());
-            pst.setFloat(2, ent.getDescuento());
-            pst.setInt(3, ent.getIdventa());
-            r = pst.executeUpdate();
-        }
-        return r == 1 ? true : false;
-    }
+
     public static boolean CambiarEstado(Ventas p) throws ClassNotFoundException, SQLException {
         return Estado(p);
     }
-public static boolean Entregar(Ventas p) throws ClassNotFoundException, SQLException {
-        return Estado2(p);
+
+    public static boolean entregarProducto(Ventas p) throws ClassNotFoundException, SQLException {
+        return entregar(p);
+    }
+    public static boolean generarComprobante(Ventas p) throws ClassNotFoundException, SQLException {
+        return facturar(p);
     }
     public static int Guardar(Ventas v) throws ClassNotFoundException, SQLException {
         return Nuevo(v);
@@ -509,32 +684,45 @@ public static boolean Entregar(Ventas p) throws ClassNotFoundException, SQLExcep
         return Nro(doc);
     }
 
-    public static LinkedList<ConsultaVentas> ConsultaVentas(Date fec1, Date fec2, String estado,String cliente) throws SQLException, ClassNotFoundException {
-        return Lista(fec1, fec2, estado,cliente);
+    public static LinkedList<ConsultaVentas> ConsultaVentas(Date fec1, Date fec2, String estado, String cliente) throws SQLException, ClassNotFoundException {
+        return Lista(fec1, fec2, estado, cliente);
     }
+
     public static LinkedList<ConsultaVentas> ConsultaVentasTC(Date fec1, Date fec2, String estado) throws SQLException, ClassNotFoundException {
         return ListaTC(fec1, fec2, estado);
     }
-public static LinkedList<ConsultaVentas> ConsultaProductos(String marca, String color, String carac) throws SQLException, ClassNotFoundException {
+
+    public static LinkedList<ConsultaVentas> ConsultaProductos(String marca, String color, String carac) throws SQLException, ClassNotFoundException {
         return Lista_productos(marca, color, carac);
     }
-    public static LinkedList<ConsultaVentas> ConsultaVentas2(Date fec1, Date fec2,String est) throws SQLException, ClassNotFoundException {
-        return Lista2(fec1, fec2,est);
+
+    public static LinkedList<ConsultaVentas> ConsultaVentas2(Date fec1, Date fec2, String est) throws SQLException, ClassNotFoundException {
+        return Lista2(fec1, fec2, est);
     }
 
     public static LinkedList<ConsultaVentas> ListaVentasPendientes(String numdoc) throws SQLException, ClassNotFoundException {
         return ListaPendiente(numdoc);
     }
+
     public static LinkedList<ProductoDetalle> DetalleVenta(int idventa) throws SQLException, ClassNotFoundException {
         return Detalle(idventa);
     }
-    public static LinkedList<ConsultaVentas2> getDatosVenta(int idVenta) throws SQLException, ClassNotFoundException
-    {
-        return datosVentaPre(idVenta);
+
+    public static LinkedList<ConsultaVentas2> getDatosVenta(Date fecIni, Date fecFin, int idVenta,boolean isForComprobante) throws SQLException, ClassNotFoundException {
+        if(isForComprobante){
+            return datosVentaPreE(fecIni, fecFin, idVenta);
+        }else{
+            return datosVentaPre(fecIni, fecFin, idVenta);
+        }
+        
+    }
+    public static LinkedList<ConsultaVentas2> getDatosVentaFacturacion(Date fecIni, Date fecFin, int idVenta) throws SQLException, ClassNotFoundException {
+        return datosVentaPreE(fecIni, fecFin, idVenta);
     }
     public static LinkedList<ConsultaVentas2> Detalle_Ventas(int idventa) throws SQLException, ClassNotFoundException {
         return ListaDetalle(idventa);
     }
+
     public static boolean updateFlagEnvioPSE(Ventas p) throws ClassNotFoundException, SQLException {
         return flagEnvioPSE(p);
     }

@@ -157,7 +157,7 @@ public class JDAgregarClientes extends javax.swing.JDialog {
                 c.setDni(dn);
                 c.setIdCliente(idcli);
                 boolean respuesta = true;
-                cli = new Clientes(idcli, nom, dn, dir, tel, "1","");
+                cli = new Clientes(idcli, nom, dn, dir, tel, "1","","1");
                 mensaje = "Datos guardados correctamente";
                 
                 if (ClientesADN.Evaluar(c) == 1) {
