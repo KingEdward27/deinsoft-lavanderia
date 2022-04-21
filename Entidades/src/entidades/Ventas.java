@@ -28,16 +28,17 @@ public class Ventas {
     private float descuento;
     private float recibido;
     private float vuelto;
-    private TipoDoc tipoDoc;
-    private String envioPseFlag;
-    private String envioPseMensaje ;
-    private String nroRespuesta ;
-    private String codigoQR;
-    private String xmlHash; 
-    private String serieDocE;
-    private int numDocE;
-    private int indClienteE;
-    
+    private float saldo;
+//    private TipoDoc tipoDoc;
+//    private String envioPseFlag;
+//    private String envioPseMensaje ;
+//    private String nroRespuesta ;
+//    private String codigoQR;
+//    private String xmlHash; 
+//    private String serieDocE;
+//    private int numDocE;
+//    private int indClienteE;
+    private Date fechaPago;
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdventa() {
         return Idventa;
@@ -190,78 +191,78 @@ public class Ventas {
     public void setDescuento(float descuento) {
         this.descuento = descuento;
     }
-
-    public TipoDoc getTipoDoc() {
-        return tipoDoc;
-    }
-
-    public void setTipoDoc(TipoDoc tipoDoc) {
-        this.tipoDoc = tipoDoc;
-    }
-
-    public String getEnvioPseFlag() {
-        return envioPseFlag;
-    }
-
-    public void setEnvioPseFlag(String envioPseFlag) {
-        this.envioPseFlag = envioPseFlag;
-    }
-
-    public String getEnvioPseMensaje() {
-        return envioPseMensaje;
-    }
-
-    public void setEnvioPseMensaje(String envioPseMensaje) {
-        this.envioPseMensaje = envioPseMensaje;
-    }
-
-    public String getNroRespuesta() {
-        return nroRespuesta;
-    }
-
-    public void setNroRespuesta(String nroRespuesta) {
-        this.nroRespuesta = nroRespuesta;
-    }
-
-    public String getCodigoQR() {
-        return codigoQR;
-    }
-
-    public void setCodigoQR(String codigoQR) {
-        this.codigoQR = codigoQR;
-    }
-
-    public String getXmlHash() {
-        return xmlHash;
-    }
-
-    public void setXmlHash(String xmlHash) {
-        this.xmlHash = xmlHash;
-    }
-
-    public String getSerieDocE() {
-        return serieDocE;
-    }
-
-    public void setSerieDocE(String serieDocE) {
-        this.serieDocE = serieDocE;
-    }
-
-    public int getNumDocE() {
-        return numDocE;
-    }
-
-    public void setNumDocE(int numDocE) {
-        this.numDocE = numDocE;
-    }
-
-    public int getIndClienteE() {
-        return indClienteE;
-    }
-
-    public void setIndClienteE(int indClienteE) {
-        this.indClienteE = indClienteE;
-    }
+//
+//    public TipoDoc getTipoDoc() {
+//        return tipoDoc;
+//    }
+//
+//    public void setTipoDoc(TipoDoc tipoDoc) {
+//        this.tipoDoc = tipoDoc;
+//    }
+//
+//    public String getEnvioPseFlag() {
+//        return envioPseFlag;
+//    }
+//
+//    public void setEnvioPseFlag(String envioPseFlag) {
+//        this.envioPseFlag = envioPseFlag;
+//    }
+//
+//    public String getEnvioPseMensaje() {
+//        return envioPseMensaje;
+//    }
+//
+//    public void setEnvioPseMensaje(String envioPseMensaje) {
+//        this.envioPseMensaje = envioPseMensaje;
+//    }
+//
+//    public String getNroRespuesta() {
+//        return nroRespuesta;
+//    }
+//
+//    public void setNroRespuesta(String nroRespuesta) {
+//        this.nroRespuesta = nroRespuesta;
+//    }
+//
+//    public String getCodigoQR() {
+//        return codigoQR;
+//    }
+//
+//    public void setCodigoQR(String codigoQR) {
+//        this.codigoQR = codigoQR;
+//    }
+//
+//    public String getXmlHash() {
+//        return xmlHash;
+//    }
+//
+//    public void setXmlHash(String xmlHash) {
+//        this.xmlHash = xmlHash;
+//    }
+//
+//    public String getSerieDocE() {
+//        return serieDocE;
+//    }
+//
+//    public void setSerieDocE(String serieDocE) {
+//        this.serieDocE = serieDocE;
+//    }
+//
+//    public int getNumDocE() {
+//        return numDocE;
+//    }
+//
+//    public void setNumDocE(int numDocE) {
+//        this.numDocE = numDocE;
+//    }
+//
+//    public int getIndClienteE() {
+//        return indClienteE;
+//    }
+//
+//    public void setIndClienteE(int indClienteE) {
+//        this.indClienteE = indClienteE;
+//    }
 
     public float getRecibido() {
         return recibido;
@@ -279,6 +280,21 @@ public class Ventas {
         this.vuelto = vuelto;
     }
 
+    public Date getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(Date fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+
+    public float getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(float saldo) {
+        this.saldo = saldo;
+    }
 
     
     //</editor-fold>
@@ -288,12 +304,11 @@ public class Ventas {
         lista = new LinkedList<>();
     }
 
-    public Ventas(int Idventa, int idcliente, TipoDoc tipodoc, String Serie, String nro, 
+    public Ventas(int Idventa, int idcliente, String Serie, String nro, 
             Date fecha,String hora, float igv, float subtotal, float total,int idusuario, 
             String estado,float a_cuenta,float descuento) {
         this.Idventa = Idventa;
         this.idcliente = idcliente;
-        this.tipoDoc = tipodoc;
         this.Serie = Serie;
         this.nro = nro;
         this.fecha = fecha;
@@ -307,10 +322,9 @@ public class Ventas {
         this.descuento=descuento;
     }
     
-    public Ventas(int Idventa, int idcliente, TipoDoc tipodoc, String Serie, String nro, Date fecha, float igv, float subtotal, float total) {
+    public Ventas(int Idventa, int idcliente, String Serie, String nro, Date fecha, float igv, float subtotal, float total) {
         this.Idventa = Idventa;
         this.idcliente = idcliente;
-        this.tipoDoc = tipodoc;
         this.Serie = Serie;
         this.nro = nro;
         this.fecha = fecha;
@@ -326,8 +340,10 @@ public class Ventas {
 
     @Override
     public String toString() {
-        return "Ventas{" + "Idventa=" + Idventa + ", idcliente=" + idcliente + ", Serie=" + Serie + ", nro=" + nro + ", fecha=" + fecha + ", hora=" + hora + ", igv=" + igv + ", subtotal=" + subtotal + ", total=" + total + ", idusuario=" + idusuario + ", estado=" + estado + ", idtiposervicio=" + idtiposervicio + ", tipo_pago=" + tipo_pago + ", descripcion_servicio=" + descripcion_servicio + ", fecha_Entrega=" + fecha_Entrega + ", strfecha_Entrega=" + strfecha_Entrega + ", fecha_reg=" + fecha_reg + ", lista=" + lista + ", a_cuenta=" + a_cuenta + ", descuento=" + descuento + ", tipoDoc=" + tipoDoc + ", envioPseFlag=" + envioPseFlag + ", envioPseMensaje=" + envioPseMensaje + ", nroRespuesta=" + nroRespuesta + ", codigoQR=" + codigoQR + ", xmlHash=" + xmlHash + ", serieDocE=" + serieDocE + ", numDocE=" + numDocE + ", indClienteE=" + indClienteE + '}';
+        return "Ventas{" + "Idventa=" + Idventa + ", idcliente=" + idcliente + ", Serie=" + Serie + ", nro=" + nro + ", fecha=" + fecha + ", hora=" + hora + ", igv=" + igv + ", subtotal=" + subtotal + ", total=" + total + ", idusuario=" + idusuario + ", estado=" + estado + ", idtiposervicio=" + idtiposervicio + ", tipo_pago=" + tipo_pago + ", descripcion_servicio=" + descripcion_servicio + ", fecha_Entrega=" + fecha_Entrega + ", strfecha_Entrega=" + strfecha_Entrega + ", fecha_reg=" + fecha_reg + ", lista=" + lista + ", a_cuenta=" + a_cuenta + ", descuento=" + descuento + ", recibido=" + recibido + ", vuelto=" + vuelto + ", fechaPago=" + fechaPago + '}';
     }
+
+    
 
     
     

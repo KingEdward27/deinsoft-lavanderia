@@ -23,6 +23,7 @@ public class Detalle {
         private String descuento_porcentaje;
         private String tipo_igv;
         private String afectacion_igv;
+        private String monto_referencial_unitario;
         public String getCodigo() {
             return codigo;
         }
@@ -93,6 +94,14 @@ public class Detalle {
 
     public void setAfectacion_igv(String afectacion_igv) {
         this.afectacion_igv = afectacion_igv;
+    }
+
+    public String getMonto_referencial_unitario() {
+        return monto_referencial_unitario;
+    }
+
+    public void setMonto_referencial_unitario(String monto_referencial_unitario) {
+        this.monto_referencial_unitario = monto_referencial_unitario;
     }
 
         

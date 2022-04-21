@@ -21,6 +21,7 @@ import entidades.Productos;
 import entidades.Tipos_Servicio;
 import entidades.Ventas;
 import entidades.Clientes;
+import entidades.Ingresos;
 import entidades.Parametros;
 import facturacionelectronica.JDConfirmacion;
 import java.sql.Date;
@@ -820,7 +821,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
                         Clientes c = new Clientes();
                         c.setNombres(cbxClientes.getSelectedItem().toString());
                         aux.setIdcliente(ClientesADN.CapturaIDCliente(c));
-                        aux.setTipoDoc(null);
+//                        aux.setTipoDoc(null);
                         aux.setSerie(tbxserie.getText().trim());
                         aux.setNro(tbxnrodocumento.getText().trim());
 //                        aux.setSerieDocE(tbxserie1.getText().trim());
@@ -863,17 +864,20 @@ public class JIVentas extends javax.swing.JInternalFrame {
                         aux.setLista(dv);
                         System.out.println("venta: " + aux.toString());
                         int idVenta = VentasADN.Guardar(aux);
+                        
                         if (idVenta > 0) {
+                            
                             JOptionPane.showMessageDialog(rootPane, ":. Venta Efectuada .:");
                             try {
                                 jlblEstado.setText("Imprimiendo ticket...");
-                                JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta, true,ParametrosADN.Lista().get(0).getNombreImpresora());
+                                JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta, true,ParametrosADN.Lista().get(0).getNombreImpresora(),"v",idVenta,"0");
                                 dialog.setLocationRelativeTo(this);
                                 dialog.setVisible(true);
                             } catch (Exception ex) {
                                 System.out.println(Util.exceptionToString(ex));
                                 ex.printStackTrace(System.out);
                             }
+                            jbtnNuevoActionPerformed(evt);
                             jbtnNuevoActionPerformed(evt);
                             jlblEstado.setText("");
                         }

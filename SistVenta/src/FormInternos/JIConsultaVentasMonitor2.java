@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 package FormInternos;
+
 import Adicional.AutoCompletion;
 import Adicional.Util;
+import static FormInternos.JIListaVentasPendientes.valorIGV;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
@@ -36,11 +38,14 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -52,6 +57,7 @@ import javax.swing.JFileChooser;
 import javax.swing.table.TableModel;
 import jxl.write.*;
 import jxl.*;
+
 /**
  *
  * @author EDWARD
@@ -176,7 +182,6 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
         jLabel14.setForeground(new java.awt.Color(204, 0, 0));
         jLabel14.setText("0");
 
-        btnimprimir1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/excel (1).png"))); // NOI18N
         btnimprimir1.setText("Exportar");
         btnimprimir1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,13 +257,13 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Idventa", "Tipo", "Documento Elec.", "Cliente", "Fecha", "F. Entrega", "Importe total", "Enviado", "Respuesta"
+                "Idventa_IdIngreso", "Tipo", "Documento Elec.", "Cliente", "Fecha", "F. Entrega", "Importe total", "Enviado", "Respuesta", "Tipo", "idventa", "Es adelanto", "Ticket"
             }
         ));
         jTable1.setComponentPopupMenu(jPopupMenu1);
@@ -275,7 +280,7 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 796, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 906, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -302,7 +307,7 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbxtotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -313,22 +318,37 @@ void OcultarColumna(int columna) {
         jTable1.getColumnModel().getColumn(columna).setPreferredWidth(0);
     }
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        dtm = (DefaultTableModel) jTable1.getModel();
-        OcultarColumna(0);
-        Util.AlinearDerecha(jTable1, 6);
-//        OcultarColumna(2);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(120);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(250);
-        jTable1.getColumnModel().getColumn(5).setPreferredWidth(140);
-        jTable1.getColumnModel().getColumn(7).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(8).setPreferredWidth(350);
+        System.out.println("abriendo form JIConsultaVentasMonitor2");
+        try {
+            dtm = (DefaultTableModel) jTable1.getModel();
+            OcultarColumna(0);
+            OcultarColumna(9);
+            OcultarColumna(10);
+            OcultarColumna(11);
+            Util.AlinearDerecha(jTable1, 6);
+            //        OcultarColumna(2);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(80);
+            jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
+            jTable1.getColumnModel().getColumn(3).setPreferredWidth(250);
+            jTable1.getColumnModel().getColumn(5).setPreferredWidth(140);
+            jTable1.getColumnModel().getColumn(7).setPreferredWidth(70);
+            jTable1.getColumnModel().getColumn(8).setPreferredWidth(350);
+            jTable1.getColumnModel().getColumn(12).setPreferredWidth(150);
+//            Util.ModificarTamañoJtable(jTable1,2,150);
+//            Util.ModificarTamañoJtable(jTable1,3,250);
+//            Util.ModificarTamañoJtable(jTable1,8,350);
+//            Util.ModificarTamañoJtable(jTable1,12,150);
+//            Util.ModificarTamañoJtable(jTable1,12,100);
+        } catch (Exception e) {
+            System.out.println(Util.exceptionToString(e));
+        }
+
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btnmostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmostrarActionPerformed
         try {
             VerDatos();
-            int nrofilas = 0,totalEnviados=0;
+            int nrofilas = 0, totalEnviados = 0;
             float totalventas = 0;
             int filas = jTable1.getRowCount();
             if (filas > 0) {
@@ -336,10 +356,11 @@ void OcultarColumna(int columna) {
                     nrofilas += 1;
                     totalventas += Float.parseFloat(dtm.getValueAt(i, 6).toString());
                     String flag = dtm.getValueAt(i, 7).toString();
-                    if(flag.equals("1")){
+                    if (flag.equals("SI")) {
                         totalEnviados = totalEnviados + 1;
                     }
                 }
+
             } else {
                 totalventas = 0;
                 nrofilas = 0;
@@ -347,7 +368,8 @@ void OcultarColumna(int columna) {
             jLabel12.setText(String.valueOf(nrofilas));
             jLabel13.setText(String.valueOf(totalEnviados));
             jLabel14.setText(String.valueOf(nrofilas - totalEnviados));
-            
+            tbxnroventas.setText(String.valueOf(nrofilas));
+            tbxtotal.setText(String.valueOf(totalventas));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, e.toString());
         }
@@ -366,6 +388,8 @@ void OcultarColumna(int columna) {
         int fila = jTable1.getSelectedRow();
         String enviado = jTable1.getValueAt(fila, 7).toString();
         String tipoDoc = jTable1.getValueAt(fila, 1).toString();
+        String flagAdelanto = jTable1.getValueAt(fila, 11).toString();
+        float monto = Float.parseFloat(jTable1.getValueAt(fila, 6).toString()) ;
         if (enviado.toLowerCase().equals("si")) {
             JOptionPane.showMessageDialog(rootPane, ":. El documento ya se ha enviado :( .:");
             return;
@@ -374,19 +398,37 @@ void OcultarColumna(int columna) {
             JOptionPane.showMessageDialog(rootPane, ":. El documento NOTA DE VENTA no se puede enviar :( .:");
             return;
         }
-        int idVenta = Integer.parseInt(jTable1.getValueAt(fila, 2).toString());
+        int idVentaOIngreso = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+        String tipoF = jTable1.getValueAt(fila, 9).toString();
+        int idVenta = Integer.parseInt(jTable1.getValueAt(fila, 10).toString());
         ConsultaVentas2 datosVenta = null;
         List<ConsultaVentas2> datosVentaDetalle = null;
         try {
-            datosVenta = VentasADN.getDatosVenta(null, null, idVenta,true).get(0);
-            datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+
+            if (tipoF.equals("v")) {
+                datosVenta = VentasADN.getDatosVenta(null, null, idVentaOIngreso, false).get(0);
+            } else {
+                datosVenta = VentasADN.getDatosVenta2(null, null, idVentaOIngreso, false).get(0);
+            }
+            if (flagAdelanto.equals("1")) {
+                datosVentaDetalle = new ArrayList<>();
+//                                String codigo, String producto, float cantidad, float precio, 
+//                                float importe,int idproducto,float afectacionIGV
+                datosVentaDetalle.add(new ConsultaVentas2("-",
+                        "ADELANTO DE " + Formatos.df.format(monto) + "DE PAGO DE SERVICIO ",
+                        1, monto,
+                        monto, 0, monto - (monto / (1 + valorIGV))));
+            } else {
+                datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            }
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
-            Logger.getLogger(JIConsultaVentasMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
             return;
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
-            Logger.getLogger(JIConsultaVentasMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
             return;
         }
 
@@ -399,20 +441,20 @@ void OcultarColumna(int columna) {
             resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
 
             if (resultEnvioPSE.isResult()) {
-                Ventas doc = new Ventas();
-                doc.setIdventa(idVenta);
+                Ingresos doc = new Ingresos();
+                doc.setIdIngreso(idVentaOIngreso);
                 doc.setEnvioPseFlag("1");
                 doc.setEnvioPseMensaje("Recibido correctamente");
                 doc.setNroRespuesta(resultEnvioPSE.getId());
                 doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
                 doc.setXmlHash(resultEnvioPSE.getXmlHash());
-                VentasADN.updateFlagEnvioPSE(doc);
+                IngresosADN.updateFlagEnvioPSE(doc);
             } else {
-                Ventas doc = new Ventas();
-                doc.setIdventa(idVenta);
+                Ingresos doc = new Ingresos();
+                doc.setIdIngreso(idVentaOIngreso);
                 doc.setEnvioPseFlag("0");
                 doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
-                VentasADN.updateFlagEnvioPSE(doc);
+                IngresosADN.updateFlagEnvioPSE(doc);
                 JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
             }
         } catch (Exception e) {
@@ -429,11 +471,11 @@ void OcultarColumna(int columna) {
                 } else {
                     if (resultEnvioPSE.getPdfRespuesta() != null) {
                         Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerieDocE() + "-"
-                            + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
+                                + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
                     }
                     if (resultEnvioPSE.getXmlRespuesta() != null) {
                         Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerieDocE() + "-"
-                            + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
+                                + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
                     }
                 }
             } catch (Exception e) {
@@ -442,6 +484,13 @@ void OcultarColumna(int columna) {
                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + e.toString());
             }
 
+        }
+        try {
+            VerDatos();
+        } catch (SQLException ex) {
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (resultEnvioPSE.isResult()) {
             JOptionPane.showMessageDialog(rootPane, ":. Enviado correctamente! :) .:");
@@ -517,8 +566,14 @@ void OcultarColumna(int columna) {
             String fec2 = Formatos.sdfFecha.format(jdprFecFinal.getDate());
             Date fechasql1 = Formatos.FechaSQL(fec1);
             Date fechasql2 = Formatos.FechaSQL(fec2);
+            List<ConsultaVentas2> list = VentasADN.getDatosVenta(fechasql1, fechasql2, 0, true);
+            list.addAll(VentasADN.getDatosVenta2(fechasql1, fechasql2, 0, true));
 
-            for (ConsultaVentas2 la : VentasADN.getDatosVenta(fechasql1, fechasql2, 0,true)) {
+            List<ConsultaVentas2> sortedList = list.stream()
+                    .sorted(Comparator.comparingInt(ConsultaVentas2::getNumDocE).reversed())
+                    .collect(Collectors.toList());
+
+            for (ConsultaVentas2 la : sortedList) {
                 dtm.addRow(la.arregloDatosMonitor());
             }
 //            FormatoTabla ft  = new FormatoTabla();
@@ -527,6 +582,7 @@ void OcultarColumna(int columna) {
             JOptionPane.showMessageDialog(rootPane, e.toString());
         }
     }
+
     void Imprimir() {
         try {
             //creamos un documento
@@ -750,17 +806,22 @@ void OcultarColumna(int columna) {
             JOptionPane.showMessageDialog(rootPane, "Error al imprimir reporte: " + e.getMessage());
         }
     }
+
     private boolean imprimir(int tipo) throws NumberFormatException, HeadlessException {
         try {
             int fila = jTable1.getSelectedRow();
             String enviado = jTable1.getValueAt(fila, 7).toString();
             String tipoDoc = jTable1.getValueAt(fila, 1).toString();
-            if (enviado.toLowerCase().equals("no")) {
-                JOptionPane.showMessageDialog(rootPane, ":. No puede imprimir el documento ya que aun no se ha enviado :( .:");
-                return true;
-            }
-            int idVenta = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
-            JDConfirmacion dialog = new JDConfirmacion(null, closable, idVenta,false, ParametrosADN.Lista().get(0).getNombreImpresora());
+            String tipoF = jTable1.getValueAt(fila, 9).toString();
+            String flagAdelanto = jTable1.getValueAt(fila, 11).toString();
+            int idVenta = Integer.parseInt(jTable1.getValueAt(fila, 10).toString());
+//            if (enviado.toLowerCase().equals("no")) {
+//                JOptionPane.showMessageDialog(rootPane, ":. No puede imprimir el documento ya que aun no se ha enviado :( .:");
+//                return true;
+//            }
+            int idVentaIngreso = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+            JDConfirmacion dialog = new JDConfirmacion(null, closable, idVentaIngreso, false,
+                    ParametrosADN.Lista().get(0).getNombreImpresora(), tipoF, idVenta,flagAdelanto);
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
 //            int idVenta = Integer.parseInt(jTable1.getValueAt(fila, 2).toString());
@@ -777,221 +838,218 @@ void OcultarColumna(int columna) {
         }
         return false;
     }
+
     void Imprimir2() throws FileNotFoundException, DocumentException, IOException, SQLException, ClassNotFoundException {
 //        try {
-            //creamos un documento
-            Document doc = new Document(PageSize.A4, 30f, 20f, 50f, 20f);
-            OutputStream archivo = new FileOutputStream("Reporte_ventas.pdf");
-            PdfWriter.getInstance(doc, archivo);
+        //creamos un documento
+        Document doc = new Document(PageSize.A4, 30f, 20f, 50f, 20f);
+        OutputStream archivo = new FileOutputStream("Reporte_ventas.pdf");
+        PdfWriter.getInstance(doc, archivo);
 
-            //abrimos el archivo
-            doc.open();
-            Paragraph encabezado = new Paragraph("Reporte de ventas2", FontFactory.getFont("arial", 24, Font.BOLD));
-            encabezado.setAlignment(encabezado.ALIGN_CENTER);
-            Paragraph separacion = new Paragraph("\n");
-            Paragraph fecha1 = new Paragraph("Del: " + Formatos.sdfFecha.format(jdprFecInicial.getDate()) + "   " + "Al: " + Formatos.sdfFecha.format(jdprFecInicial.getDate()));
-            fecha1.setAlignment(fecha1.ALIGN_CENTER);
+        //abrimos el archivo
+        doc.open();
+        Paragraph encabezado = new Paragraph("Reporte de ventas2", FontFactory.getFont("arial", 24, Font.BOLD));
+        encabezado.setAlignment(encabezado.ALIGN_CENTER);
+        Paragraph separacion = new Paragraph("\n");
+        Paragraph fecha1 = new Paragraph("Del: " + Formatos.sdfFecha.format(jdprFecInicial.getDate()) + "   " + "Al: " + Formatos.sdfFecha.format(jdprFecInicial.getDate()));
+        fecha1.setAlignment(fecha1.ALIGN_CENTER);
 //            Paragraph fecha2 = new Paragraph();
-            Paragraph linea = new Paragraph("-------------------------------------------------------------------------------------------------------------------------------------");
+        Paragraph linea = new Paragraph("-------------------------------------------------------------------------------------------------------------------------------------");
 
-            BaseFont tipo = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
-            Font fuente = new Font(tipo, 13, Font.BOLD, BaseColor.BLUE);
-            Paragraph totales = new Paragraph("Nro ventas: " + tbxnroventas.getText() + "                                                                                                   " + "Total: " + tbxtotal.getText(), fuente);
+        BaseFont tipo = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
+        Font fuente = new Font(tipo, 13, Font.BOLD, BaseColor.BLUE);
+        Paragraph totales = new Paragraph("Nro ventas: " + tbxnroventas.getText() + "                                                                                                   " + "Total: " + tbxtotal.getText(), fuente);
 
-            //creamos la tabla para las filas del jtable
-            PdfPTable tabla = new PdfPTable(8);
-            tabla.getDefaultCell().setBorder(0);
-            tabla.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-            int[] ancho = new int[]{50, 50, 50, 90, 200, 50, 50, 100};
-            tabla.setWidths(ancho);
-            //tabla.setSpacingBefore(50);
-            tabla.setWidthPercentage(100);
-            PdfPCell cell = new PdfPCell(new Phrase("Nro", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
-            cell.setBorderWidthBottom(1);
-            cell.setBackgroundColor(BaseColor.GRAY);
-            tabla.addCell(cell);
+        //creamos la tabla para las filas del jtable
+        PdfPTable tabla = new PdfPTable(8);
+        tabla.getDefaultCell().setBorder(0);
+        tabla.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
+        int[] ancho = new int[]{50, 50, 50, 90, 200, 50, 50, 100};
+        tabla.setWidths(ancho);
+        //tabla.setSpacingBefore(50);
+        tabla.setWidthPercentage(100);
+        PdfPCell cell = new PdfPCell(new Phrase("Nro", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
+        cell.setBorderWidthBottom(1);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        tabla.addCell(cell);
 
-            cell = new PdfPCell(new Phrase("Serie", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
-            cell.setBorderWidthBottom(1);
-            cell.setBackgroundColor(BaseColor.GRAY);
-            tabla.addCell(cell);
+        cell = new PdfPCell(new Phrase("Serie", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
+        cell.setBorderWidthBottom(1);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        tabla.addCell(cell);
 
-            cell = new PdfPCell(new Phrase("Numero", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
-            cell.setBorderWidthBottom(1);
-            cell.setBackgroundColor(BaseColor.GRAY);
-            tabla.addCell(cell);
+        cell = new PdfPCell(new Phrase("Numero", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
+        cell.setBorderWidthBottom(1);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        tabla.addCell(cell);
 
-            cell = new PdfPCell(new Phrase("Tipo", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
-            cell.setBorderWidthBottom(1);
-            cell.setBackgroundColor(BaseColor.GRAY);
-            tabla.addCell(cell);
-            
-            cell = new PdfPCell(new Phrase("Cliente", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
-            cell.setBorderWidthBottom(1);
-            cell.setBackgroundColor(BaseColor.GRAY);
-            tabla.addCell(cell);
+        cell = new PdfPCell(new Phrase("Tipo", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
+        cell.setBorderWidthBottom(1);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        tabla.addCell(cell);
 
-            PdfPCell cell0 = new PdfPCell(new Phrase("Fecha de venta", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
-            cell0.setBorderWidthBottom(1);
-            cell0.setBackgroundColor(BaseColor.GRAY);
+        cell = new PdfPCell(new Phrase("Cliente", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
+        cell.setBorderWidthBottom(1);
+        cell.setBackgroundColor(BaseColor.GRAY);
+        tabla.addCell(cell);
 
-            cell0.setColspan(2);
+        PdfPCell cell0 = new PdfPCell(new Phrase("Fecha de venta", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
+        cell0.setBorderWidthBottom(1);
+        cell0.setBackgroundColor(BaseColor.GRAY);
 
-            tabla.addCell(cell0);
+        cell0.setColspan(2);
 
-            cell = new PdfPCell(new Phrase("Importe total", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
-            cell.setBorderWidthBottom(1);
-            cell.setBackgroundColor(BaseColor.GRAY);
+        tabla.addCell(cell0);
 
-            tabla.addCell(cell);
+        cell = new PdfPCell(new Phrase("Importe total", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.BOLD, BaseColor.BLACK)));
+        cell.setBorderWidthBottom(1);
+        cell.setBackgroundColor(BaseColor.GRAY);
 
+        tabla.addCell(cell);
 
-            PdfPTable tabla2 = new PdfPTable(8);
-            tabla2.getDefaultCell().setBorder(0);
-            int[] ancho2 = new int[]{50, 50, 50, 90, 200, 50, 50, 100};
+        PdfPTable tabla2 = new PdfPTable(8);
+        tabla2.getDefaultCell().setBorder(0);
+        int[] ancho2 = new int[]{50, 50, 50, 90, 200, 50, 50, 100};
 
-            tabla2.setWidths(ancho2);
-            tabla2.setWidthPercentage(100);
+        tabla2.setWidths(ancho2);
+        tabla2.setWidthPercentage(100);
 
-            int filas = jTable1.getRowCount();
-            int idventa = 0;
-            for (int i = 0; i < filas; i++) {
-                idventa = Integer.parseInt(dtm.getValueAt(i, 0).toString());
+        int filas = jTable1.getRowCount();
+        int idventa = 0;
+        for (int i = 0; i < filas; i++) {
+            idventa = Integer.parseInt(dtm.getValueAt(i, 0).toString());
 
-                PdfPCell cellx = new PdfPCell(new Phrase(String.valueOf(i + 1), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                cellx.setBorder(0);
-                tabla2.addCell(cellx);
+            PdfPCell cellx = new PdfPCell(new Phrase(String.valueOf(i + 1), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            cellx.setBorder(0);
+            tabla2.addCell(cellx);
 
-                cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 0).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                cellx.setBorder(0);
-                tabla2.addCell(cellx);
+            cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 0).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            cellx.setBorder(0);
+            tabla2.addCell(cellx);
 
-                cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 1).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                cellx.setBorder(0);
-                tabla2.addCell(cellx);
+            cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 1).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            cellx.setBorder(0);
+            tabla2.addCell(cellx);
 
-                cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 2).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                cellx.setBorder(0);
-                tabla2.addCell(cellx);
-                
-                cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 3).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                cellx.setBorder(0);
-                tabla2.addCell(cellx);
+            cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 2).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            cellx.setBorder(0);
+            tabla2.addCell(cellx);
 
-                cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 4).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                cellx.setColspan(2);
-                cellx.setBorder(0);
-                tabla2.addCell(cellx);
+            cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 3).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            cellx.setBorder(0);
+            tabla2.addCell(cellx);
 
-                cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 6).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 4).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            cellx.setColspan(2);
+            cellx.setBorder(0);
+            tabla2.addCell(cellx);
 
-                cellx.setBorder(0);
-                cellx.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                tabla2.addCell(cellx);
+            cellx = new PdfPCell(new Phrase(dtm.getValueAt(i, 6).toString(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
 
-                //tabla2.addCell(dtm.getValueAt(i, 5).toString());
+            cellx.setBorder(0);
+            cellx.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            tabla2.addCell(cellx);
 
-                PdfPCell cell1 = new PdfPCell(new Phrase("", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                PdfPCell cell2 = new PdfPCell(new Phrase("", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                PdfPCell cell3 = new PdfPCell(new Phrase("Nro", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                //PdfPCell cell4 = new PdfPCell(new Phrase("Codigo", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                PdfPCell cell5 = new PdfPCell(new Phrase("Producto", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                PdfPCell cell6 = new PdfPCell(new Phrase("Cantidad", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                PdfPCell cell7 = new PdfPCell(new Phrase("Precio", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                PdfPCell cell8 = new PdfPCell(new Phrase("Importe", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            //tabla2.addCell(dtm.getValueAt(i, 5).toString());
+            PdfPCell cell1 = new PdfPCell(new Phrase("", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            PdfPCell cell2 = new PdfPCell(new Phrase("", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            PdfPCell cell3 = new PdfPCell(new Phrase("Nro", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            //PdfPCell cell4 = new PdfPCell(new Phrase("Codigo", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            PdfPCell cell5 = new PdfPCell(new Phrase("Producto", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            PdfPCell cell6 = new PdfPCell(new Phrase("Cantidad", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            PdfPCell cell7 = new PdfPCell(new Phrase("Precio", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+            PdfPCell cell8 = new PdfPCell(new Phrase("Importe", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
 
-                cell1.setBorderWidthBottom(0);
-                cell1.setBorderWidthTop(0);
-                cell1.setBorderWidthLeft(0);
-                cell1.setBorderWidthRight(0);
+            cell1.setBorderWidthBottom(0);
+            cell1.setBorderWidthTop(0);
+            cell1.setBorderWidthLeft(0);
+            cell1.setBorderWidthRight(0);
 
-                cell2.setBorderWidthBottom(1);
-                cell3.setBorderWidthBottom(1);
+            cell2.setBorderWidthBottom(1);
+            cell3.setBorderWidthBottom(1);
 //                cell4.setBorderWidthBottom(1);
-                cell5.setBorderWidthBottom(1);
-                cell6.setBorderWidthBottom(1);
-                cell7.setBorderWidthBottom(1);
-                cell8.setBorderWidthBottom(1);
+            cell5.setBorderWidthBottom(1);
+            cell6.setBorderWidthBottom(1);
+            cell7.setBorderWidthBottom(1);
+            cell8.setBorderWidthBottom(1);
 
-                cell2.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                cell3.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell2.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell3.setBackgroundColor(BaseColor.LIGHT_GRAY);
 //                cell4.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                cell5.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                cell6.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                cell7.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                cell8.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell5.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell6.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell7.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell8.setBackgroundColor(BaseColor.LIGHT_GRAY);
 
-                tabla2.addCell(cell1);
-                tabla2.addCell(cell2);
-                tabla2.addCell(cell3);
+            tabla2.addCell(cell1);
+            tabla2.addCell(cell2);
+            tabla2.addCell(cell3);
 //                tabla2.addCell(cell4);
-                tabla2.addCell(cell5);
-                tabla2.addCell(cell6);
-                tabla2.addCell(cell7);
-                tabla2.addCell(cell8);
-                int o = 0;
-                
-                for (ProductoDetalle j : VentasADN.DetalleVenta(idventa)) {
-                    tabla2.addCell("");
-                    tabla2.addCell("");
-                    o++;
-                    PdfPCell celld_0  = new PdfPCell(new Phrase(String.valueOf(o), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                    celld_0.setBorderWidth(0);
-                    
+            tabla2.addCell(cell5);
+            tabla2.addCell(cell6);
+            tabla2.addCell(cell7);
+            tabla2.addCell(cell8);
+            int o = 0;
+
+            for (ProductoDetalle j : VentasADN.DetalleVenta(idventa)) {
+                tabla2.addCell("");
+                tabla2.addCell("");
+                o++;
+                PdfPCell celld_0 = new PdfPCell(new Phrase(String.valueOf(o), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+                celld_0.setBorderWidth(0);
+
 //                    PdfPCell  celld_0_1  = new PdfPCell(new Phrase("--", new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
 //                    celld_0_1.setBorderWidth(0);
-                    
-                    PdfPCell celld_1  = new PdfPCell(new Phrase(j.getDescripcion(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                    celld_1.setBorderWidth(0);
-                    
-                    PdfPCell celld_2  = new PdfPCell(new Phrase(Formatos.df.format(j.getCantidad()) , new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                    celld_2.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
-                    celld_2.setBorderWidth(0);
-                    
-                    PdfPCell celld_3  = new PdfPCell(new Phrase(Formatos.df.format(j.getPrecio()) , new com.itextpdf.text.Font(tipo, 8, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                    celld_3.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
-                    celld_3.setBorderWidth(0);
-                    
-                    PdfPCell celld_4 = new PdfPCell(new Phrase(Formatos.df.format(j.getImporte()), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
-                    celld_4.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
-                    celld_4.setBorderWidth(0);
-                    
-                    //celld_1.setColspan(2);
-                    tabla2.addCell( celld_0);
-                                        
+                PdfPCell celld_1 = new PdfPCell(new Phrase(j.getDescripcion(), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+                celld_1.setBorderWidth(0);
+
+                PdfPCell celld_2 = new PdfPCell(new Phrase(Formatos.df.format(j.getCantidad()), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+                celld_2.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+                celld_2.setBorderWidth(0);
+
+                PdfPCell celld_3 = new PdfPCell(new Phrase(Formatos.df.format(j.getPrecio()), new com.itextpdf.text.Font(tipo, 8, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+                celld_3.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+                celld_3.setBorderWidth(0);
+
+                PdfPCell celld_4 = new PdfPCell(new Phrase(Formatos.df.format(j.getImporte()), new com.itextpdf.text.Font(tipo, 9, com.itextpdf.text.Font.NORMAL, BaseColor.BLACK)));
+                celld_4.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_RIGHT);
+                celld_4.setBorderWidth(0);
+
+                //celld_1.setColspan(2);
+                tabla2.addCell(celld_0);
+
 //                    tabla2.addCell( celld_0_1);
-                    tabla2.addCell( celld_1);
-                    tabla2.addCell( celld_2);
-                    tabla2.addCell( celld_3);
-                    tabla2.addCell( celld_4);
-                }
-                
-                
-                tabla2.addCell(" ");
-                tabla2.addCell(" ");
-                tabla2.addCell(" ");
-                tabla2.addCell(" ");
-                tabla2.addCell(" ");
-                tabla2.addCell(" ");
-                tabla2.addCell(" ");
-                tabla2.addCell(" ");
+                tabla2.addCell(celld_1);
+                tabla2.addCell(celld_2);
+                tabla2.addCell(celld_3);
+                tabla2.addCell(celld_4);
             }
 
-            //le añadimos los elementos al documento
-            doc.add(encabezado);
+            tabla2.addCell(" ");
+            tabla2.addCell(" ");
+            tabla2.addCell(" ");
+            tabla2.addCell(" ");
+            tabla2.addCell(" ");
+            tabla2.addCell(" ");
+            tabla2.addCell(" ");
+            tabla2.addCell(" ");
+        }
 
-            doc.add(fecha1);
-            doc.add(separacion);
-            doc.add(tabla);
-            doc.add(tabla2);
-            doc.add(linea);
-            doc.add(totales);
-            doc.close();
-            archivo.close();
+        //le añadimos los elementos al documento
+        doc.add(encabezado);
 
-            //abrir el documento
-            File arch = new File("Reporte_ventas.pdf");
-            Desktop.getDesktop().open(arch);
+        doc.add(fecha1);
+        doc.add(separacion);
+        doc.add(tabla);
+        doc.add(tabla2);
+        doc.add(linea);
+        doc.add(totales);
+        doc.close();
+        archivo.close();
+
+        //abrir el documento
+        File arch = new File("Reporte_ventas.pdf");
+        Desktop.getDesktop().open(arch);
 //        } catch (Exception e) {
 //            JOptionPane.showMessageDialog(rootPane, "Error al imprimir reporte: "+e.getMessage());
 //        }

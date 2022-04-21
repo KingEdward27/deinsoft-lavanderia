@@ -151,10 +151,10 @@
           <Properties>
             <Property name="hint" type="java.lang.String" value="Ingrese su Motivo"/>
             <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-              <Value id="nulo"/>
+              <Value id="null"/>
             </Property>
             <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-              <Value id="nulo"/>
+              <Value id="null"/>
             </Property>
           </Properties>
         </Component>

@@ -352,62 +352,62 @@ public class JDBuscarProductoLector extends javax.swing.JDialog {
     private void jbtnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnEnviarActionPerformed
         try {
 //            if (jteLista.getSelectedRowCount() >= 0) {
-            if (JIVentas2.llamada) {
-
-//                    int fila = jteLista.getSelectedRow();
-//                    idpro = Integer.parseInt(jteLista.getValueAt(fila, 0).toString());
-                float pre = 0;
-                if (jcbxtipo.getSelectedIndex() == 0) {
-                    pre = Float.parseFloat(jtfdprecio.getText().toString());
-                } else {
-                    pre = Float.parseFloat(jtfdprecio2.getText().toString());
-                }
-
-                float can = Float.parseFloat(jtfdcantidad.getText().toString());
-                float stock = Float.parseFloat(jtfdstock.getText().toString());
-//                    if (rbnpaquete.isSelected()) {
-//                        float conversor = ProductosADN.Cantidad_XPaquete(idproducto);
-//                        can = conversor * can;
-//                    }
-//                    if (can > stock || stock == 0) {
-//                        JOptionPane.showMessageDialog(rootPane, "No hay stock suficiente");
+//            if (JIVentas2.llamada) {
+//
+////                    int fila = jteLista.getSelectedRow();
+////                    idpro = Integer.parseInt(jteLista.getValueAt(fila, 0).toString());
+//                float pre = 0;
+//                if (jcbxtipo.getSelectedIndex() == 0) {
+//                    pre = Float.parseFloat(jtfdprecio.getText().toString());
+//                } else {
+//                    pre = Float.parseFloat(jtfdprecio2.getText().toString());
+//                }
+//
+//                float can = Float.parseFloat(jtfdcantidad.getText().toString());
+//                float stock = Float.parseFloat(jtfdstock.getText().toString());
+////                    if (rbnpaquete.isSelected()) {
+////                        float conversor = ProductosADN.Cantidad_XPaquete(idproducto);
+////                        can = conversor * can;
+////                    }
+////                    if (can > stock || stock == 0) {
+////                        JOptionPane.showMessageDialog(rootPane, "No hay stock suficiente");
+////                    } else {
+//                if (pre > 0 && can > 0) {
+//                    if (jtfdcantidad.getText().length() > 5) {
+//                        JOptionPane.showMessageDialog(rootPane, "Error, cantidad muy elevada");
+//                        jtfdcantidad.setText("");
 //                    } else {
-                if (pre > 0 && can > 0) {
-                    if (jtfdcantidad.getText().length() > 5) {
-                        JOptionPane.showMessageDialog(rootPane, "Error, cantidad muy elevada");
-                        jtfdcantidad.setText("");
-                    } else {
-                        JIVentas2.ProX.setIdProducto(idproducto);
-                        JIVentas2.ProX.setDescripcion(jtfddescripcion.getText());
-                        JIVentas2.ProX.setPrecio(pre);
-                        JIVentas2.ProX.setCantidad(can);
-                        Productos p = new Productos();
-                        p.setPrecio(Float.parseFloat(jtfdprecio.getText()));
-                        p.setStock(can);
-                        p.setIdProducto(idproducto);
-//                            if (Float.parseFloat(jteLista.getValueAt(jteLista.getSelectedRow(), 6).toString()) != Float.parseFloat(jtfdPrecio.getText())) {
-//                                int r = JOptionPane.showConfirmDialog(rootPane, "¿Desea actualizar el nuevo precio?");
-//                                if (r == 0) {
+//                        JIVentas2.ProX.setIdProducto(idproducto);
+//                        JIVentas2.ProX.setDescripcion(jtfddescripcion.getText());
+//                        JIVentas2.ProX.setPrecio(pre);
+//                        JIVentas2.ProX.setCantidad(can);
+//                        Productos p = new Productos();
+//                        p.setPrecio(Float.parseFloat(jtfdprecio.getText()));
+//                        p.setStock(can);
+//                        p.setIdProducto(idproducto);
+////                            if (Float.parseFloat(jteLista.getValueAt(jteLista.getSelectedRow(), 6).toString()) != Float.parseFloat(jtfdPrecio.getText())) {
+////                                int r = JOptionPane.showConfirmDialog(rootPane, "¿Desea actualizar el nuevo precio?");
+////                                if (r == 0) {
+////
+////                                    ProductosADN.ActualizarPrecio(p);
+////
+////                                }
+////                            } else if (rbnpaquete.isSelected() && Float.parseFloat(jteLista.getValueAt(jteLista.getSelectedRow(), 7).toString()) != Float.parseFloat(jtfdPrecio.getText())) {
+////                                int r = JOptionPane.showConfirmDialog(rootPane, "¿Desea actualizar el nuevo precio?");
+////                                if (r == 0) {
+////
+////                                    ProductosADN.ActualizarPrecio2(p);
+////
+////                                }
+////                            }
+//                        ProductosADN.QuitarStock(p);
+//                        dispose();
+////                        }
+//                    }
 //
-//                                    ProductosADN.ActualizarPrecio(p);
 //
-//                                }
-//                            } else if (rbnpaquete.isSelected() && Float.parseFloat(jteLista.getValueAt(jteLista.getSelectedRow(), 7).toString()) != Float.parseFloat(jtfdPrecio.getText())) {
-//                                int r = JOptionPane.showConfirmDialog(rootPane, "¿Desea actualizar el nuevo precio?");
-//                                if (r == 0) {
-//
-//                                    ProductosADN.ActualizarPrecio2(p);
-//
-//                                }
-//                            }
-                        ProductosADN.QuitarStock(p);
-                        dispose();
-//                        }
-                    }
-
-
-                }
-            }
+//                }
+//            }
 //                if (JIVentas2.llamada) {
 //
 //                    int fila = jteLista.getSelectedRow();
@@ -483,26 +483,26 @@ public class JDBuscarProductoLector extends javax.swing.JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             Productos p = new Productos();
-            p.setCodbarra(JIVentas2.codbarra);
-            if (ProductosADN.Existe_CodBarra(p) == false) {
-                dispose();
-            } else {
-
-                for (Productos i : ProductosADN.DatosProducto(p)) {
-
-                    idproducto = i.getIdProducto();
-                    jtfdCodBarra.setText(i.getCodbarra());
-                    jtfddescripcion.setText(i.getDescripcion());
-                    jtfdcategoria.setText(i.getCategoriasx().getNom());
-                    jtfdunidadmedida.setText(i.getUnidadmedidasx().getNombre());
-                    jtfdcosto.setText(String.valueOf(i.getCosto()));
-                    jtfdprecio.setText(String.valueOf(i.getPrecio()));
-                    jtfdprecio2.setText(String.valueOf(i.getPrecio2()));
-                    jtfdstock.setText(String.valueOf(i.getStock()));
-
-
-                }
-            }
+//            p.setCodbarra(JIVentas2.codbarra);
+//            if (ProductosADN.Existe_CodBarra(p) == false) {
+//                dispose();
+//            } else {
+//
+//                for (Productos i : ProductosADN.DatosProducto(p)) {
+//
+//                    idproducto = i.getIdProducto();
+//                    jtfdCodBarra.setText(i.getCodbarra());
+//                    jtfddescripcion.setText(i.getDescripcion());
+//                    jtfdcategoria.setText(i.getCategoriasx().getNom());
+//                    jtfdunidadmedida.setText(i.getUnidadmedidasx().getNombre());
+//                    jtfdcosto.setText(String.valueOf(i.getCosto()));
+//                    jtfdprecio.setText(String.valueOf(i.getPrecio()));
+//                    jtfdprecio2.setText(String.valueOf(i.getPrecio2()));
+//                    jtfdstock.setText(String.valueOf(i.getStock()));
+//
+//
+//                }
+//            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, e.toString());
         }

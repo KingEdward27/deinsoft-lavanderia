@@ -30,6 +30,8 @@ public class Util {
     
     public static void ModificarTamañoJtable(JTable jtable, int indice,int tamano)
     {
+        jtable.getColumnModel().getColumn(indice).setMaxWidth(tamano);
+        jtable.getColumnModel().getColumn(indice).setMinWidth(tamano);
         jtable.getColumnModel().getColumn(indice).setPreferredWidth(tamano);
     }
     public static void OcultarColumnaJtable(JTable jtable, int indice)
@@ -53,6 +55,7 @@ public class Util {
     public static SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm");
     public static SimpleDateFormat sdfFecha2 = new SimpleDateFormat("MM/dd/yyyy");
     public static SimpleDateFormat sdfFechaHora = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    public static SimpleDateFormat sdfFecha3 = new SimpleDateFormat("yyyy-MM-dd");
     public static DecimalFormat df = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.US));
 
     public static java.sql.Date FechaSQL(String fecha)throws ParseException 

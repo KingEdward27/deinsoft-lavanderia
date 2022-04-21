@@ -155,7 +155,7 @@ public class JIIngresos extends javax.swing.JInternalFrame {
                         String fec = Formatos.sdfFecha.format(jdprFecha.getDate());
                         Date fechasql = Formatos.FechaSQL(fec);
                         float monto = Float.parseFloat(Formatos.df.format(Float.parseFloat(jtfdnro.getText().toString())));
-                        boolean gua = IngresosADN.Guardar(new Ingresos(0, fechasql, monto, motivo));
+                        boolean gua = IngresosADN.Guardar(new Ingresos(0, fechasql, monto, motivo,null));
                         if (gua) {
                             JOptionPane.showMessageDialog(rootPane, "Ingreso a caja registrado correctamente");
                             JIVentas.apertura = true;

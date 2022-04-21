@@ -312,15 +312,25 @@ public class JDCobrar extends javax.swing.JDialog {
 
     private void btncobrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncobrarActionPerformed
         try {
+            
             if ((!JIVentas.llamada_venta && jtfdBillete.getText().trim().length() > 0) || 
                     (JIVentas.llamada_venta && jtfdAcuenta.getText().trim().length() > 0)) {
+                
                 float b = Float.parseFloat(jtfdBillete.getText());
                 float descuento = Float.parseFloat(jtfdDescuento.getText())/100f;
                 float a_cuenta = Float.parseFloat(jtfdAcuenta.getText());
                 float monto = Float.parseFloat(jtfdMonto.getText());
+                if(a_cuenta < 0){
+                    JOptionPane.showMessageDialog(rootPane, "El monto a cuenta no puede ser una cantidad negativa");
+                    return;
+                }
+                if(b < 0){
+                    JOptionPane.showMessageDialog(rootPane, "El monto a pagar ingresado no puede ser una cantidad negativa");
+                    return;
+                }
                     if (JIVentas.llamada_venta) {
-                        if (a_cuenta>monto) {
-                            JOptionPane.showMessageDialog(rootPane, "El monto a cuenta no puede ser mayor al total de la venta");
+                        if (a_cuenta>=monto) {
+                            JOptionPane.showMessageDialog(rootPane, "El monto a cuenta no puede ser mayor o igual al total de la venta");
                             return;
                         }
                         JIVentas.montopagado = b;
@@ -367,26 +377,26 @@ public class JDCobrar extends javax.swing.JDialog {
 
     private void jtfdBilleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdBilleteActionPerformed
         try {
-            
-            if(JIVentas.llamada_venta){
-                if (jtfdBillete.getText().trim().length() > 0) {
-                    float b = Float.valueOf(jtfdBillete.getText());
-                    float d = b - (Float.parseFloat(Float.parseFloat(jtfdAcuenta.getText().toString()) >0?jtfdAcuenta.getText(): jtfdMonto.getText()));
-                    double e = Math.rint(Double.valueOf(String.valueOf(d)) * 100) / 100;
-                    jtfdVuelto.setText(String.valueOf(e));
-                    btncobrar.requestFocus();
-                    PanelAC.pintartext(jPanel1);
-                }
-            }else{
-                if (jtfdAcuenta.getText().trim().length() > 0) {
+            float monto = Float.valueOf(jtfdMonto.getText());
+            float pagaCon = Float.valueOf(jtfdBillete.getText());
+            float diferencia = pagaCon - monto;
+            double vuelto = Math.rint(Double.valueOf(String.valueOf(diferencia)) * 100) / 100;
+//            if(JIVentas.llamada_venta){
+//                
+//                if (jtfdAcuenta.getText().trim().length() > 0) {
+//                    btncobrar.requestFocus();
+//                    PanelAC.pintartext(jPanel1);
+//                }
+//            }else{
+//                if (jtfdAcuenta.getText().trim().length() > 0) {
 //                    float b = Float.valueOf(jtfdBillete.getText());
 //                    float d = b - (Float.parseFloat(Float.parseFloat(jtfdAcuenta.getText().toString()) >0?jtfdAcuenta.getText(): jtfdMonto.getText()));
 //                    double e = Math.rint(Double.valueOf(String.valueOf(d)) * 100) / 100;
-                    jtfdVuelto.setText("0");
+                    jtfdVuelto.setText(String.valueOf(vuelto));
                     btncobrar.requestFocus();
-                    PanelAC.pintartext(jPanel1);
-                }
-            }
+//                    PanelAC.pintartext(jPanel1);
+//                }
+//            }
             
         }catch (Exception e) {
             System.out.println(Util.exceptionToString(e));

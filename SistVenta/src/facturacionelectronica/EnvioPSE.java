@@ -54,7 +54,7 @@ public class EnvioPSE {
             servicio.setSerie(datosVenta.getSerieDocE());
             servicio.setNumero(String.valueOf(datosVenta.getNumDocE()));
             servicio.setForma_pago("Contado");
-            servicio.setFecha_emision(Util.sdfFecha2.format(datosVenta.getFecha()));
+            servicio.setFecha_emision(Util.sdfFecha.format(datosVenta.getFecha()));
             servicio.setFecha_vencimiento(null);
             servicio.setTipo_operacion(Constantes.TIPO_OPERACION_WS);
             servicio.setCliente_tipo(datosVenta.getTipoCliente().split("-")[0]);
@@ -75,11 +75,18 @@ public class EnvioPSE {
             servicio.setNota_referencia_tipo(null);
             servicio.setNota_referencia_serie(null);
             servicio.setNota_referencia_numero(null);
+            servicio.setSerie_ref(datosVenta.getSerieDocRef());
+            servicio.setNumero_ref(datosVenta.getNumDocRef());
+            servicio.setMonto_ref(Util.df.format(datosVenta.getMontoRef()));
+            servicio.setFecha_ref(Util.sdfFecha.format(datosVenta.getFechaRef()));
 //            servicio.setIncluir_pdf(ConfiguracionADN.Datos().get(0).getFlagPDF().equals("1")?"true":"false");
 //            servicio.setIncluir_xml(ConfiguracionADN.Datos().get(0).getFlagXML().equals("1")?"true":"false");
             List<Detalle> listaItemsEnvio = new ArrayList<Detalle>();
             int count = 0;
             for (ConsultaVentas2 detalleVenta : det) {
+                if(detalleVenta.getPrecio() == 0){
+                    continue;
+                }
                 Detalle items = new Detalle();
                 items.setCodigo(detalleVenta.getCodigo());
                 items.setDescripcion(detalleVenta.getProducto());
@@ -88,8 +95,9 @@ public class EnvioPSE {
                 items.setCantidad(String.valueOf(detalleVenta.getCantidad()));
                 items.setPrecio_unitario(Formatos.df.format(detalleVenta.getPrecio()));
                 items.setDescuento_porcentaje(Formatos.df.format(detalleVenta.getDescuento()));
-                items.setTipo_igv(datosVenta.getTipoIGV());
+                items.setTipo_igv(detalleVenta.getPrecio() == 0?"31": datosVenta.getTipoIGV());
                 items.setAfectacion_igv(String.valueOf(detalleVenta.getAfectacion_igv()));
+                items.setMonto_referencial_unitario(detalleVenta.getPrecio() == 0? "1":"0");
                 listaItemsEnvio.add(items);
                 count++;
             }

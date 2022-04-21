@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableModel; 
 
 /**
  *
@@ -408,7 +408,7 @@ public class JDBuscarProductos extends javax.swing.JDialog {
 
     private void jteListaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jteListaMouseClicked
         if (evt.getClickCount() == 1) {
-            if (JIVentas.llamada || JIVentas2.llamada) {
+            if (JIVentas.llamada) {
 //                            if (rbnpaquete.isSelected()) {
 //                            } else if (rbnunidades.isSelected()) {
 //                                jtfdPrecio.setText(jteLista.getValueAt(jteLista.getSelectedRow(), 6).toString());
@@ -550,24 +550,24 @@ public class JDBuscarProductos extends javax.swing.JDialog {
                     }
 
                 }
-                if (JIVentas2.llamada) {
-
-                    int fila = jteLista.getSelectedRow();
-                    idpro = Integer.parseInt(jteLista.getValueAt(fila, 0).toString());
-                    float pre = 0f;
-                    pre = 0f;
-                    float can = Float.parseFloat(jtfdCantidad.getText().toString());
-                    float stock = Float.parseFloat(jteLista.getValueAt(fila, 9).toString());
-
-                    if (fila >= 0) {
-                        JIVentas2.ProX.setIdProducto(idpro);
-                        JIVentas2.ProX.setDescripcion(jteLista.getValueAt(fila, 4).toString());
-                        JIVentas2.ProX.setPrecio(pre);
-                        JIVentas2.ProX.setCantidad(can);
-//                        ProductosADN.QuitarStock(p);
-                        dispose();
-                    }
-                } 
+//                if (JIVentas2.llamada) {
+//
+//                    int fila = jteLista.getSelectedRow();
+//                    idpro = Integer.parseInt(jteLista.getValueAt(fila, 0).toString());
+//                    float pre = 0f;
+//                    pre = 0f;
+//                    float can = Float.parseFloat(jtfdCantidad.getText().toString());
+//                    float stock = Float.parseFloat(jteLista.getValueAt(fila, 9).toString());
+//
+//                    if (fila >= 0) {
+//                        JIVentas2.ProX.setIdProducto(idpro);
+//                        JIVentas2.ProX.setDescripcion(jteLista.getValueAt(fila, 4).toString());
+//                        JIVentas2.ProX.setPrecio(pre);
+//                        JIVentas2.ProX.setCantidad(can);
+////                        ProductosADN.QuitarStock(p);
+//                        dispose();
+//                    }
+//                } 
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, "Operacion invalida - " + e.toString());

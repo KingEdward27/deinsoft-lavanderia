@@ -108,9 +108,11 @@ public class Impresion {
             parametros.put("ppagina", "Para consultar el comprobante visita " + Constantes.PAGINA_WEB);
             parametros.put("presumen", datosVenta.getXmlHash());
             parametros.put("pACuenta", Formatos.df.format(datosVenta.getAcuenta()));
+            parametros.put("pSaldo", Formatos.df.format(isTicket?datosVenta.getVentatotal() - datosVenta.getAcuenta():0));
             parametros.put("pRecibido", Formatos.df.format(datosVenta.getRecibido()));
             parametros.put("pVuelto", Formatos.df.format(datosVenta.getVuelto()));
-            parametros.put("idTipoDoc", datosVenta.getTipoDoc().getValue());
+            parametros.put("pAnticipo", Formatos.df.format(datosVenta.getMontoRef()));
+            parametros.put("idTipoDoc", datosVenta.getTipoDoc().getValue()== null? "00":datosVenta.getTipoDoc().getValue());
             parametros.put("isTicket", isTicket);
             parametros.put("psummary", "NOTA: Una vez retirada la prenda no hay lugar a reclamo. "
                     + "Pasado 30 dias de no retirar su ropa esta sera rematada "

@@ -166,7 +166,8 @@ public class ProductosADN {
                 + "inner join categorias c on p.idcategoria=c.idcategoria "
                 + "inner join unidadmedidas u on p.idunidadmedida=u.idunidadmedida"
                 + " where c.nombre like concat('%',?,'%') and m.nombre like concat('%',?,'%') and "
-                + " p.descripcion like concat('%',?,'%') and p.codigobarra like concat('%',?,'%') and p.estado like ?";
+                + " p.descripcion like concat('%',?,'%') and p.codigobarra like concat('%',?,'%') "
+                + "and p.estado like ? order by p.orden asc";
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
 //            ps.setString(1, c.getMarca().getNombre());
             ps.setString(1, c.getCategoriasx().getNom());

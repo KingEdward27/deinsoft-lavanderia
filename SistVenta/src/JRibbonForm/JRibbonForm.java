@@ -20,7 +20,6 @@ import FormInternos.JIMarcas;
 import FormInternos.JIColores;
 import FormInternos.JICaracteristicas;
 import FormInternos.JIConsultaProductos2;
-import FormInternos.JIConsultaVentasMonitor;
 import FormInternos.JIConsultaVentasMonitor2;
 import FormInternos.JIProductos;
 import FormInternos.JIProveedores;
@@ -30,7 +29,6 @@ import FormInternos.JIUnidadMedidas;
 import FormInternos.JIUsuarios;
 import FormInternos.JIVentas;
 import FormInternos.JIListaVentasPendientes;
-import FormInternos.JIVentas2;
 import FormInternos.JIParametros;
 import FormInternos.JIRestauraBackup;
 import FormInternos.JITiposServicio;
@@ -273,7 +271,7 @@ public class JRibbonForm extends JRibbonFrame{
          band5.setResizePolicies((List) Arrays.asList(new CoreRibbonResizePolicies.None(band5.getControlPanel()),
                 new IconRibbonBandResizePolicy(band5.getControlPanel())));
          band5.addCommandButton(jcbnVentasR, RibbonElementPriority.TOP);
-         band5.addCommandButton(jcbnVentasMonitorR, RibbonElementPriority.TOP);
+         band5.addCommandButton(jcbnVentasMonitorR, RibbonElementPriority.MEDIUM);
         //</editor-fold>    
 
         //<editor-fold defaultstate="collapsed" desc="JRibbonBand6">
@@ -409,6 +407,7 @@ public class JRibbonForm extends JRibbonFrame{
                     }
 //                    JLabel use = new JLabel(user);
                 } catch (Exception ex) {
+                    System.out.println("error: "+ Util.exceptionToString(ex));
                 }
             }
             
@@ -591,7 +590,9 @@ public class JRibbonForm extends JRibbonFrame{
         }
       }
       private void jcbnVentasMonitorRActionPerformed(java.awt.event.ActionEvent evt) {
-        try {
+          System.out.println("click jcbnVentasMonitorRActionPerformed");
+          try {
+            
             JIConsultaVentasMonitor2 v = new JIConsultaVentasMonitor2();
             FormDS.FormControlCenter(v, jdpeContainer);
         } catch (Exception e) {

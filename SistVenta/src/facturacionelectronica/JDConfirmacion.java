@@ -5,14 +5,17 @@
 package facturacionelectronica;
 
 //import accesodatos.EmpresaADN;
+import static FormInternos.JIListaVentasPendientes.valorIGV;
 import accesodatos.ParametrosADN;
 import accesodatos.VentasADN;
 import entidades.ConsultaVentas;
 import entidades.ConsultaVentas2;
+import entidades.Formatos;
 import entidades.Parametros;
 //import entidades.Empresa;
 import facturacionelectronica.Impresion;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,15 +31,19 @@ public class JDConfirmacion extends javax.swing.JDialog {
     /**
      * Creates new form JDCobrar
      */
-    private static int idVenta = 0;
+    private static int idVentaOIngreso = 0,idVenta = 0;
     private static boolean isTicket = false;
-    private static String nombreImpresora = "";
-    public JDConfirmacion(java.awt.Frame parent, boolean modal, int idVenta,boolean isTicket,String nombreImpresora) {
+    private static String nombreImpresora = "",tipo,flagAdelanto;
+    public JDConfirmacion(java.awt.Frame parent, boolean modal, int idVentaOIngreso,boolean isTicket,
+            String nombreImpresora,String tipo,int idVenta,String flagAdelanto) {
         super(parent, modal);
         initComponents();
-        this.idVenta = idVenta;
+        this.idVentaOIngreso = idVentaOIngreso;
         this.isTicket = isTicket;
         this.nombreImpresora = nombreImpresora;
+        this.tipo = tipo;
+        this.idVenta = idVenta;
+        this.flagAdelanto = flagAdelanto;
     }
 
     /**
@@ -151,8 +158,26 @@ public class JDConfirmacion extends javax.swing.JDialog {
         List<Parametros> datosEmpresa;
         try {
             datosEmpresa = ParametrosADN.Lista();
-            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(null, null, idVenta, !isTicket).get(0);
-            List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            ConsultaVentas2 datosVenta;
+            
+            if(tipo.equals("v")){
+                datosVenta = VentasADN.getDatosVenta(null, null, idVentaOIngreso, !isTicket).get(0);
+            }else{
+                datosVenta = VentasADN.getDatosVenta2(null, null, idVentaOIngreso, !isTicket).get(0);
+            }
+            List<ConsultaVentas2> datosVentaDetalle;
+            if (flagAdelanto.equals("1")) {
+                datosVentaDetalle = new ArrayList<>();
+//                                String codigo, String producto, float cantidad, float precio, 
+//                                float importe,int idproducto,float afectacionIGV
+                datosVentaDetalle.add(new ConsultaVentas2("-",
+                        "ADELANTO DE " + Formatos.df.format(datosVenta.getVentatotal()) + " DE PAGO DE SERVICIO ",
+                        1, datosVenta.getVentatotal(),
+                        datosVenta.getVentatotal(), 0, datosVenta.getVentatotal() - (datosVenta.getVentatotal() / (1 + valorIGV))));
+            } else {
+                datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            }
+            
             JasperPrint resultImpr = Impresion.Imprimir(2, datosEmpresa, datosVenta, datosVentaDetalle, isTicket);
             if (resultImpr == null) {
                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
@@ -172,8 +197,25 @@ public class JDConfirmacion extends javax.swing.JDialog {
         List<Parametros> datosEmpresa;
         try {
             datosEmpresa = ParametrosADN.Lista();
-            ConsultaVentas2 datosVenta = VentasADN.getDatosVenta(null, null, idVenta, !isTicket).get(0);
-            List<ConsultaVentas2> datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            ConsultaVentas2 datosVenta;
+            
+            if(tipo.equals("v")){
+                datosVenta = VentasADN.getDatosVenta(null, null, idVentaOIngreso, !isTicket).get(0);
+            }else{
+                datosVenta = VentasADN.getDatosVenta2(null, null, idVentaOIngreso, !isTicket).get(0);
+            }
+            List<ConsultaVentas2> datosVentaDetalle;
+            if (flagAdelanto.equals("1")) {
+                datosVentaDetalle = new ArrayList<>();
+//                                String codigo, String producto, float cantidad, float precio, 
+//                                float importe,int idproducto,float afectacionIGV
+                datosVentaDetalle.add(new ConsultaVentas2("-",
+                        "ADELANTO DE " + Formatos.df.format(datosVenta.getVentatotal()) + " DE PAGO DE SERVICIO ",
+                        1, datosVenta.getVentatotal(),
+                        datosVenta.getVentatotal(), 0, datosVenta.getVentatotal() - (datosVenta.getVentatotal() / (1 + valorIGV))));
+            } else {
+                datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            }
             JasperPrint resultImpr = Impresion.Imprimir(1, datosEmpresa, datosVenta, datosVentaDetalle, isTicket);
             if (resultImpr == null) {
                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al imprimir el documento :( .:" + resultImpr);
@@ -215,7 +257,8 @@ public class JDConfirmacion extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDConfirmacion dialog = new JDConfirmacion(new javax.swing.JFrame(), true, idVenta,isTicket,nombreImpresora);
+                JDConfirmacion dialog = new JDConfirmacion(new javax.swing.JFrame(), true, idVentaOIngreso,
+                        isTicket,nombreImpresora,tipo,idVenta,flagAdelanto);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

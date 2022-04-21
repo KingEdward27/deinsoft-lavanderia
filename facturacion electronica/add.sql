@@ -275,16 +275,16 @@ left join tipodoc td on td.tipodoc_id = v.tipodoc_id
 inner join tipos_servicio ts on ts.idtiposervicio = v.idtiposervicio 
 where ((v.idventa  = 48792))
 
-select p.codigo,\n"
-                + "trim(concat(p.descripcion,' ',ifnull(m.nombre,''), ' ',ifnull(c.nombre,''),' ', ifnull(ca.nombre,''))) descripcion ,d.cantidad,\n"
-                + "d.precio as precio_venta,d.importe,p.idproducto,\n"
-                + "ifnull(d.afectacion_igv,0) afectacion_igv\n"
-                + "from productos p \n"
-                + "inner join detalleventas d\n"
-                + "on p.idproducto = d.idproducto\n"
-                + "left join marcas m on m.idmarca = d.idmarca\n"
-                + "left join colores c on c.idcolor = d.idcolor\n"
-                + "left join caracteristicas ca on ca.idcaracteristica = d.idcaracteristica\n"
+select p.codigo,
+                + "trim(concat(p.descripcion,' ',ifnull(m.nombre,''), ' ',ifnull(c.nombre,''),' ', ifnull(ca.nombre,''))) descripcion ,d.cantidad,
+                + "d.precio as precio_venta,d.importe,p.idproducto,
+                + "ifnull(d.afectacion_igv,0) afectacion_igv
+                + "from productos p 
+                + "inner join detalleventas d
+                + "on p.idproducto = d.idproducto
+                + "left join marcas m on m.idmarca = d.idmarca
+                + "left join colores c on c.idcolor = d.idcolor
+                + "left join caracteristicas ca on ca.idcaracteristica = d.idcaracteristica
                 + "where d.idventa = ?
 
 alter table parametros
@@ -427,8 +427,6 @@ END
 alter table productos
 add orden int default 9999;
 
-select * from productos
-
 UPDATE `productos` SET `orden` = '1' WHERE (`IdProducto` = '86');
 UPDATE `productos` SET `orden` = '2' WHERE (`IdProducto` = '99');
 UPDATE `productos` SET `orden` = '3' WHERE (`IdProducto` = '169');
@@ -438,3 +436,193 @@ UPDATE `productos` SET `orden` = '5' WHERE (`IdProducto` = '7');
 UPDATE `productos` SET `orden` = '6' WHERE (`IdProducto` = '4');
 UPDATE `productos` SET `orden` = '7' WHERE (`IdProducto` = '175');
 UPDATE `dblavanderia`.`productos` SET `orden` = '8' WHERE (`IdProducto` = '3');
+
+alter table ventas
+add fecha_pago date;
+
+update ventas set fecha_pago = STR_TO_DATE(substr( fecha_entrega,1,10),'%d/%m/%Y') 
+where estado in ('1','2') and idventa > 0;
+
+SELECT * FROM VENTAS WHERE NUMDOC = 155411
+
+select * from resumen_diario
+
+update ventas v set estado = '1' 
+where tipo_pago <> 'POR PAGAR'
+AND v.ESTADO = 'p' and seriedoc <> '0001'
+and ifnull((select sum(monto) from ingresos i where i.idventa = v.idventa),0) = v.total
+
+update ventas v set subtotal = round(total/1.18,2), igv = round(total - total/1.18,2)
+WHERE IGV = 0 AND ESTADO = 'p' and seriedoc = '001'
+
+update detalleventas v set afectacion_igv = round(importe - importe/1.18)
+WHERE afectacion_igv is null
+
+-- aqui 
+
+alter table ingresos
+add igv decimal(12,2);
+
+alter table ingresos
+add subtotal decimal(12,2);
+
+alter table ingresos
+add tipodoc_id int;
+
+alter table ingresos
+add envio_pse_flag char(1);
+
+alter table ingresos
+add envio_pse_mensaje varchar(1000);
+
+alter table ingresos
+add xmlhash varchar(300);
+
+alter table ingresos
+add codigoqr varchar(300);
+
+alter table ingresos
+add num_ticket varchar(300);
+
+alter table ingresos
+add serie_doc varchar(4);
+
+alter table ingresos
+add num_doc int;
+
+alter table ingresos
+add cliente_id varchar(300);
+
+alter table ingresos
+add recibido  decimal(12,2);
+
+alter table ingresos
+add fecha_envio datetime;
+
+alter table ventas
+add saldo decimal(12,2);
+
+alter table ingresos
+add flag_adelanto char(1);
+
+alter table ingresos
+add fecha_pago datetime;
+
+/*
+update ingresos i set i.igv = round(monto - (monto/1.18),2),
+subtotal = round(monto/1.18,2),
+tipodoc_id = (select tipodoc_id from ventas where idventa = i.idventa),
+envio_pse_flag = (select envio_pse_flag from ventas where idventa = i.idventa),
+envio_pse_mensaje = (select envio_pse_mensaje from ventas where idventa = i.idventa),
+xmlhash = (select xmlhash from ventas where idventa = i.idventa),
+codigoqr = (select codigoqr from ventas where idventa = i.idventa),
+num_ticket = (select num_ticket from ventas where idventa = i.idventa),
+serie_doc = (select serieDocE from ventas where idventa = i.idventa),
+num_doc = (select numDocE from ventas where idventa = i.idventa),
+cliente_id = (select clienteE_id from ventas where idventa = i.idventa),
+fecha_envio = (select fecha_pago from ventas where idventa = i.idventa),
+estado = '1'
+where exists (select 1 from ventas v 
+where v.idventa = i.idventa and v.numDocE is not null)*/
+
+
+alter table ingresos
+add descuento decimal(12,2) default 0;
+
+
+drop trigger if exists tia_ventas;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` TRIGGER tia_ventas
+AFTER INSERT ON ventas
+FOR EACH ROW
+BEGIN 
+    DECLARE ln_descuento decimal(8,2); 
+    DECLARE LN_MONTO decimal(8,2); 
+    
+    set ln_descuento =  new.descuento;
+    -- if new.tipo_pago <> 'POR PAGAR' then
+       if new.a_cuenta > 0 then
+            set LN_MONTO = new.a_cuenta;
+       else
+            set LN_MONTO = new.total - ln_descuento;
+       end if;
+       if new.a_cuenta > 0 then
+        insert into ingresos(idingreso,fecha,monto,motivo,idventa,flag_adelanto,estado)
+           values (null,now(),LN_MONTO,'VENTAS',new.idventa,'1','1');
+           
+           if new.tipo_pago IN ('TARJETA VISA','TARJETA MASTERCARD') then
+                insert into egresos(idegreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'SALIDA POR TARJETA',new.idventa);
+           end if;
+       end if;
+       
+    -- end if;
+END$$
+DELIMITER ;
+
+drop trigger if exists tua_ventas;
+DELIMITER $$
+CREATE TRIGGER tua_ventas
+AFTER UPDATE ON ventas
+FOR EACH ROW
+BEGIN 
+    DECLARE ln_descuento decimal(8,2); 
+    DECLARE LN_MONTO decimal(8,2); 
+    
+    if new.descuento > 0 then
+      set ln_descuento = new.descuento;
+    else
+      set ln_descuento = old.descuento;
+    end if;
+    
+    /*if new.estado = '1' and old.estado = 'p' then
+        
+	if old.a_cuenta > 0 then
+                set LN_MONTO = new.total - ln_descuento - old.a_cuenta;
+                insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+        else
+             set LN_MONTO = new.total - ln_descuento;
+             insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+        end if;
+       if new.tipo_pago = 'POR PAGAR' then
+           set LN_MONTO = old.total - new.a_cuenta - ln_descuento;
+           insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+           values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+        else
+           if old.a_cuenta > 0 then
+                set LN_MONTO = new.total - ln_descuento - old.a_cuenta;
+                insert into ingresos(idingreso,fecha,monto,motivo,idventa)
+                values (null,now(),LN_MONTO,'VENTAS',new.idventa);
+           -- else
+                -- set LN_MONTO = new.total - ln_descuento;
+           end if;
+        end if;
+    else*/
+		if new.estado = '0' and old.estado <> '0' then
+        -- si anulan la venta
+			update ingresos set estado = '0' where idventa = new.idventa;
+			if new.tipo_pago IN ('TARJETA VISA','TARJETA MASTERCARD') then
+				update egresos set estado = '0' where idventa = new.idventa;
+			end if;
+        end if;
+    -- end if;
+END$$
+DELIMITER ;
+
+drop trigger tua_ventas;
+
+update ingresos i set i.flag_adelanto = '1' , i.estado = '1'
+where exists (select 1 from ventas v where v.idventa = i.idventa 
+				and i.monto = v.a_cuenta and v.estado in ('p') ) 
+                
+select * from productos where idproducto = 149
+select * from detalleventas 49397
+select * from ventas
+select * from ingresos
+select * from ingresos
+select * from detalleventas where idventa = 49276
+
+select * from numeracion_documento
+select * from parametros

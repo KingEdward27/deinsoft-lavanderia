@@ -308,10 +308,10 @@
             <Property name="hint" type="java.lang.String" value="Ingrese Marca o Descripcion"/>
             <Property name="primeraMayus" type="java.lang.Boolean" value="true"/>
             <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-              <Value id="nulo"/>
+              <Value id="null"/>
             </Property>
             <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-              <Value id="nulo"/>
+              <Value id="null"/>
             </Property>
           </Properties>
           <Events>
@@ -450,10 +450,10 @@
         <Property name="hint" type="java.lang.String" value="Descripci&#xf3;n abreviada"/>
         <Property name="primeraMayus" type="java.lang.Boolean" value="true"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
       <Events>

@@ -45,6 +45,11 @@ public class Cabecera {
     private String incluir_pdf;
     private String incluir_xml;
     private String forma_pago;
+    
+    private String serie_ref;
+    private String numero_ref;
+    private String monto_ref;
+    private String fecha_ref;
     private List<Detalle> lista;
 
     public List<Detalle> getLista() {
@@ -269,6 +274,38 @@ public class Cabecera {
 
     public void setForma_pago(String forma_pago) {
         this.forma_pago = forma_pago;
+    }
+
+    public String getSerie_ref() {
+        return serie_ref;
+    }
+
+    public void setSerie_ref(String serie_ref) {
+        this.serie_ref = serie_ref;
+    }
+
+    public String getNumero_ref() {
+        return numero_ref;
+    }
+
+    public void setNumero_ref(String numero_ref) {
+        this.numero_ref = numero_ref;
+    }
+
+    public String getMonto_ref() {
+        return monto_ref;
+    }
+
+    public void setMonto_ref(String monto_ref) {
+        this.monto_ref = monto_ref;
+    }
+
+    public String getFecha_ref() {
+        return fecha_ref;
+    }
+
+    public void setFecha_ref(String fecha_ref) {
+        this.fecha_ref = fecha_ref;
     }
 
     public Cabecera() {

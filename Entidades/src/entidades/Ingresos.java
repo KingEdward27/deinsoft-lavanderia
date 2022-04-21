@@ -1,12 +1,29 @@
 package entidades;
 import java.sql.Date;
+import java.util.LinkedList;
 
 public class Ingresos implements iArregloLista{
     private int IdIngreso;
     private Date Fecha;
     private float Monto;
     private String Motivo;
-
+    private int ventaId;
+    private String estado;
+    private float igv;
+    private float subtotal;
+    private float descuento;
+    private float recibido;
+    private TipoDoc tipoDoc;
+    private String envioPseFlag;
+    private String envioPseMensaje ;
+    private String nroRespuesta ;
+    private String codigoQR;
+    private String xmlHash; 
+    private String serieDocE;
+    private int numDocE;
+    private int indClienteE;
+    private Date fechaPago;
+    private Ventas venta;
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdIngreso() {
         return IdIngreso;
@@ -40,17 +57,156 @@ public class Ingresos implements iArregloLista{
         this.Motivo = Motivo;
     }
 
+    public float getIgv() {
+        return igv;
+    }
+
+    public void setIgv(float igv) {
+        this.igv = igv;
+    }
+
+    public float getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(float subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public TipoDoc getTipoDoc() {
+        return tipoDoc;
+    }
+
+    public void setTipoDoc(TipoDoc tipoDoc) {
+        this.tipoDoc = tipoDoc;
+    }
+
+    public String getEnvioPseFlag() {
+        return envioPseFlag;
+    }
+
+    public void setEnvioPseFlag(String envioPseFlag) {
+        this.envioPseFlag = envioPseFlag;
+    }
+
+    public String getEnvioPseMensaje() {
+        return envioPseMensaje;
+    }
+
+    public void setEnvioPseMensaje(String envioPseMensaje) {
+        this.envioPseMensaje = envioPseMensaje;
+    }
+
+    public String getNroRespuesta() {
+        return nroRespuesta;
+    }
+
+    public void setNroRespuesta(String nroRespuesta) {
+        this.nroRespuesta = nroRespuesta;
+    }
+
+    public String getCodigoQR() {
+        return codigoQR;
+    }
+
+    public void setCodigoQR(String codigoQR) {
+        this.codigoQR = codigoQR;
+    }
+
+    public String getXmlHash() {
+        return xmlHash;
+    }
+
+    public void setXmlHash(String xmlHash) {
+        this.xmlHash = xmlHash;
+    }
+
+    public String getSerieDocE() {
+        return serieDocE;
+    }
+
+    public void setSerieDocE(String serieDocE) {
+        this.serieDocE = serieDocE;
+    }
+
+    public int getNumDocE() {
+        return numDocE;
+    }
+
+    public void setNumDocE(int numDocE) {
+        this.numDocE = numDocE;
+    }
+
+    public int getIndClienteE() {
+        return indClienteE;
+    }
+
+    public void setIndClienteE(int indClienteE) {
+        this.indClienteE = indClienteE;
+    }
+
+    public Date getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(Date fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+
+    
+    public int getVentaId() {
+        return ventaId;
+    }
+
+    public void setVentaId(int ventaId) {
+        this.ventaId = ventaId;
+    }
+
+    public Ventas getVenta() {
+        return venta;
+    }
+
+    public void setVenta(Ventas venta) {
+        this.venta = venta;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public float getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(float descuento) {
+        this.descuento = descuento;
+    }
+
+    public float getRecibido() {
+        return recibido;
+    }
+
+    public void setRecibido(float recibido) {
+        this.recibido = recibido;
+    }
+
+
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="CONSTRUCTORES">
     public Ingresos() {
     }
 
-    public Ingresos(int IdIngreso, Date Fecha, float Monto, String Motivo) {
+    public Ingresos(int IdIngreso, Date Fecha, float Monto, String Motivo,String estado) {
         this.IdIngreso = IdIngreso;
         this.Fecha = Fecha;
         this.Monto = Monto;
         this.Motivo = Motivo;
+        this.estado = estado;
     }
     
     public Ingresos(Date Fecha, float Monto, String Motivo) {

@@ -52,6 +52,14 @@ public class ConsultaVentas2 {
     private float acuenta;
     private float recibido;
     private float vuelto;
+    private String tipo;
+    private int idVentaFromIngresos;
+    private String serieDocRef;
+    private String numDocRef;
+    private float montoRef;
+    private Date fechaRef;
+    private String flagAdelanto;
+    
     public int getIdventa() {
         return idventa;
     }
@@ -313,6 +321,62 @@ public class ConsultaVentas2 {
         this.vuelto = vuelto;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getIdVentaFromIngresos() {
+        return idVentaFromIngresos;
+    }
+
+    public void setIdVentaFromIngresos(int idVentaFromIngresos) {
+        this.idVentaFromIngresos = idVentaFromIngresos;
+    }
+
+    public String getSerieDocRef() {
+        return serieDocRef;
+    }
+
+    public void setSerieDocRef(String serieDocRef) {
+        this.serieDocRef = serieDocRef;
+    }
+
+    public String getNumDocRef() {
+        return numDocRef;
+    }
+
+    public void setNumDocRef(String numDocRef) {
+        this.numDocRef = numDocRef;
+    }
+
+    public float getMontoRef() {
+        return montoRef;
+    }
+
+    public void setMontoRef(float montoRef) {
+        this.montoRef = montoRef;
+    }
+
+    public Date getFechaRef() {
+        return fechaRef;
+    }
+
+    public void setFechaRef(Date fechaRef) {
+        this.fechaRef = fechaRef;
+    }
+
+    public String getFlagAdelanto() {
+        return flagAdelanto;
+    }
+
+    public void setFlagAdelanto(String flagAdelanto) {
+        this.flagAdelanto = flagAdelanto;
+    }
+
 
     
     public ConsultaVentas2() {
@@ -336,7 +400,9 @@ public class ConsultaVentas2 {
             String tipoCliente,String correoCliente,String codigoQR,
             String xmlHash,TipoDoc tipoDoc, Tipos_Servicio tipoServicio,
             float sumatoriaIGV,String serieDocE,int numDocE,String fechaEntrega,
-            String envioPseFlag, String envioPseMensaje,float acuenta,float recibido,float vuelto) {
+            String envioPseFlag, String envioPseMensaje,float acuenta,
+            float recibido,float vuelto,String tipo,int idVentaFromIngresos,
+            String serieDocRef,String numDocRef,float montoRef,Date fechaRef,String flagAdelanto) {
         this.idventa = idventa;
         this.serie = serie;
         this.num = num;
@@ -364,6 +430,13 @@ public class ConsultaVentas2 {
         this.acuenta = acuenta;
         this.recibido = recibido;
         this.vuelto = vuelto;
+        this.tipo = tipo;
+        this.idVentaFromIngresos = idVentaFromIngresos;
+        this.serieDocRef = serieDocRef;
+        this.numDocRef = numDocRef;
+        this.montoRef = montoRef;
+        this.fechaRef = fechaRef;
+        this.flagAdelanto = flagAdelanto;
     }
     //anular ventas
 public ConsultaVentas2(int idventa, String serie,  String num, String cliente, Date fecha, float ventatotal) {
@@ -417,7 +490,7 @@ public ConsultaVentas2(int idventa, String serie,  String num, String cliente, D
         return aux;
     }
     public String[] arregloDatosMonitor(){
-        String[] aux = new String[9];
+        String[] aux = new String[13];
         aux[0] = String.valueOf(idventa);
         aux[1] = tipoDoc.getNombre();
         aux[2] = serieDocE + "-" + String.format("%08d", numDocE);
@@ -428,6 +501,10 @@ public ConsultaVentas2(int idventa, String serie,  String num, String cliente, D
         aux[6] = Formatos.df.format(ventatotal);
         aux[7] = envioPseFlag.equals("1")?"SI":"NO";
         aux[8] = envioPseMensaje;
+        aux[9] = tipo;
+        aux[10] = String.valueOf(idVentaFromIngresos);
+        aux[11] = flagAdelanto;
+        aux[12] = serie + "-"+num;
         return aux;
     }
     

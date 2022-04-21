@@ -174,10 +174,10 @@
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="hint" type="java.lang.String" value="Buscar Codigo de Barra"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
     </Component>
@@ -197,10 +197,10 @@
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="hint" type="java.lang.String" value="nombre del producto"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
     </Component>
@@ -215,10 +215,10 @@
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="hint" type="java.lang.String" value="marca"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
     </Component>
@@ -233,10 +233,10 @@
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="hint" type="java.lang.String" value="categoria"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
     </Component>
@@ -250,10 +250,10 @@
         <Property name="editable" type="boolean" value="false"/>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
     </Component>
@@ -263,10 +263,10 @@
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="hint" type="java.lang.String" value="S/. 0.00"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
     </Component>
@@ -396,10 +396,10 @@
         <Property name="length" type="int" value="1"/>
         <Property name="primeraMayus" type="java.lang.Boolean" value="true"/>
         <Property name="tipoTextBox" type="org.Interfaces.Enum$TipoTextBox" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
         <Property name="tiponumero" type="org.Interfaces.Enum$TiposNumeros" editor="org.netbeans.modules.form.editors.EnumEditor">
-          <Value id="nulo"/>
+          <Value id="null"/>
         </Property>
       </Properties>
       <Events>
