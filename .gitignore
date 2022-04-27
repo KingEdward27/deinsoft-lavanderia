@@ -25,3 +25,10 @@ hs_err_pid*
 /AccesoDatos/dist/
 /bks/
 /SistVenta/dist/
+/LavanderiaSistVenta/build/
+/LavanderiaSistVenta/dist/
+/LavanderiaSistVenta/nbproject/private/
+/LavanderiaAccesoDatos/build/
+/LavanderiaAccesoDatos/dist/
+/LavanderiaAccesoDatos/nbproject/private/
+/LavanderiaAccesoDatos/build/
