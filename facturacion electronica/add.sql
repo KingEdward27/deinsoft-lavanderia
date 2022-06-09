@@ -626,3 +626,13 @@ select * from detalleventas where idventa = 49276
 
 select * from numeracion_documento
 select * from parametros
+
+-- 2022-05-19
+ALTER TABLE `dblavanderia`.`ingresos` 
+ADD INDEX `ingresos_idx01` (`Fecha` ASC) ;
+
+ALTER TABLE `dblavanderia`.`ingresos` 
+ADD INDEX `ingresos_idx02` (`fecha_pago` ASC, `estado` ASC) ;
+
+ALTER TABLE `dblavanderia`.`ingresos` 
+ADD INDEX `ingresos_idx03` (`idventa` ASC) ;

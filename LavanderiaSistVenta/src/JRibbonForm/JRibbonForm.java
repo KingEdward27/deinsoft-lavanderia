@@ -528,7 +528,7 @@ public class JRibbonForm extends JRibbonFrame{
     }
     private void jcbnVentasPendientesActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            JIListaVentasPendientes v= new JIListaVentasPendientes();
+            JIListaVentasPendientes v= new JIListaVentasPendientes("");
             FormDS.FormControlCenter(v, jdpeContainer);
 //            v.setMaximum(true);     
         } catch (Exception e) {

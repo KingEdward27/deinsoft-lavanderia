@@ -8,6 +8,8 @@ import accesodatos.ClientesADN;
 import entidades.Clientes;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,14 +17,16 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author EDWARD
  */
-public class JDAgregarClientes extends javax.swing.JDialog {
+public class JDModificarClientes extends javax.swing.JDialog {
 
     /**
      * Creates new form JDBuscarClientes
      */
-    public JDAgregarClientes(java.awt.Frame parent, boolean modal) {
+    static int idCliente = 0;
+    public JDModificarClientes(java.awt.Frame parent, boolean modal,int idCliente) {
         super(parent, modal);
         initComponents();
+        this.idCliente = idCliente;
     }
 
     /**
@@ -38,21 +42,23 @@ public class JDAgregarClientes extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jtfdNombres = new org.swing.componet.JTextBoxHintDS();
         jLabel3 = new javax.swing.JLabel();
-        jtfdTelefono = new org.swing.componet.JTextBoxHintDS();
-        jLabel6 = new javax.swing.JLabel();
         jbtnGuardar = new javax.swing.JButton();
-        jtfdDni = new org.swing.componet.JTextBoxHintDS();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jcbxTipo = new javax.swing.JComboBox<>();
-        jtfdDireccion = new org.swing.componet.JTextBoxHintDS();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jtfdDni = new org.swing.componet.JTextBoxHintDS();
         jLabel5 = new javax.swing.JLabel();
+        jtfdDireccion = new org.swing.componet.JTextBoxHintDS();
         jtfdCorreo = new org.swing.componet.JTextBoxHintDS();
         jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(">>>:::::: Buscar Clientes ::::::<<<");
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -61,18 +67,13 @@ public class JDAgregarClientes extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
+        jtfdNombres.setEditable(false);
         jtfdNombres.setHint("Ingrese sus Apellidos y Nombres");
         jtfdNombres.setPrimeraMayus(java.lang.Boolean.TRUE);
         jtfdNombres.setTipoTextBox(org.Interfaces.Enum.TipoTextBox.SoloTexto);
         jtfdNombres.setTiponumero(null);
 
         jLabel3.setText("Nombres:");
-
-        jtfdTelefono.setHint("Ingrese su Telefono");
-        jtfdTelefono.setLength(10);
-        jtfdTelefono.setTiponumero(org.Interfaces.Enum.TiposNumeros.Telefono);
-
-        jLabel6.setText("Telefono:");
 
         jbtnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/save.png"))); // NOI18N
         jbtnGuardar.setText("Guardar");
@@ -84,21 +85,21 @@ public class JDAgregarClientes extends javax.swing.JDialog {
             }
         });
 
-        jtfdDni.setHint("Ingrese su DNI");
-        jtfdDni.setLength(11);
-
-        jLabel4.setText("DNI/RUC:");
+        jcbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1-DNI", "4-CARNET EXTRANJERIA", "6-RUC", "7-PASAPORTE" }));
 
         jLabel8.setText("Tipo:");
 
-        jcbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1-DNI", "4-CARNET EXTRANJERIA", "6-RUC", "7-PASAPORTE" }));
+        jLabel4.setText("DNI/RUC:");
+
+        jtfdDni.setHint("Ingrese su DNI");
+        jtfdDni.setLength(11);
+
+        jLabel5.setText("Dirección:");
 
         jtfdDireccion.setHint("Ingrese su Dirección");
         jtfdDireccion.setPrimeraMayus(java.lang.Boolean.TRUE);
         jtfdDireccion.setTipoTextBox(null);
         jtfdDireccion.setTiponumero(null);
-
-        jLabel5.setText("Dirección:");
 
         jtfdCorreo.setHint("Ingrese su Correo");
         jtfdCorreo.setPrimeraMayus(java.lang.Boolean.TRUE);
@@ -112,9 +113,6 @@ public class JDAgregarClientes extends javax.swing.JDialog {
 
         jLabel7.setText("Correo electrónico:");
 
-        jLabel9.setForeground(new java.awt.Color(153, 0, 0));
-        jLabel9.setText("*");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -123,46 +121,43 @@ public class JDAgregarClientes extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfdTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtfdNombres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel8)
                                     .addComponent(jLabel5)
                                     .addComponent(jtfdDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jcbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(29, 29, 29)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jtfdDni, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(1, 1, 1)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jbtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jLabel7)
-                                                .addComponent(jtfdCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jtfdNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel9))))
-                        .addContainerGap(15, Short.MAX_VALUE))))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jtfdCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel4)
+                                    .addComponent(jtfdDni, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jbtnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(14, 14, 14))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel9))
+                .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jtfdNombres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jLabel4))
@@ -181,12 +176,8 @@ public class JDAgregarClientes extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfdCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtfdTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbtnGuardar))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addComponent(jbtnGuardar)
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -195,19 +186,20 @@ public class JDAgregarClientes extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 3, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    public static int idcli = 0;
+    //public static int idcli = 0;
     public static String estado = "";
     public static boolean modif = false;
     DefaultTableModel dtm = null;
@@ -219,10 +211,12 @@ public class JDAgregarClientes extends javax.swing.JDialog {
     private void jbtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnGuardarActionPerformed
         try {
             String nom = "", dn = "", tel = "", dir = "";
+            
+            Clientes c = ClientesADN.getById(idCliente);
             nom = jtfdNombres.getText().trim().toUpperCase();
             dn = jtfdDni.getText().trim().toUpperCase();
-            tel = jtfdTelefono.getText().trim().toUpperCase();
-            dir = jtfdDireccion.getText().trim().toUpperCase();
+            //tel = jtfdTelefono.getText().trim().toUpperCase();
+            //dir = jtfdDireccion.getText().trim().toUpperCase();
             String mensaje = "";
             String correo = jtfdCorreo.getText().trim();
             String tipo = jcbxTipo.getSelectedItem().toString();
@@ -234,10 +228,10 @@ public class JDAgregarClientes extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(rootPane, "Asegurese de ingresar el nombre");
             } else {
                 boolean respuesta = true;
-                Clientes cli = new Clientes(0, nom, dn, dir, tel, "1",correo,tipo);
-                mensaje = "Datos guardados correctamente";
+                Clientes cli = new Clientes(idCliente, nom, dn, dir, tel, "1",correo,tipo);
+                mensaje = "Datos actualizados correctamente";
                 
-                if (ClientesADN.Evaluar(cli) == 1) {
+                if (ClientesADN.Evaluar(c) == 1) {
                     JOptionPane.showMessageDialog(rootPane, "Ya existe un cliente con el mismo nombre");
                     respuesta = false;
                 }
@@ -255,6 +249,23 @@ public class JDAgregarClientes extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(rootPane, e.toString());
         }
     }//GEN-LAST:event_jbtnGuardarActionPerformed
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        try {
+            Clientes c = ClientesADN.getById(idCliente);
+            jtfdNombres.setText(c.getNombres());
+                    jtfdDni.setText(c.getDni());
+                    jtfdDireccion.setText(c.getDireccion());
+                    //jtfdTelefono.setText(jteLista.getValueAt(fila, 4).toString());
+                    jtfdCorreo.setText(c.getCorreo());
+                    jcbxTipo.setSelectedItem(c.getTipoDoc());
+        } catch (SQLException ex) {
+            Logger.getLogger(JDModificarClientes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JDModificarClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_formComponentShown
 
     private void jtfdCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdCorreoActionPerformed
         // TODO add your handling code here:
@@ -277,20 +288,21 @@ public class JDAgregarClientes extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDAgregarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDModificarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDAgregarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDModificarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDAgregarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDModificarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDAgregarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDModificarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDAgregarClientes dialog = new JDAgregarClientes(new javax.swing.JFrame(), true);
+                JDModificarClientes dialog = new JDModificarClientes(new javax.swing.JFrame(), true,idCliente);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -306,10 +318,8 @@ public class JDAgregarClientes extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jbtnGuardar;
     private javax.swing.JComboBox<String> jcbxTipo;
@@ -317,7 +327,6 @@ public class JDAgregarClientes extends javax.swing.JDialog {
     private org.swing.componet.JTextBoxHintDS jtfdDireccion;
     private org.swing.componet.JTextBoxHintDS jtfdDni;
     private org.swing.componet.JTextBoxHintDS jtfdNombres;
-    private org.swing.componet.JTextBoxHintDS jtfdTelefono;
     // End of variables declaration//GEN-END:variables
 
 

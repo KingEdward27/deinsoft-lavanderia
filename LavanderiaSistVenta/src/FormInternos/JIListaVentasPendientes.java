@@ -46,8 +46,11 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     /**
      * Creates new form JIListaVentasPendientes
      */
-    public JIListaVentasPendientes() {
+    String nroTicket;
+
+    public JIListaVentasPendientes(String nroTicket) {
         initComponents();
+        this.nroTicket = nroTicket;
     }
 
     /**
@@ -73,7 +76,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         tbxACuenta = new javax.swing.JTextField();
-        tbxtipodoc = new javax.swing.JTextField();
+        tbxnumdoc = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         tbxFechaEntrega = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -234,13 +237,13 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Cliente:");
 
-        jLabel2.setText("Tipo Documiento:");
+        jLabel2.setText("Documento:");
 
         jLabel8.setText("A cuenta:");
 
-        tbxtipodoc.addActionListener(new java.awt.event.ActionListener() {
+        tbxnumdoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbxtipodocActionPerformed(evt);
+                tbxnumdocActionPerformed(evt);
             }
         });
 
@@ -263,7 +266,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
             }
         });
 
-        jbtnBCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/agregar.png"))); // NOI18N
+        jbtnBCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagen/editar.png"))); // NOI18N
         jbtnBCliente1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtnBCliente1ActionPerformed(evt);
@@ -282,10 +285,10 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbtnBCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tbxtipodoc, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                    .addComponent(tbxnumdoc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
@@ -314,10 +317,6 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbxserie1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tbxtipodoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(26, 26, 26))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -327,17 +326,20 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                             .addComponent(tbxFechaEntrega, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(4, 4, 4)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jbtnBCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbxClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(tbxACuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbxTipoServicio1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(tbxTipoServicio1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2))
+                                .addGap(4, 4, 4)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tbxnumdoc, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jbtnBCliente1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxClientes, javax.swing.GroupLayout.Alignment.TRAILING))))))
                 .addContainerGap())
         );
 
@@ -352,7 +354,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(46, Short.MAX_VALUE)
+                .addContainerGap(58, Short.MAX_VALUE)
                 .addComponent(jlblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -648,12 +650,13 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         try {
 //            System.out.println("wtf");
             int index = -1;
-            for (Clientes ts2 : ClientesADN.Lista(ts)) {
+            List<Clientes> list = ClientesADN.Lista(ts);
+            for (Clientes ts2 : list) {
                 cbxClientes.addItem(ts2.getNombres());
 
 //                System.out.println("waaa");
             }
-            for (Clientes ts2 : ClientesADN.Lista(ts)) {
+            for (Clientes ts2 : list) {
                 index++;
                 if (ts2.getIdCliente() == 1) {
                     break;
@@ -685,6 +688,8 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
         }
+        tbxNroVenta.setText(nroTicket);
+        tbxNroVentaActionPerformed(null);
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void jtbelistaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbelistaMouseClicked
@@ -714,17 +719,18 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 //            td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
             if (td.getValue().equals("01") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 11)) {
                 JOptionPane.showMessageDialog(rootPane, "El cliente no tiene RUC para generar documento electrónico");
+
                 return;
             }
-            if (td.getValue().equals("03") && (this.cliente.getDni().isEmpty() || this.cliente.getDni().length() != 8)) {
+            if (td.getValue().equals("03") && (this.cliente.getDni().isEmpty())) {
                 JOptionPane.showMessageDialog(rootPane, "El cliente no tiene DNI para generar documento electrónico");
                 return;
             }
             estado = false;
             total = Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length()));
             float a_cuenta = Float.parseFloat(tbxACuenta.getText().toString());;
-            
-            if(cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 1){
+
+            if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 1) {
                 JOptionPane.showMessageDialog(rootPane, "Debe generar el comprobante del pago a cuenta primero");
                 return;
             }
@@ -733,7 +739,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 is_acuenta = true;
             }
             if (cbxServicios1.getSelectedIndex() == 0) {
-                
+
 //                //float descuento = Float.parseFloat(dtm.getValueAt(fila, 0).toString());
 //                if(cbxPagos.getItemCount() > 1){
 //                total = total - a_cuenta - descuento;
@@ -758,13 +764,13 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 v.setTipo_pago(cbxServicios1.getSelectedItem().toString());
                 v.setDescuento(descuento);
                 v.setSaldo(0);
-                
+
                 v.setRecibido(recidido);
-                if(cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 0){
+                if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 0) {
                     is_acuenta = true;
                 }
                 v.setVuelto(vuelto);
-                
+
                 String fecha = Formatos.sdfFecha.format(jdprFecVenta.getDate());
                 try {
                     Date fechasql = Formatos.FechaSQL(fecha);
@@ -772,8 +778,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 } catch (ParseException ex) {
                     Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                
+
                 boolean ven = false;
                 int ingresoId = 0;
                 try {
@@ -781,13 +786,13 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     System.out.println("idc: " + idc);
                     Ingresos i = new Ingresos();
                     int idIngreso = 0;
-                    if(cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 0){
+                    if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 0) {
                         is_acuenta = true;
                         //get ingreso x idventa
                         i.setMonto(a_cuenta);
                         idIngreso = IngresosADN.getIngresoIdByVentaId(id).getIdIngreso();
                         v.setEstado("p");
-                    }else{
+                    } else {
                         is_acuenta = false;
                         i.setMonto(total);
                         idIngreso = 0;
@@ -801,8 +806,8 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     i.setVenta(v);
                     i.setDescuento(descuento);
                     i.setRecibido(recidido);
-                    i.setIgv(total - total/(1 + valorIGV));
-                    i.setSubtotal(total/(1 + valorIGV));
+                    i.setIgv(total - total / (1 + valorIGV));
+                    i.setSubtotal(total / (1 + valorIGV));
                     i.setSerieDocE(jlblTotal1.getText().split("-")[0]);
                     i.setFechaPago(Formatos.FechaSQL(fecha));
                     ingresoId = IngresosADN.generarComprobante(i);
@@ -813,12 +818,12 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 }
                 if (ingresoId > 0) {
 //                    cbxtipodocumentoE.removeAllItems();
-                    if(is_acuenta){
+                    if (is_acuenta) {
                         JOptionPane.showMessageDialog(rootPane, "Pago a cuenta facturado correctamente");
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(rootPane, "Venta cancelada correctamente");
                     }
-                    
+
                 }
                 if (ven) {
                     JOptionPane.showMessageDialog(rootPane, "Venta cancelada correctamente");
@@ -832,18 +837,18 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 
                         try {
                             datosVenta = VentasADN.getDatosVenta2(null, null, ingresoId, true).get(0);
-                            if(is_acuenta){
+                            if (is_acuenta) {
                                 datosVentaDetalle = new ArrayList<>();
 //                                String codigo, String producto, float cantidad, float precio, 
 //                                float importe,int idproducto,float afectacionIGV
-                                datosVentaDetalle.add(new ConsultaVentas2("-", 
-                                        "ADELANTO DE "+Formatos.df.format(a_cuenta)+"DE PAGO DE SERVICIO ", 
-                                        1, a_cuenta, 
-                                        a_cuenta, 0, a_cuenta - (a_cuenta/(1+valorIGV))));
-                            }else{
+                                datosVentaDetalle.add(new ConsultaVentas2("-",
+                                        "ADELANTO DE " + Formatos.df.format(a_cuenta) + "DE PAGO DE SERVICIO ",
+                                        1, a_cuenta,
+                                        a_cuenta, 0, a_cuenta - (a_cuenta / (1 + valorIGV))));
+                            } else {
                                 datosVentaDetalle = VentasADN.Detalle_Ventas(id);
                             }
-                            
+
                         } catch (SQLException ex) {
                             System.out.println(Util.exceptionToString(ex));
                         } catch (ClassNotFoundException ex) {
@@ -852,24 +857,28 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                         EnvioPSE envioPSE = new EnvioPSE();
                         String jsonBody = envioPSE.paramToJson(datosVenta, datosVentaDetalle);
                         resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
-
-                        if (resultEnvioPSE.isResult()) {
-                            Ingresos doc = new Ingresos();
-                            doc.setIdIngreso(ingresoId);
-                            doc.setEnvioPseFlag("1");
-                            doc.setEnvioPseMensaje("Recibido correctamente");
-                            doc.setNroRespuesta(resultEnvioPSE.getId());
-                            doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
-                            doc.setXmlHash(resultEnvioPSE.getXmlHash());
-                            IngresosADN.updateFlagEnvioPSE(doc);
-                        } else {
-                            Ingresos doc = new Ingresos();
-                            doc.setIdIngreso(ingresoId);
-                            doc.setEnvioPseFlag("0");
-                            doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
-                            IngresosADN.updateFlagEnvioPSE(doc);
-                            JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
+                        if (resultEnvioPSE != null) {
+                            if (resultEnvioPSE.isResult()) {
+                                Ingresos doc = new Ingresos();
+                                doc.setIdIngreso(ingresoId);
+                                doc.setEnvioPseFlag("1");
+                                doc.setEnvioPseMensaje("Recibido correctamente");
+                                doc.setNroRespuesta(resultEnvioPSE.getId());
+                                doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
+                                doc.setXmlHash(resultEnvioPSE.getXmlHash());
+                                IngresosADN.updateFlagEnvioPSE(doc);
+                            } else {
+                                Ingresos doc = new Ingresos();
+                                doc.setIdIngreso(ingresoId);
+                                doc.setEnvioPseFlag("0");
+                                doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
+                                IngresosADN.updateFlagEnvioPSE(doc);
+                                JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
+                            }
+                        }else{
+                            JOptionPane.showMessageDialog(rootPane, ":. Respuesta incorrecta de los servicios de facturación DEINSOFT/SUNAT");
                         }
+
                         //obtenemos otra vez los datos por lo actualizado por el envío
                         //                                            jlblEstado.setText("Comprobante enviado...");
                     } catch (Exception ex) {
@@ -880,37 +889,52 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                         //imprimir pruebas demostracion facturacion electronica
                         //                                    return;
                     }
-                    if (resultEnvioPSE.isResult()) {
-                        try {
-                            String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
-                            if (rutaDoc.equals("")) {
-                                JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
-                            } else {
-                                if (resultEnvioPSE.getPdfRespuesta() != null) {
-                                    Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerieDocE() + "-"
-                                            + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
+                    if (resultEnvioPSE != null) {
+                        if (resultEnvioPSE.isResult()) {
+                            try {
+                                String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
+                                if (rutaDoc.equals("")) {
+                                    JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
+                                } else {
+                                    if (resultEnvioPSE.getPdfRespuesta() != null) {
+                                        Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerieDocE() + "-"
+                                                + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
+                                    }
+                                    if (resultEnvioPSE.getXmlRespuesta() != null) {
+                                        Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerieDocE() + "-"
+                                                + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
+                                    }
                                 }
-                                if (resultEnvioPSE.getXmlRespuesta() != null) {
-                                    Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerieDocE() + "-"
-                                            + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
-                                }
+                                //imprimir reporte
+                                //                                                jlblEstado.setText("Comprobante enviado...");
+                                JDConfirmacion dialog = new JDConfirmacion(null, closable, ingresoId, false, ParametrosADN.Lista().get(0).getNombreImpresora(), "i", id, is_acuenta ? "1" : "0");
+                                dialog.setLocationRelativeTo(this);
+                                dialog.setVisible(true);
+
+                            } catch (Exception ex) {
+                                System.out.println(Util.exceptionToString(ex));
+                                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + ex.toString());
                             }
-                            //imprimir reporte
-                            //                                                jlblEstado.setText("Comprobante enviado...");
-                            JDConfirmacion dialog = new JDConfirmacion(null, closable, ingresoId, false, ParametrosADN.Lista().get(0).getNombreImpresora(),"i",id,is_acuenta?"1":"0");
-                            dialog.setLocationRelativeTo(this);
-                            dialog.setVisible(true);
 
-                        } catch (Exception ex) {
-                            System.out.println(Util.exceptionToString(ex));
-                            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + ex.toString());
                         }
-
+                    } else {
+                        JDConfirmacion dialog;
+                        try {
+                            dialog = new JDConfirmacion(null, closable, ingresoId, false, ParametrosADN.Lista().get(0).getNombreImpresora(), "i", id, is_acuenta ? "1" : "0");
+                            dialog.setLocationRelativeTo(this);
+                        dialog.setVisible(true);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
                     }
+
                 } else {
                     JDConfirmacion dialog = null;
                     try {
-                        dialog = new JDConfirmacion(null, closable, ingresoId, false, ParametrosADN.Lista().get(0).getNombreImpresora(),"i",id, is_acuenta?"1":"0");
+                        dialog = new JDConfirmacion(null, closable, ingresoId, false, ParametrosADN.Lista().get(0).getNombreImpresora(), "i", id, is_acuenta ? "1" : "0");
                     } catch (SQLException ex) {
                         System.out.println(Util.exceptionToString(ex));
                     } catch (ClassNotFoundException ex) {
@@ -933,7 +957,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
             id = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
             JDConfirmacion dialog = null;
             try {
-                dialog = new JDConfirmacion(null, closable, id, true, ParametrosADN.Lista().get(0).getNombreImpresora(),"v",id,"0");
+                dialog = new JDConfirmacion(null, closable, id, true, ParametrosADN.Lista().get(0).getNombreImpresora(), "v", id, "0");
             } catch (SQLException ex) {
                 Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
@@ -1080,7 +1104,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     cbxClientes.setSelectedItem(jtbelista.getValueAt(fila, 1).toString());
                     jtfdIGV.setText(jtbelista.getValueAt(fila, 7).toString());
                     jtfdSubTotal.setText(jtbelista.getValueAt(fila, 8).toString());
-                    tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
+                    //tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
                     tbxACuenta.setText(jtbelista.getValueAt(fila, 3).toString());
                     jlblTotal.setText("S/. " + jtbelista.getValueAt(fila, 10).toString());
                     VerDatosProductos();
@@ -1125,7 +1149,8 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     cbxClientes.setSelectedItem(this.cliente.getNombres());
                     jtfdIGV.setText(jtbelista.getValueAt(fila, 7).toString());
                     jtfdSubTotal.setText(jtbelista.getValueAt(fila, 8).toString());
-                    tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
+                    //tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
+                    tbxnumdoc.setText(this.cliente.getDni());
                     tbxACuenta.setText(jtbelista.getValueAt(fila, 16).toString());
                     float a_cuentaa = Float.parseFloat(jtbelista.getValueAt(fila, 16).toString());
                     descuento = Float.parseFloat(jtbelista.getValueAt(fila, 10).toString());
@@ -1140,11 +1165,11 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     float total = Float.parseFloat(jtbelista.getValueAt(fila, 11).toString());
                     Ingresos i = IngresosADN.getIngresoIdByVentaId(idventa);
                     //no hay pagos a cuenta
-                    if(i != null){
+                    if (i != null) {
                         if (!i.getEstado().equals("2")) {
                             cbxPagos.addItem("A cuenta: " + String.valueOf(a_cuentaa));
-                        }else{
-                            
+                        } else {
+
                         }
                         total = total - i.getMonto();
                     }
@@ -1227,7 +1252,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                         cbxServicios1.setEnabled(true);
                         cbxPagos.setEnabled(true);
                     }
-                    
+
                 }
             }
             cbxtipodocumentoEActionPerformed(evt);
@@ -1238,9 +1263,9 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_tbxNroVentaActionPerformed
 
-    private void tbxtipodocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxtipodocActionPerformed
+    private void tbxnumdocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxnumdocActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tbxtipodocActionPerformed
+    }//GEN-LAST:event_tbxnumdocActionPerformed
 
     private void tbxFechaEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxFechaEntregaActionPerformed
         // TODO add your handling code here:
@@ -1284,6 +1309,14 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cbxClientesActionPerformed
 
     private void jbtnBCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnBCliente1ActionPerformed
+
+        try {
+            this.cliente = ClientesADN.getByName(cbxClientes.getSelectedItem().toString());
+            JDModificarClientes dialog = new JDModificarClientes(null, closable, cliente.getIdCliente());
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+            tbxNroVentaActionPerformed(evt);
+
 //        JDAgregarClientes v = new JDAgregarClientes(null, closable);
 //        v.setLocationRelativeTo(this);
 //        v.setVisible(true);
@@ -1294,6 +1327,11 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 //            } catch (SQLException ex) {
 //                System.out.println("ex: "+ex.toString());
 //            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jbtnBCliente1ActionPerformed
 
     private void cbxServicios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxServicios1ActionPerformed
@@ -1383,8 +1421,8 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     private javax.swing.JTextField tbxFechaEntrega;
     private javax.swing.JTextField tbxNroVenta;
     private javax.swing.JTextField tbxTipoServicio1;
+    private javax.swing.JTextField tbxnumdoc;
     private javax.swing.JTextField tbxserie1;
-    private javax.swing.JTextField tbxtipodoc;
     // End of variables declaration//GEN-END:variables
 
     private void VerDatos() throws SQLException, ClassNotFoundException {

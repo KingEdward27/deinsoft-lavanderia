@@ -132,6 +132,20 @@ public class ClientesADN {
         }
         return r;
     }
+    private static Clientes findById(int idCLiente) throws SQLException, ClassNotFoundException {
+        Clientes r = null;
+        String sql = "select idcliente,nombres,trim(dni),tipo from clientes where idcliente = ?";
+        try (Connection cn = Conexion.Conexion();
+                PreparedStatement pst = cn.prepareStatement(sql)) {
+            pst.setInt(1, idCLiente);
+            // leer el siguiente valor:
+            try (ResultSet rs = pst.executeQuery()) {
+                rs.next();
+                r = new Clientes(rs.getInt(1), rs.getString(2), rs.getString(3), null, null, null,null,rs.getString(4));
+            }
+        }
+        return r;
+    }
     private static LinkedList<Clientes> ListaClientes(Clientes c) throws SQLException, ClassNotFoundException {
         LinkedList<Clientes> aux = new LinkedList<>();
         String sql = "select idcliente,nombres,dni,direccion,telefono,estado,ifnull(correo,''),ifnull(tipo,'') correo "
@@ -209,5 +223,8 @@ private static List<String> ListaClientes_combo(Clientes c) throws SQLException,
     }
     public static Clientes getByName(String name) throws SQLException, ClassNotFoundException{
         return findByName(name);
+    }
+    public static Clientes getById(int idCLiente) throws SQLException, ClassNotFoundException{
+        return findById(idCLiente);
     }
 }

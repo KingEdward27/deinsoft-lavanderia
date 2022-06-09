@@ -25,6 +25,7 @@ import entidades.*;
 import facturacionelectronica.EnvioPSE;
 import facturacionelectronica.JDConfirmacion;
 import facturacionelectronica.RespuestaPSE;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
@@ -54,6 +55,8 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import javax.swing.JFileChooser;
+import javax.swing.JProgressBar;
+import javax.swing.SwingWorker;
 import javax.swing.table.TableModel;
 import jxl.write.*;
 import jxl.*;
@@ -67,6 +70,8 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
     /**
      * Creates new form JIConsultaVentas
      */
+    List<ConsultaVentas2> list;
+    int contador = 0;
     public JIConsultaVentasMonitor2() {
         initComponents();
     }
@@ -97,6 +102,10 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         btnimprimir1 = new javax.swing.JButton();
+        cbxServicios1 = new javax.swing.JComboBox();
+        jLabel15 = new javax.swing.JLabel();
+        btnimprimir2 = new javax.swing.JButton();
+        jProgressBar1 = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -189,31 +198,32 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
             }
         });
 
+        cbxServicios1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TODOS", "ENVIADOS", "NO ENVIADOS" }));
+        cbxServicios1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        cbxServicios1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxServicios1ActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("Estado:");
+
+        btnimprimir2.setBackground(new java.awt.Color(70, 80, 82));
+        btnimprimir2.setText("Enviar pendientes");
+        btnimprimir2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnimprimir2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jdprFecInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jdprFecFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(49, 49, 49)
-                                .addComponent(jLabel8)))
-                        .addGap(48, 48, 48)
-                        .addComponent(btnmostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnimprimir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnimprimir1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,18 +234,38 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
                         .addGap(34, 34, 34)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(214, 214, 214)
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jdprFecInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jdprFecFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(49, 49, 49)
+                                .addComponent(jLabel8)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(21, 21, 21)
+                        .addComponent(btnmostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnimprimir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnimprimir1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnimprimir2)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnmostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnimprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnimprimir1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
@@ -243,15 +273,26 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jdprFecInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jdprFecFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jdprFecFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnmostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnimprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnimprimir1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnimprimir2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel14))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(jLabel10)
+                        .addComponent(jLabel11)
+                        .addComponent(jLabel12)
+                        .addComponent(jLabel13)
+                        .addComponent(jLabel14))
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -267,6 +308,7 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
             }
         ));
         jTable1.setComponentPopupMenu(jPopupMenu1);
+        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Nro de ventas:");
@@ -280,7 +322,7 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 906, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -348,28 +390,7 @@ void OcultarColumna(int columna) {
     private void btnmostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmostrarActionPerformed
         try {
             VerDatos();
-            int nrofilas = 0, totalEnviados = 0;
-            float totalventas = 0;
-            int filas = jTable1.getRowCount();
-            if (filas > 0) {
-                for (int i = 0; i < filas; i++) {
-                    nrofilas += 1;
-                    totalventas += Float.parseFloat(dtm.getValueAt(i, 6).toString());
-                    String flag = dtm.getValueAt(i, 7).toString();
-                    if (flag.equals("SI")) {
-                        totalEnviados = totalEnviados + 1;
-                    }
-                }
 
-            } else {
-                totalventas = 0;
-                nrofilas = 0;
-            }
-            jLabel12.setText(String.valueOf(nrofilas));
-            jLabel13.setText(String.valueOf(totalEnviados));
-            jLabel14.setText(String.valueOf(nrofilas - totalEnviados));
-            tbxnroventas.setText(String.valueOf(nrofilas));
-            tbxtotal.setText(String.valueOf(totalventas));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(rootPane, e.toString());
         }
@@ -386,116 +407,18 @@ void OcultarColumna(int columna) {
 
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
         int fila = jTable1.getSelectedRow();
-        String enviado = jTable1.getValueAt(fila, 7).toString();
-        String tipoDoc = jTable1.getValueAt(fila, 1).toString();
-        String flagAdelanto = jTable1.getValueAt(fila, 11).toString();
-        float monto = Float.parseFloat(jTable1.getValueAt(fila, 6).toString()) ;
-        if (enviado.toLowerCase().equals("si")) {
-            JOptionPane.showMessageDialog(rootPane, ":. El documento ya se ha enviado :( .:");
-            return;
-        }
-        if (tipoDoc.toUpperCase().equals("NOTA DE VENTA")) {
-            JOptionPane.showMessageDialog(rootPane, ":. El documento NOTA DE VENTA no se puede enviar :( .:");
-            return;
-        }
-        int idVentaOIngreso = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
-        String tipoF = jTable1.getValueAt(fila, 9).toString();
-        int idVenta = Integer.parseInt(jTable1.getValueAt(fila, 10).toString());
-        ConsultaVentas2 datosVenta = null;
-        List<ConsultaVentas2> datosVentaDetalle = null;
-        try {
-
-            if (tipoF.equals("v")) {
-                datosVenta = VentasADN.getDatosVenta(null, null, idVentaOIngreso, false).get(0);
-            } else {
-                datosVenta = VentasADN.getDatosVenta2(null, null, idVentaOIngreso, false).get(0);
-            }
-            if (flagAdelanto.equals("1")) {
-                datosVentaDetalle = new ArrayList<>();
-//                                String codigo, String producto, float cantidad, float precio, 
-//                                float importe,int idproducto,float afectacionIGV
-                datosVentaDetalle.add(new ConsultaVentas2("-",
-                        "ADELANTO DE " + Formatos.df.format(monto) + "DE PAGO DE SERVICIO ",
-                        1, monto,
-                        monto, 0, monto - (monto / (1 + valorIGV))));
-            } else {
-                datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
-            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
-            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-
-        RespuestaPSE resultEnvioPSE = null;
-        try {
-            //enviar a pse
-
-            EnvioPSE envioPSE = new EnvioPSE();
-            String jsonBody = envioPSE.paramToJson(datosVenta, datosVentaDetalle);
-            resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
-
-            if (resultEnvioPSE.isResult()) {
-                Ingresos doc = new Ingresos();
-                doc.setIdIngreso(idVentaOIngreso);
-                doc.setEnvioPseFlag("1");
-                doc.setEnvioPseMensaje("Recibido correctamente");
-                doc.setNroRespuesta(resultEnvioPSE.getId());
-                doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
-                doc.setXmlHash(resultEnvioPSE.getXmlHash());
-                IngresosADN.updateFlagEnvioPSE(doc);
-            } else {
-                Ingresos doc = new Ingresos();
-                doc.setIdIngreso(idVentaOIngreso);
-                doc.setEnvioPseFlag("0");
-                doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
-                IngresosADN.updateFlagEnvioPSE(doc);
-                JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
-            }
-        } catch (Exception e) {
-            System.out.println(Util.exceptionToString(e));
-            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, e);
-            JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al enviar el documento :( .:" + e.getMessage());
-            return;
-        }
-        if (resultEnvioPSE.isResult()) {
+        boolean result = enviar(jTable1, fila, null);
+        if (result) {
             try {
-                String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
-                if (rutaDoc.equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
-                } else {
-                    if (resultEnvioPSE.getPdfRespuesta() != null) {
-                        Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerieDocE() + "-"
-                                + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
-                    }
-                    if (resultEnvioPSE.getXmlRespuesta() != null) {
-                        Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerieDocE() + "-"
-                                + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(Util.exceptionToString(e));
-                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, e);
-                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + e.toString());
+                VerDatos();
+            } catch (SQLException ex) {
+                Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        }
-        try {
-            VerDatos();
-        } catch (SQLException ex) {
-            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (resultEnvioPSE.isResult()) {
             JOptionPane.showMessageDialog(rootPane, ":. Enviado correctamente! :) .:");
-            //
         }
+
     }//GEN-LAST:event_EnviarActionPerformed
 
     private void btnimprimir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnimprimir1ActionPerformed
@@ -531,24 +454,69 @@ void OcultarColumna(int columna) {
         }
     }//GEN-LAST:event_btnimprimir1ActionPerformed
 
+    private void cbxServicios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxServicios1ActionPerformed
+
+    }//GEN-LAST:event_cbxServicios1ActionPerformed
+
+    private void btnimprimir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnimprimir2ActionPerformed
+
+        if (list != null) {
+            list = list
+                    .stream()
+                    .filter(c -> !c.getEnvioPseFlag().equals("1"))
+                    .collect(Collectors.toList());
+            int cadaPaso = 100 / list.size();
+            if (!list.isEmpty()) {
+                int r = JOptionPane.showConfirmDialog(rootPane, "¿Esta seguro de realizar este proceso? Total no enviados: " + list.size());
+                //int contador = 0;
+                int i = 0;
+                if (r == 0) {
+                    //jProgressBar1 = new JProgressBar(0, 100);
+//                    jProgressBar1.setStringPainted(true);
+//                    for (ConsultaVentas2 consultaVentas2 : list) {
+//                        boolean res = enviar(null, 0, consultaVentas2);
+//                        if (res) {
+//                            contador++;
+//                        }
+//                        jProgressBar1.setValue(i);    
+//                        i=i+cadaPaso;    
+//                        try{Thread.sleep(150);}catch(Exception e){}  
+//                    }
+//                    JOptionPane.showMessageDialog(rootPane, "Total enviados: " + contador + "\n. Total no enviados: " + (list.size() - contador));
+                    //jProgressBar1.setStringPainted(true);
+                    ProgressWorker worker = new ProgressWorker(jProgressBar1);
+                    worker.execute();
+
+                    
+                }
+            }
+        }
+
+
+    }//GEN-LAST:event_btnimprimir2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Enviar;
     private javax.swing.JMenuItem Imprimir;
     private javax.swing.JButton btnimprimir;
     private javax.swing.JButton btnimprimir1;
+    private javax.swing.JButton btnimprimir2;
     private javax.swing.JButton btnmostrar;
+    private javax.swing.JComboBox cbxServicios1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private com.michaelbaranov.microba.calendar.DatePicker jdprFecFinal;
@@ -556,6 +524,184 @@ void OcultarColumna(int columna) {
     private javax.swing.JTextField tbxnroventas;
     private javax.swing.JTextField tbxtotal;
     // End of variables declaration//GEN-END:variables
+
+    private class ProgressWorker extends SwingWorker<Void, Integer> {
+
+        private final JProgressBar progress;
+        
+        public ProgressWorker(JProgressBar progress) {
+            this.progress = progress;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            int cadaPaso = 100 / list.size();
+            int i = 0;
+            progress.setStringPainted(true);
+            for (ConsultaVentas2 consultaVentas2 : list) {
+                boolean res = enviar(null, 0, consultaVentas2);
+                if (res) {
+                    contador++;
+                }
+                i = i + cadaPaso;
+                publish(i);
+                //progress.setValue(progress.getValue() + cadaPaso);
+            }
+//            for (long i = 85000000; i > 0; i--) {
+//                final int progr = (int) ((100L * (85000000 - i)) / 85000000);
+//                publish(progr);
+//            }
+            return null;
+        }
+
+        @Override
+        protected void process(List<Integer> chunks) {
+            progress.setValue(chunks.get(chunks.size() - 1));
+            super.process(chunks);
+        }
+
+        @Override
+        protected void done() {
+            progress.setValue(100);
+            JOptionPane.showMessageDialog(rootPane, "Total enviados: " + contador + ". \nTotal no enviados: " + (list.size() - contador));
+        }
+    }
+
+    boolean enviar(JTable jTable1, int fila, ConsultaVentas2 item) {
+        String enviado = "", tipoDoc = "", flagAdelanto = "", tipoF = "";
+        float monto;
+        int idVentaOIngreso = 0, idVenta = 0;
+        if (jTable1 != null) {
+            enviado = jTable1.getValueAt(fila, 7).toString();
+            tipoDoc = jTable1.getValueAt(fila, 1).toString();
+            flagAdelanto = jTable1.getValueAt(fila, 11).toString();
+            monto = Float.parseFloat(jTable1.getValueAt(fila, 6).toString());
+
+            idVentaOIngreso = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+            tipoF = jTable1.getValueAt(fila, 9).toString();
+            idVenta = Integer.parseInt(jTable1.getValueAt(fila, 10).toString());
+        } else {
+            enviado = item.getEnvioPseFlag().equals("1") ? "SI" : "NO";
+            tipoDoc = item.getTipoDoc().getNombre();
+            flagAdelanto = item.getFlagAdelanto();
+            monto = item.getVentatotal();
+
+            idVentaOIngreso = item.getIdventa();
+            tipoF = item.getTipo();
+            idVenta = item.getIdVentaFromIngresos();
+        }
+
+        if (enviado.toLowerCase().equals("si")) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. El documento ya se ha enviado :( .:");
+            }
+            return false;
+        }
+        if (tipoDoc.toUpperCase().equals("NOTA DE VENTA")) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. El documento NOTA DE VENTA no se puede enviar :( .:");
+            }
+            return false;
+        }
+
+        ConsultaVentas2 datosVenta = null;
+        List<ConsultaVentas2> datosVentaDetalle = null;
+        try {
+
+            if (tipoF.equals("v")) {
+                datosVenta = VentasADN.getDatosVenta(null, null, idVentaOIngreso, false).get(0);
+            } else {
+                datosVenta = VentasADN.getDatosVenta2(null, null, idVentaOIngreso, false).get(0);
+            }
+            if (flagAdelanto.equals("1")) {
+                datosVentaDetalle = new ArrayList<>();
+//                                String codigo, String producto, float cantidad, float precio, 
+//                                float importe,int idproducto,float afectacionIGV
+                datosVentaDetalle.add(new ConsultaVentas2("-",
+                        "ADELANTO DE " + Formatos.df.format(monto) + "DE PAGO DE SERVICIO ",
+                        1, monto,
+                        monto, 0, monto - (monto / (1 + valorIGV))));
+            } else {
+                datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+            }
+
+        } catch (SQLException ex) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
+            }
+
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } catch (ClassNotFoundException ex) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
+            }
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+
+        RespuestaPSE resultEnvioPSE = null;
+        try {
+            //enviar a pse
+
+            EnvioPSE envioPSE = new EnvioPSE();
+            String jsonBody = envioPSE.paramToJson(datosVenta, datosVentaDetalle);
+            resultEnvioPSE = envioPSE.envioJsonPSE(jsonBody);
+
+            if (resultEnvioPSE.isResult()) {
+                Ingresos doc = new Ingresos();
+                doc.setIdIngreso(idVentaOIngreso);
+                doc.setEnvioPseFlag("1");
+                doc.setEnvioPseMensaje("Recibido correctamente");
+                doc.setNroRespuesta(resultEnvioPSE.getId());
+                doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
+                doc.setXmlHash(resultEnvioPSE.getXmlHash());
+                IngresosADN.updateFlagEnvioPSE(doc);
+            } else {
+                Ingresos doc = new Ingresos();
+                doc.setIdIngreso(idVentaOIngreso);
+                doc.setEnvioPseFlag("0");
+                doc.setEnvioPseMensaje(resultEnvioPSE.getErrCode() + "-" + resultEnvioPSE.getErrMessage());
+                IngresosADN.updateFlagEnvioPSE(doc);
+                if (jTable1 != null) {
+                    JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(Util.exceptionToString(e));
+            Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, e);
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al enviar el documento :( .:" + e.getMessage());
+            }
+            return false;
+        }
+        if (resultEnvioPSE.isResult()) {
+            try {
+                String rutaDoc = ParametrosADN.Lista().get(0).getRutadocs();
+                if (rutaDoc.equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, ":. Configuración permite guardar documentos en pc, pero no se encuentra ruta configurada :( .:");
+                } else {
+                    if (resultEnvioPSE.getPdfRespuesta() != null) {
+                        Util.getPDF(resultEnvioPSE.getPdfRespuesta(), rutaDoc + "/PDF/" + datosVenta.getSerieDocE() + "-"
+                                + String.format("%08d", datosVenta.getNumDocE()) + ".pdf");
+                    }
+                    if (resultEnvioPSE.getXmlRespuesta() != null) {
+                        Util.getPDF(resultEnvioPSE.getXmlRespuesta(), rutaDoc + "/XML/" + datosVenta.getSerieDocE() + "-"
+                                + String.format("%08d", datosVenta.getNumDocE()) + ".xml");
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(Util.exceptionToString(e));
+                Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, e);
+                if (jTable1 != null) {
+                    JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + e.toString());
+                }
+            }
+
+        }
+        return resultEnvioPSE.isResult();
+    }
+
     private void VerDatos() throws SQLException, ClassNotFoundException {
         try {
             int filas = jTable1.getRowCount();
@@ -566,15 +712,49 @@ void OcultarColumna(int columna) {
             String fec2 = Formatos.sdfFecha.format(jdprFecFinal.getDate());
             Date fechasql1 = Formatos.FechaSQL(fec1);
             Date fechasql2 = Formatos.FechaSQL(fec2);
-            List<ConsultaVentas2> list = VentasADN.getDatosVenta(fechasql1, fechasql2, 0, true);
+            list = VentasADN.getDatosVenta(fechasql1, fechasql2, 0, true);
             list.addAll(VentasADN.getDatosVenta2(fechasql1, fechasql2, 0, true));
+
+            int est = cbxServicios1.getSelectedIndex();
+            list = list
+                    .stream()
+                    .filter(c -> est == 0
+                    || (est == 1 && c.getEnvioPseFlag().equals(String.valueOf(est)))
+                    || (est == 2 && !c.getEnvioPseFlag().equals("1")))
+                    .collect(Collectors.toList());
 
             List<ConsultaVentas2> sortedList = list.stream()
                     .sorted(Comparator.comparingInt(ConsultaVentas2::getNumDocE).reversed())
                     .collect(Collectors.toList());
-
             for (ConsultaVentas2 la : sortedList) {
                 dtm.addRow(la.arregloDatosMonitor());
+            }
+            filas = jTable1.getRowCount();
+            int nrofilas = 0, totalEnviados = 0;
+            float totalventas = 0;
+            if (filas > 0) {
+                for (int i = 0; i < filas; i++) {
+                    nrofilas += 1;
+                    totalventas += Float.parseFloat(dtm.getValueAt(i, 6).toString());
+                    String flag = dtm.getValueAt(i, 7).toString();
+                    if (flag.equals("SI")) {
+                        totalEnviados = totalEnviados + 1;
+                    }
+                }
+
+            } else {
+                totalventas = 0;
+                nrofilas = 0;
+            }
+            jLabel12.setText(String.valueOf(nrofilas));
+            jLabel13.setText(String.valueOf(totalEnviados));
+            jLabel14.setText(String.valueOf(nrofilas - totalEnviados));
+            tbxnroventas.setText(String.valueOf(nrofilas));
+            tbxtotal.setText(String.valueOf(totalventas));
+            if (nrofilas - totalEnviados > 0) {
+                btnimprimir2.setBackground(new Color(102, 0, 0));
+            } else {
+                btnimprimir2.setBackground(new Color(70, 80, 82));
             }
 //            FormatoTabla ft  = new FormatoTabla();
 //            FormatoTabla.darFormato(jTable1,6);
@@ -821,7 +1001,7 @@ void OcultarColumna(int columna) {
 //            }
             int idVentaIngreso = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
             JDConfirmacion dialog = new JDConfirmacion(null, closable, idVentaIngreso, false,
-                    ParametrosADN.Lista().get(0).getNombreImpresora(), tipoF, idVenta,flagAdelanto);
+                    ParametrosADN.Lista().get(0).getNombreImpresora(), tipoF, idVenta, flagAdelanto);
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
 //            int idVenta = Integer.parseInt(jTable1.getValueAt(fila, 2).toString());

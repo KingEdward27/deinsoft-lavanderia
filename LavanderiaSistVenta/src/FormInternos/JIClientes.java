@@ -529,8 +529,13 @@ public class JIClientes extends javax.swing.JInternalFrame {
             dn = jtfdDni.getText().trim().toUpperCase();
             tel = jtfdTelefono.getText().trim().toUpperCase();
             dir = jtfdDireccion.getText().trim().toUpperCase();
+            String tipo = jcbxTipo.getSelectedItem().toString();
             Clientes cli = null;
             String mensaje = "";
+            if(dn.length()> 10 && tipo.contains("1-")){
+                JOptionPane.showMessageDialog(rootPane, "Si es RUC, debe seleccionar correctamente el tipo de documento, caso contrario ingrese sólo 8 dígitos");
+                return;
+            }
             if (nom.length() == 0 ) {
                 JOptionPane.showMessageDialog(rootPane, "Asegurese de ingresar el nombre");
             } else {
@@ -539,7 +544,7 @@ public class JIClientes extends javax.swing.JInternalFrame {
                 c.setDni(dn);
                 c.setIdCliente(idcli);
                 boolean respuesta = true;
-                String tipo = jcbxTipo.getSelectedItem().toString();
+                
                 if (modif == false) {
                     cli = new Clientes(idcli, nom, dn, dir, tel, "1",jtfdCorreo.getText().trim(),tipo);
                     mensaje = "Datos guardados correctamente";

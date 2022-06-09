@@ -43,3 +43,6 @@ permitir generar comprobante en a cuenta
 
 
 la boleta sale con la fecha del pago a cuenta
+https://deinsoft-facturador-w.azurewebsites.net/
+usuario: lavanderiachick
+clave: DEINSOFT202201$$
