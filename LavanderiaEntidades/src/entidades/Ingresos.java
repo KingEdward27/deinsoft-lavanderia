@@ -24,6 +24,8 @@ public class Ingresos implements iArregloLista{
     private int indClienteE;
     private Date fechaPago;
     private Ventas venta;
+    private String tipoDocName ;
+    
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdIngreso() {
         return IdIngreso;
@@ -194,6 +196,14 @@ public class Ingresos implements iArregloLista{
         this.recibido = recibido;
     }
 
+    public String getTipoDocName() {
+        return tipoDocName;
+    }
+
+    public void setTipoDocName(String tipoDocName) {
+        this.tipoDocName = tipoDocName;
+    }
+
 
     //</editor-fold>
     
@@ -201,12 +211,13 @@ public class Ingresos implements iArregloLista{
     public Ingresos() {
     }
 
-    public Ingresos(int IdIngreso, Date Fecha, float Monto, String Motivo,String estado) {
+    public Ingresos(int IdIngreso, Date Fecha, float Monto, String Motivo,String estado,String tipoDocName) {
         this.IdIngreso = IdIngreso;
         this.Fecha = Fecha;
         this.Monto = Monto;
         this.Motivo = Motivo;
         this.estado = estado;
+        this.tipoDocName = tipoDocName;
     }
     
     public Ingresos(Date Fecha, float Monto, String Motivo) {

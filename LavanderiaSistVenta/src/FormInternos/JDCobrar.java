@@ -24,10 +24,12 @@ public class JDCobrar extends javax.swing.JDialog {
     /**
      * Creates new form JDCobrar
      */
-    public JDCobrar(java.awt.Frame parent, boolean modal) {
+    private static float total = 0f;
+    public JDCobrar(java.awt.Frame parent, boolean modal,float total) {
         super(parent, modal);
         initComponents();
         this.getRootPane().setDefaultButton(btncobrar);
+        this.total = total;
     }
 
     /**
@@ -268,16 +270,15 @@ public class JDCobrar extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if (JIVentas.llamada_venta) {
-            jtfdMonto.setText(String.valueOf(JIVentas.total));
-//            jtfdBillete1.setText(String.valueOf(JIVentas.total));
-            
-        }else
-        {
-            jtfdMonto.setText(String.valueOf(JIListaVentasPendientes.total));
-//            jtfdBillete1.setText(String.valueOf(JIVentas.total));
-            
-        }   
+//        if (JIVentas.llamada_venta) {
+//            jtfdMonto.setText(String.valueOf(JIVentas.total));
+//            
+//        }else
+//        {
+//            jtfdMonto.setText(String.valueOf(JIListaVentasPendientes.total));
+//            
+//        }  
+        jtfdMonto.setText(String.valueOf(total));
         jtfdDescuento.requestFocus();
         jtfdDescuento.setSelectionStart(0);
         jtfdDescuento.setSelectionEnd(jtfdDescuento.getText().length());
@@ -338,7 +339,7 @@ public class JDCobrar extends javax.swing.JDialog {
                         JIVentas.vuelto = Float.parseFloat(jtfdVuelto.getText());
                         JIVentas.estado_cobro = true;
                         JIVentas.a_cuenta=a_cuenta;
-                        JIVentas.descuento=JIVentas.total*descuento;
+                        JIVentas.descuento=total*descuento;
                         llamada_venta = false;
                         dispose();
                     }else
@@ -427,7 +428,7 @@ public class JDCobrar extends javax.swing.JDialog {
     }//GEN-LAST:event_jtfdAcuentaKeyTyped
 
     private void jtfdDescuentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdDescuentoActionPerformed
-        float total =  JIVentas.llamada_venta?JIVentas.total:JIListaVentasPendientes.total;
+        //float total =  JIVentas.llamada_venta?JIVentas.total:JIListaVentasPendientes.total;
         float descuento = Float.parseFloat(jtfdDescuento.getText().toString())/100;
         jtfdMonto.setText(Formatos.df.format(total - total*descuento));
         jtfdAcuenta.setSelectionStart(0);
@@ -502,7 +503,7 @@ public class JDCobrar extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDCobrar dialog = new JDCobrar(new javax.swing.JFrame(), true);
+                JDCobrar dialog = new JDCobrar(new javax.swing.JFrame(), true,total);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

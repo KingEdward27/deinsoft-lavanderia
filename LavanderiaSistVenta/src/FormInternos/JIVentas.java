@@ -810,7 +810,7 @@ public class JIVentas extends javax.swing.JInternalFrame {
                 total = Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length()));
                 if (cbxServicios1.getSelectedIndex() == 0) {
                     llamada_venta = true;
-                    JDCobrar co = new JDCobrar(null, closable);
+                    JDCobrar co = new JDCobrar(null, closable,total);
                     co.setLocationRelativeTo(this);
                     co.setVisible(true);
                     llamada_venta = false;

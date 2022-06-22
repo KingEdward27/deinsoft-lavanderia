@@ -100,14 +100,16 @@ public class IngresosADN {
 
     private static Ingresos findIngresoIdByVentaId(int ventaId) throws SQLException, ClassNotFoundException {
         Ingresos r = null;
-        String sql = "select idingreso,monto,estado from ingresos where idventa = ? and flag_adelanto = '1'";
+        String sql = "select i.idingreso,i.monto,i.estado,ifnull(td.nombre,'') nombre from ingresos i "
+                + "left join tipodoc td on td.tipodoc_id = i.tipodoc_id "
+                + "where i.idventa = ? and i.flag_adelanto = '1'";
         try (Connection cn = Conexion.Conexion();
                 PreparedStatement pst = cn.prepareStatement(sql)) {
             pst.setInt(1, ventaId);
             // leer el siguiente valor:
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    r = new Ingresos(rs.getInt(1), null, rs.getFloat(2), null, rs.getString(3));
+                    r = new Ingresos(rs.getInt(1), null, rs.getFloat(2), null, rs.getString(3), rs.getString(4));
                     
                 }
             }
@@ -209,7 +211,7 @@ public class IngresosADN {
                                 + "cliente_id = ?,"
                                 + "estado = '2',"
                                 + "igv = ?,"
-                                + "subtotal = ?,fecha_pago = ?,descuento = ?, recibido = ? "
+                                + "subtotal = ?,fecha_pago = ?,descuento = ?, recibido = ?, monto = ? "
                                 + "where idingreso = ?";
                         ps = cn.prepareStatement(sql);
                         //                ps.setString(1, ent.getEstado());
@@ -227,7 +229,8 @@ public class IngresosADN {
                         ps.setDate(7, i.getFechaPago());
                         ps.setFloat(8, i.getDescuento());
                         ps.setFloat(9, i.getRecibido());
-                        ps.setInt(10, i.getIdIngreso());
+                        ps.setFloat(10, i.getMonto());
+                        ps.setInt(11, i.getIdIngreso());
                         
                         r = ps.executeUpdate();
                         ingresoId = i.getIdIngreso();

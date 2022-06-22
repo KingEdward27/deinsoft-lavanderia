@@ -81,7 +81,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         tbxFechaEntrega = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         tbxTipoServicio1 = new javax.swing.JTextField();
-        tbxserie1 = new javax.swing.JTextField();
+        tbxSaldo = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         cbxClientes = new javax.swing.JComboBox();
         jbtnBCliente1 = new javax.swing.JButton();
@@ -296,7 +296,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel15)
-                    .addComponent(tbxserie1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbxSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -316,7 +316,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbxserie1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbxSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -542,7 +542,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(3, 3, 3)
                                         .addComponent(lblEstado)))))
-                        .addGap(13, 13, 13)
+                        .addGap(18, 18, 18)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -572,7 +572,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                             .addComponent(jdprFecVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel16)
                             .addComponent(jlblTotal1))
-                        .addGap(0, 19, Short.MAX_VALUE))
+                        .addGap(0, 7, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jbtnGenerarComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -727,9 +727,27 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 return;
             }
             estado = false;
-            total = Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length()));
-            float a_cuenta = Float.parseFloat(tbxACuenta.getText().toString());;
+            float total = Float.parseFloat(jlblTotal.getText().substring(4, jlblTotal.getText().length()));
+            a_cuenta = Float.parseFloat(tbxACuenta.getText().toString());
 
+            if (cbxtipodocumentoE.getSelectedIndex() == 1) {
+                a_cuenta = a_cuenta + a_cuenta * valorIGV;
+            }
+            Ingresos ingreso = null;
+            try {
+                ingreso = IngresosADN.getIngresoIdByVentaId(id);
+            } catch (SQLException ex) {
+                Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(ingreso != null && ingreso.getEstado().equals("2")){
+                if(!ingreso.getTipoDocName().equals(cbxtipodocumentoE.getSelectedItem().toString())){
+                    JOptionPane.showMessageDialog(rootPane, "El tipo de comprobante debe ser el mismo que el del pago a cuenta: "+ingreso.getTipoDocName());
+                    return;
+                }
+            }
+            
             if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 1) {
                 JOptionPane.showMessageDialog(rootPane, "Debe generar el comprobante del pago a cuenta primero");
                 return;
@@ -748,7 +766,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 //                    total = a_cuenta - descuento;
 //                    is_acuenta = true;
 //                }
-                JDCobrar c = new JDCobrar(null, closable);
+                JDCobrar c = new JDCobrar(null, closable,total);
                 c.setLocationRelativeTo(this);
                 c.setVisible(true);
             } else {
@@ -789,12 +807,12 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 0) {
                         is_acuenta = true;
                         //get ingreso x idventa
-                        i.setMonto(a_cuenta);
-                        idIngreso = IngresosADN.getIngresoIdByVentaId(id).getIdIngreso();
+                        //i.setMonto(a_cuenta);
+                        idIngreso = ingreso.getIdIngreso();
                         v.setEstado("p");
                     } else {
                         is_acuenta = false;
-                        i.setMonto(total);
+
                         idIngreso = 0;
                         v.setEstado("1");
                     }
@@ -808,6 +826,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     i.setRecibido(recidido);
                     i.setIgv(total - total / (1 + valorIGV));
                     i.setSubtotal(total / (1 + valorIGV));
+                    i.setMonto(total);
                     i.setSerieDocE(jlblTotal1.getText().split("-")[0]);
                     i.setFechaPago(Formatos.FechaSQL(fecha));
                     ingresoId = IngresosADN.generarComprobante(i);
@@ -875,7 +894,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                 IngresosADN.updateFlagEnvioPSE(doc);
                                 JOptionPane.showMessageDialog(rootPane, ":. Hubo un problema al enviar el documento electrónico :( .:\n" + doc.getEnvioPseMensaje());
                             }
-                        }else{
+                        } else {
                             JOptionPane.showMessageDialog(rootPane, ":. Respuesta incorrecta de los servicios de facturación DEINSOFT/SUNAT");
                         }
 
@@ -922,13 +941,13 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                         try {
                             dialog = new JDConfirmacion(null, closable, ingresoId, false, ParametrosADN.Lista().get(0).getNombreImpresora(), "i", id, is_acuenta ? "1" : "0");
                             dialog.setLocationRelativeTo(this);
-                        dialog.setVisible(true);
+                            dialog.setVisible(true);
                         } catch (SQLException ex) {
                             Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (ClassNotFoundException ex) {
                             Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
+
                     }
 
                 } else {
@@ -1137,80 +1156,85 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 
     private void tbxNroVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxNroVentaActionPerformed
         try {
-            VerDatos();
-            if (jtbelista.getRowCount() > 0) {
-                cbxPagos.removeAllItems();
-                jtbelista.setRowSelectionInterval(0, 0);
-                jtbelista.requestFocus();
+            if (tbxNroVenta.getText().length() > 0) {
+                VerDatos();
+                if (jtbelista.getRowCount() > 0) {
+                    cbxPagos.removeAllItems();
+                    jtbelista.setRowSelectionInterval(0, 0);
+                    jtbelista.requestFocus();
 
-                int fila = jtbelista.getSelectedRow();
-                idventa = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
-                if (fila >= 0) {
-                    cbxClientes.setSelectedItem(this.cliente.getNombres());
-                    jtfdIGV.setText(jtbelista.getValueAt(fila, 7).toString());
-                    jtfdSubTotal.setText(jtbelista.getValueAt(fila, 8).toString());
-                    //tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
-                    tbxnumdoc.setText(this.cliente.getDni());
-                    tbxACuenta.setText(jtbelista.getValueAt(fila, 16).toString());
-                    float a_cuentaa = Float.parseFloat(jtbelista.getValueAt(fila, 16).toString());
-                    descuento = Float.parseFloat(jtbelista.getValueAt(fila, 10).toString());
-                    float saldo = 0f;
-                    if (a_cuentaa > 0) {
-                        saldo = Float.parseFloat(jtbelista.getValueAt(fila, 11).toString())
-                                - Float.parseFloat(jtbelista.getValueAt(fila, 16).toString()) - descuento;
-                    } else {
-                        saldo = 0;
-                    }
-                    tbxserie1.setText(Formatos.df.format(saldo));
-                    float total = Float.parseFloat(jtbelista.getValueAt(fila, 11).toString());
-                    Ingresos i = IngresosADN.getIngresoIdByVentaId(idventa);
-                    //no hay pagos a cuenta
-                    if (i != null) {
-                        if (!i.getEstado().equals("2")) {
-                            cbxPagos.addItem("A cuenta: " + String.valueOf(a_cuentaa));
+                    int fila = jtbelista.getSelectedRow();
+                    idventa = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
+                    if (fila >= 0) {
+                        cbxClientes.setSelectedItem(this.cliente.getNombres());
+
+                        //tbxtipodoc.setText(jtbelista.getValueAt(fila, 2).toString());
+                        tbxnumdoc.setText(this.cliente.getDni());
+                        tbxACuenta.setText(jtbelista.getValueAt(fila, 16).toString());
+                        total = Float.parseFloat(jtbelista.getValueAt(fila, 11).toString());
+                        a_cuenta = Float.parseFloat(jtbelista.getValueAt(fila, 16).toString());
+                        descuento = Float.parseFloat(jtbelista.getValueAt(fila, 10).toString());
+                        float saldo = 0f;
+                        if (a_cuenta > 0) {
+                            saldo = total - a_cuenta - descuento;
                         } else {
-
+                            saldo = 0;
                         }
-                        total = total - i.getMonto();
-                    }
-                    cbxPagos.addItem("Saldo: " + String.valueOf(total));
-                    jlblTotal.setText("S/. " + String.valueOf(total));
+                        tbxSaldo.setText(Formatos.df.format(saldo));
+                        jtfdIGV.setText(jtbelista.getValueAt(fila, 7).toString());
+                        jtfdSubTotal.setText(jtbelista.getValueAt(fila, 8).toString());
 
-                    tbxTipoServicio1.setText(jtbelista.getValueAt(fila, 13).toString());
-                    tbxFechaEntrega.setText(jtbelista.getValueAt(fila, 14).toString());
+                        Ingresos i = IngresosADN.getIngresoIdByVentaId(idventa);
+                        //no hay pagos a cuenta
+                        //float total2 = 0f;
+                        if (i != null) {
+                            if (!i.getEstado().equals("2")) {
+                                cbxPagos.addItem("A cuenta: " + String.valueOf(a_cuenta));
+                                total = a_cuenta;
+                            } else {
+                                //total2 = total;
+                                total = Float.parseFloat(jtbelista.getValueAt(fila, 11).toString());
+                                total = total - a_cuenta;
+                            }
+                            
+                        }
+                        cbxPagos.addItem("Saldo: " + String.valueOf(total));
+                        jlblTotal.setText("S/. " + String.valueOf(total));
+                        tbxTipoServicio1.setText(jtbelista.getValueAt(fila, 13).toString());
+                        tbxFechaEntrega.setText(jtbelista.getValueAt(fila, 14).toString());
 
-                    String estadoCancelado = jtbelista.getValueAt(fila, 15).toString();
-                    String estadoEntregado;
+                        String estadoCancelado = jtbelista.getValueAt(fila, 15).toString();
+                        String estadoEntregado;
 //                    String estadoEntregado = jtbelista.getValueAt(fila, 15).toString();
 
 //                    String estado_v = "";
 //                    if(estadoCancelado.equals("PAGADO")){
 //                        estado_v = "PAGADO";
 //                    }
-                    System.out.println("estadoCancelado: " + estadoCancelado);
-                    switch (estadoCancelado) {
-                        case "p":
-                            estadoCancelado = "POR CANCELAR";
-                            estadoEntregado = "POR ENTREGAR";
-                            break;
-                        case "1":
+                        System.out.println("estadoCancelado: " + estadoCancelado);
+                        switch (estadoCancelado) {
+                            case "p":
+                                estadoCancelado = "POR CANCELAR";
+                                estadoEntregado = "POR ENTREGAR";
+                                break;
+                            case "1":
 //                            if (Float.parseFloat(tbxACuenta.getText().toString()) > 0) {
 //                                estadoCancelado = "POR CANCELAR";
 //                            } else {
 //                                estadoCancelado = "PAGADO";
 //                            }
-                            estadoCancelado = "PAGADO";
-                            estadoEntregado = "POR ENTREGAR";
-                            break;
-                        case "0":
-                            estadoCancelado = "ANULADO";
-                            estadoEntregado = "ANULADO";
-                            break;
-                        default:
-                            estadoCancelado = "PAGADO";
-                            estadoEntregado = "ENTREGADO";
-                            break;
-                    }
+                                estadoCancelado = "PAGADO";
+                                estadoEntregado = "POR ENTREGAR";
+                                break;
+                            case "0":
+                                estadoCancelado = "ANULADO";
+                                estadoEntregado = "ANULADO";
+                                break;
+                            default:
+                                estadoCancelado = "PAGADO";
+                                estadoEntregado = "ENTREGADO";
+                                break;
+                        }
 //                    if (!estadoCancelado.equals("POR PAGAR")) {
 //                        if (Float.parseFloat(tbxACuenta.getText().toString()) > 0) {
 //                            estadoCancelado = "POR CANCELAR";
@@ -1225,37 +1249,46 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 //                        }
 //
 //                    }
-                    lblEstado.setText(estadoEntregado);
-                    lblpagado.setText(estadoCancelado);
-                    lblEstado.setForeground(Color.red);
-                    lblpagado.setForeground(Color.red);
-                    VerDatosProductos();
-                    tbxNroVenta.requestFocus();
-                    if (lblEstado.getText().equals("ENTREGADO") || lblEstado.getText().equals("ANULADO")) {
-                        jbtnVender.setEnabled(false);
-                    } else {
-                        jbtnVender.setEnabled(true);
-                    }
-                    if (lblpagado.getText().equals("PAGADO") || lblEstado.getText().equals("ANULADO")) {
-                        jLabel17.setEnabled(false);
-                        cbxtipodocumentoE.setEnabled(false);
-                        jlblTotal1.setEnabled(false);
-                        jbtnGenerarComprobante.setEnabled(false);
-                        cbxServicios1.setEnabled(false);
-                        cbxPagos.setEnabled(false);
+                        lblEstado.setText(estadoEntregado);
+                        lblpagado.setText(estadoCancelado);
+                        lblEstado.setForeground(Color.red);
+                        lblpagado.setForeground(Color.red);
+                        VerDatosProductos();
+                        tbxNroVenta.requestFocus();
+                        if (lblEstado.getText().equals("ENTREGADO") || lblEstado.getText().equals("ANULADO")) {
+                            jbtnVender.setEnabled(false);
+                        } else {
+                            jbtnVender.setEnabled(true);
+                        }
+                        if (lblpagado.getText().equals("PAGADO") || lblEstado.getText().equals("ANULADO")) {
+                            jLabel17.setEnabled(false);
+                            cbxtipodocumentoE.setEnabled(false);
+                            jlblTotal1.setEnabled(false);
+                            jbtnGenerarComprobante.setEnabled(false);
+                            cbxServicios1.setEnabled(false);
+                            cbxPagos.setEnabled(false);
 
-                    } else {
-                        jLabel17.setEnabled(true);
-                        cbxtipodocumentoE.setEnabled(true);
-                        jlblTotal1.setEnabled(true);
-                        jbtnGenerarComprobante.setEnabled(true);
-                        cbxServicios1.setEnabled(true);
-                        cbxPagos.setEnabled(true);
+                        } else {
+                            jLabel17.setEnabled(true);
+                            cbxtipodocumentoE.setEnabled(true);
+                            jlblTotal1.setEnabled(true);
+                            jbtnGenerarComprobante.setEnabled(true);
+                            cbxServicios1.setEnabled(true);
+                            cbxPagos.setEnabled(true);
+                        }
+                        //TipoDoc td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
+                        
+                        if (a_cuenta > 0 && i.getEstado().equals("2")) {
+                            cbxtipodocumentoE.setSelectedItem(i.getTipoDocName());
+                            cbxtipodocumentoE.setEditable(false);
+                        }else{
+                            cbxtipodocumentoEActionPerformed(evt);
+                        }
                     }
-
                 }
+                
             }
-            cbxtipodocumentoEActionPerformed(evt);
+
         } catch (SQLException ex) {
             Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -1277,13 +1310,27 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
             if (cbxtipodocumentoE.getItemCount() > 0) {
                 id = TipoDocADN.getId(cbxtipodocumentoE.getSelectedItem().toString());
                 NumeracionDocumento n = NumeracionDocumentoADN.getByTipoddocId(id);
-//                tbxserie1.setText(n.getSerie());
                 jlblTotal1.setText(n.getSerie() + "-" + String.format("%08d", n.getUltimoNumero() + 1));
-//                    if (this.cliente != null) {
-//                        if (cbxtipodocumentoE.getSelectedIndex() != 0 && this.cliente.getDni().isEmpty()) {
-//                            JOptionPane.showMessageDialog(rootPane, "El cliente no tiene dni para generar documento electrónico");
-//                        }
-//                    }
+                if (cbxtipodocumentoE.getSelectedIndex() == 1) {
+                    DefaultTableModel model = (DefaultTableModel) jtbelistaproductos.getModel();
+                    for (int i = 0; i < jtbelistaproductos.getRowCount(); i++) {
+                        float cantidad = Float.parseFloat(jtbelistaproductos.getValueAt(i, 1).toString());
+                        float precio = Float.parseFloat(jtbelistaproductos.getValueAt(i, 3).toString());
+                        float importe = Float.parseFloat(jtbelistaproductos.getValueAt(i, 4).toString());
+                        precio = precio + (precio * valorIGV);
+                        model.setValueAt(Formatos.df.format(precio), i, 3);
+                        model.setValueAt(Formatos.df.format(precio * cantidad), i, 4);
+
+                    }
+                    verTotales();
+                } else {
+                    VerDatosProductos();
+                    jtfdIGV.setText(Formatos.df.format(total - (total /(1 + valorIGV))));
+                    jtfdSubTotal.setText(Formatos.df.format(total / (1 + valorIGV)));
+                    jlblTotal.setText("S/. " + Formatos.df.format(total));
+                }
+                
+
             }
 
         } catch (Exception ex) {
@@ -1420,10 +1467,37 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     private javax.swing.JTextField tbxACuenta;
     private javax.swing.JTextField tbxFechaEntrega;
     private javax.swing.JTextField tbxNroVenta;
+    private javax.swing.JTextField tbxSaldo;
     private javax.swing.JTextField tbxTipoServicio1;
     private javax.swing.JTextField tbxnumdoc;
-    private javax.swing.JTextField tbxserie1;
     // End of variables declaration//GEN-END:variables
+
+    void verTotales() throws SQLException, ClassNotFoundException {
+//        float importe = 0;
+//        for (int i = 0; i < jtbelistaproductos.getRowCount(); i++) {
+//            float cantidad = Float.parseFloat(jtbelistaproductos.getValueAt(i, 1).toString());
+//            float precio = Float.parseFloat(jtbelistaproductos.getValueAt(i, 3).toString());
+//            float importeDetalle = Float.parseFloat(jtbelistaproductos.getValueAt(i, 4).toString());
+//            importe = importe + importeDetalle;
+//        }
+//        float subtotal = importe / (1 + valorIGV);
+//        float igv = importe - subtotal;
+        
+
+//        float saldo = 0f;
+//        Ingresos i = IngresosADN.getIngresoIdByVentaId(idventa);
+//        if (a_cuenta > 0) {
+//            saldo = total - i.getMonto() - descuento;
+//        } else {
+//            saldo = total;
+//        }
+        float totalMasIGV = 0f;
+        totalMasIGV = total + (total * valorIGV);
+        jtfdIGV.setText(Formatos.df.format(total * valorIGV));
+        jtfdSubTotal.setText(Formatos.df.format(total));
+        jlblTotal.setText("S/. " + Formatos.df.format(totalMasIGV));
+        //cbxPagos.set("Saldo: " + String.valueOf(saldo));
+    }
 
     private void VerDatos() throws SQLException, ClassNotFoundException {
 //        try {
