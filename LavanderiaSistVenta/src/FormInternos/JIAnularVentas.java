@@ -11,7 +11,10 @@ import entidades.ConsultaVentas;
 import entidades.*;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -69,7 +72,7 @@ public class JIAnularVentas extends javax.swing.JInternalFrame {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), null));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder()));
 
         jLabel7.setText("Fecha:");
 
@@ -151,7 +154,7 @@ public class JIAnularVentas extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Cod_venta", "Serie", "Nro", "Cliente", "Fecha", "Vendedor", "Importe total", "FlagPSEVenta", "FlagPSEIngreso"
+                "Cod_venta", "Serie", "Nro", "Cliente", "Fecha", "Vendedor", "Importe total", "FlagPSEVenta", "FlagPSEIngreso", "Fecha Envío"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -186,6 +189,7 @@ public class JIAnularVentas extends javax.swing.JInternalFrame {
         dtm = (DefaultTableModel) jTable1.getModel();
         Util.OcultarColumnaJtable(jTable1,7);
         Util.OcultarColumnaJtable(jTable1,8);
+        //Util.OcultarColumnaJtable(jTable1,9);
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btnanularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnanularActionPerformed
@@ -196,6 +200,16 @@ public class JIAnularVentas extends javax.swing.JInternalFrame {
                 int id = Integer.parseInt(dtm.getValueAt(fila, 0).toString());
                 String flagPSEVenta = dtm.getValueAt(fila, 7).toString();
                 String flagPSEIngreso = dtm.getValueAt(fila, 8).toString();
+                String fechaEnvio = dtm.getValueAt(fila, 9).toString();
+                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                java.util.Date dateEnvio = formatter.parse(fechaEnvio);
+                java.util.Date currentDate = new java.util.Date(); 
+                
+                long days = Util.getDateDiff(currentDate,dateEnvio,TimeUnit.DAYS);
+//                if(!fechaEnvio.equals("01/01/1900") && days > 0 && flagPSEVenta.equals("1") || flagPSEIngreso.equals("1")){
+//                    JOptionPane.showMessageDialog(rootPane, "No se puede anular una venta enviada a SUNAT pasado un día");
+//                    return;
+//                }
                 v.setIdventa(id);
                 v.setEstado("0");
 //                ConsultaVentas2 datosVenta = null;
@@ -208,10 +222,10 @@ public class JIAnularVentas extends javax.swing.JInternalFrame {
 //                } catch (ClassNotFoundException ex) {
 //                    System.out.println(Util.exceptionToString(ex));
 //                }
-                if(flagPSEVenta.equals("1") || flagPSEIngreso.equals("1")){
-                    JOptionPane.showMessageDialog(rootPane, "No se puede anular una venta enviada a SUNAT");
-                    return;
-                }
+//                if(flagPSEVenta.equals("1") || flagPSEIngreso.equals("1")){
+//                    JOptionPane.showMessageDialog(rootPane, "No se puede anular una venta enviada a SUNAT");
+//                    return;
+//                }
                 int r = JOptionPane.showConfirmDialog(rootPane, "¿Esta seguro que desea anular esta venta?");
                 if (r == 0) {
                     boolean anu = VentasADN.CambiarEstado(v);

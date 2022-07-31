@@ -288,14 +288,18 @@
 				<text><![CDATA[DESCUENTO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="50" width="71" height="14" uuid="d9a5be04-8b0a-49c0-a781-06a16c1a46c9"/>
+				<reportElement x="4" y="50" width="71" height="14" isRemoveLineWhenBlank="true" uuid="d9a5be04-8b0a-49c0-a781-06a16c1a46c9">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IGV 18%]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="36" width="71" height="14" uuid="18b202b7-aed2-4392-90b7-aada36eed29c"/>
+				<reportElement x="4" y="36" width="71" height="14" isRemoveLineWhenBlank="true" uuid="18b202b7-aed2-4392-90b7-aada36eed29c">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
@@ -316,14 +320,18 @@
 				<text><![CDATA[S/.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="151" y="36" width="50" height="14" uuid="97cfb966-9cda-4495-9280-924c649c3e76"/>
+				<reportElement x="151" y="36" width="50" height="14" isRemoveLineWhenBlank="true" uuid="97cfb966-9cda-4495-9280-924c649c3e76">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pgravado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="151" y="50" width="50" height="14" uuid="cccedc6d-0d2a-44e1-8d59-4afefe4f8a45"/>
+				<reportElement x="151" y="50" width="50" height="14" isRemoveLineWhenBlank="true" uuid="cccedc6d-0d2a-44e1-8d59-4afefe4f8a45">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
@@ -337,14 +345,18 @@
 				<textFieldExpression><![CDATA[$P{ptotal}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="120" y="36" width="16" height="14" uuid="1f273c46-0ad3-441d-b2a1-7fedf2bdd7b2"/>
+				<reportElement x="120" y="36" width="16" height="14" isRemoveLineWhenBlank="true" uuid="1f273c46-0ad3-441d-b2a1-7fedf2bdd7b2">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[S/.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="120" y="50" width="16" height="14" uuid="d8079c44-a2fb-4c6f-b0c4-b787620deb9e"/>
+				<reportElement x="120" y="50" width="16" height="14" isRemoveLineWhenBlank="true" uuid="d8079c44-a2fb-4c6f-b0c4-b787620deb9e">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="9" isBold="false"/>
 				</textElement>
@@ -378,21 +390,27 @@
 				<reportElement x="3" y="4" width="201" height="1" uuid="1b14824b-21a8-4300-917c-df467a697034"/>
 			</line>
 			<staticText>
-				<reportElement x="4" y="22" width="71" height="14" uuid="a1a7d72c-ebb0-40b9-9629-f7524f451cf2"/>
+				<reportElement x="4" y="22" width="71" height="14" uuid="a1a7d72c-ebb0-40b9-9629-f7524f451cf2">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ANTICIPOS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="120" y="22" width="16" height="14" uuid="3c954390-1516-4e6b-9eb3-17b79b49bf44"/>
+				<reportElement x="120" y="22" width="16" height="14" uuid="3c954390-1516-4e6b-9eb3-17b79b49bf44">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[S/.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="151" y="22" width="50" height="14" uuid="569d65c3-03dc-4b47-8745-dfe5534578dd"/>
+				<reportElement x="151" y="22" width="50" height="14" uuid="569d65c3-03dc-4b47-8745-dfe5534578dd">
+					<printWhenExpression><![CDATA[$P{idTipoDoc}.equals("01") || $P{idTipoDoc}.equals("03") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
@@ -403,7 +421,7 @@
 	<pageFooter>
 		<band height="347" splitType="Stretch">
 			<textField textAdjust="StretchHeight">
-				<reportElement x="5" y="233" width="196" height="104" uuid="d43f9977-575f-4d14-aed6-073eef504609"/>
+				<reportElement stretchType="RelativeToTallestObject" x="5" y="233" width="196" height="104" isRemoveLineWhenBlank="true" uuid="d43f9977-575f-4d14-aed6-073eef504609"/>
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>

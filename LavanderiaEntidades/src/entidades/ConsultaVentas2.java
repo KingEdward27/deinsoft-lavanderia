@@ -61,6 +61,12 @@ public class ConsultaVentas2 {
     private String flagAdelanto;
     private float subtotal;
     
+    private String notaTipo;
+    private String notaMotivo;
+    private String notaReferenciaTipo;
+    private String notaReferenciaSerie;
+    private String notaReferenciaNumero;
+    
     public int getIdventa() {
         return idventa;
     }
@@ -384,6 +390,54 @@ public class ConsultaVentas2 {
 
     public void setSubtotal(float subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public void setPrecio(float precio) {
+        this.precio = precio;
+    }
+
+    public void setImporte(float importe) {
+        this.importe = importe;
+    }
+
+    public String getNotaTipo() {
+        return notaTipo;
+    }
+
+    public void setNotaTipo(String notaTipo) {
+        this.notaTipo = notaTipo;
+    }
+
+    public String getNotaMotivo() {
+        return notaMotivo;
+    }
+
+    public void setNotaMotivo(String notaMotivo) {
+        this.notaMotivo = notaMotivo;
+    }
+
+    public String getNotaReferenciaTipo() {
+        return notaReferenciaTipo;
+    }
+
+    public void setNotaReferenciaTipo(String notaReferenciaTipo) {
+        this.notaReferenciaTipo = notaReferenciaTipo;
+    }
+
+    public String getNotaReferenciaSerie() {
+        return notaReferenciaSerie;
+    }
+
+    public void setNotaReferenciaSerie(String notaReferenciaSerie) {
+        this.notaReferenciaSerie = notaReferenciaSerie;
+    }
+
+    public String getNotaReferenciaNumero() {
+        return notaReferenciaNumero;
+    }
+
+    public void setNotaReferenciaNumero(String notaReferenciaNumero) {
+        this.notaReferenciaNumero = notaReferenciaNumero;
     }
 
 

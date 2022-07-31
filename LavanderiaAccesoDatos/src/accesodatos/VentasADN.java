@@ -402,9 +402,12 @@ public class VentasADN {
         LinkedList<ConsultaVentas> aux = new LinkedList<>();
         String sql = "select v.idventa,v.seriedoc,v.numdoc,cli.nombres,v.fecha,u.nombre,v.total,"
                 + "ifnull((select envio_pse_flag from ventas vv where vv.idventa = v.idventa),'0') envio_pse_venta,\n" 
-                + "ifnull((select envio_pse_flag from ingresos i where i.idventa = v.idventa and envio_pse_flag = '1' limit 1),'0') envio_pse_ingreso\n"
-                + "from ventas v inner join clientes cli on v.idcliente=cli.idcliente\n"
+                + "ifnull((select envio_pse_flag from ingresos i where i.idventa = v.idventa and envio_pse_flag = '1' limit 1),'0') envio_pse_ingreso,\n"
+                + "ifnull(i.fecha_envio,'01/01/1900') fecha_envio "
+                + "from ventas v "
+                + "inner join clientes cli on v.idcliente=cli.idcliente\n"
                 + "inner join usuarios u on u.idusuario=v.idusuario "
+                + "left join ingresos i on v.idventa = i.idventa "
                 + "where v.fecha >=? and v.fecha<=? and instr(?,concat('*',v.estado,'*')) > 0";
         try (Connection cn = Conexion.Conexion(); PreparedStatement ps = cn.prepareStatement(sql)) {//manejador de recursos            
             ps.setDate(1, (Date) fec1);
@@ -413,7 +416,7 @@ public class VentasADN {
             try (ResultSet rs = ps.executeQuery()) { //leer el valor
                 while (rs.next()) {//leer los valores devuelto
                     aux.add(new ConsultaVentas(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), 
-                            rs.getDate(5), rs.getString(6), rs.getFloat(7), rs.getString(8), rs.getString(9)));
+                            rs.getDate(5), rs.getString(6), rs.getFloat(7), rs.getString(8), rs.getString(9), rs.getDate(10)));
                 }
             }
         }

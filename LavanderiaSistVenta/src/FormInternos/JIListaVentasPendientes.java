@@ -741,13 +741,13 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JIListaVentasPendientes.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if(ingreso != null && ingreso.getEstado().equals("2")){
-                if(!ingreso.getTipoDocName().equals(cbxtipodocumentoE.getSelectedItem().toString())){
-                    JOptionPane.showMessageDialog(rootPane, "El tipo de comprobante debe ser el mismo que el del pago a cuenta: "+ingreso.getTipoDocName());
+            if (ingreso != null && ingreso.getEstado().equals("2")) {
+                if (!ingreso.getTipoDocName().equals(cbxtipodocumentoE.getSelectedItem().toString())) {
+                    JOptionPane.showMessageDialog(rootPane, "El tipo de comprobante debe ser el mismo que el del pago a cuenta: " + ingreso.getTipoDocName());
                     return;
                 }
             }
-            
+
             if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 1) {
                 JOptionPane.showMessageDialog(rootPane, "Debe generar el comprobante del pago a cuenta primero");
                 return;
@@ -766,7 +766,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 //                    total = a_cuenta - descuento;
 //                    is_acuenta = true;
 //                }
-                JDCobrar c = new JDCobrar(null, closable,total);
+                JDCobrar c = new JDCobrar(null, closable, total);
                 c.setLocationRelativeTo(this);
                 c.setVisible(true);
             } else {
@@ -782,7 +782,9 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 v.setTipo_pago(cbxServicios1.getSelectedItem().toString());
                 v.setDescuento(descuento);
                 v.setSaldo(0);
-
+//                v.setIgv(total - total / (1 + valorIGV));
+//                v.setSubtotal(total / (1 + valorIGV));
+//                v.setTotal(total);
                 v.setRecibido(recidido);
                 if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 0) {
                     is_acuenta = true;
@@ -866,6 +868,14 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                         a_cuenta, 0, a_cuenta - (a_cuenta / (1 + valorIGV))));
                             } else {
                                 datosVentaDetalle = VentasADN.Detalle_Ventas(id);
+                                if (td.getValue().equals("01")) {
+                                    for (ConsultaVentas2 consultaVentas2 : datosVentaDetalle) {
+                                        consultaVentas2.setPrecio(consultaVentas2.getPrecio() + consultaVentas2.getPrecio() * valorIGV);
+                                        consultaVentas2.setImporte(consultaVentas2.getPrecio() * consultaVentas2.getCantidad());
+                                        consultaVentas2.setAfectacion_igv(consultaVentas2.getImporte() - consultaVentas2.getImporte()/(1 + valorIGV));
+                                    }
+                                }
+
                             }
 
                         } catch (SQLException ex) {
@@ -881,6 +891,9 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                 Ingresos doc = new Ingresos();
                                 doc.setIdIngreso(ingresoId);
                                 doc.setEnvioPseFlag("1");
+                                long timeInMilliSeconds = new java.util.Date().getTime();
+                                java.sql.Date date1 = new java.sql.Date(timeInMilliSeconds);
+                                doc.setFechaEnvio(date1);
                                 doc.setEnvioPseMensaje("Recibido correctamente");
                                 doc.setNroRespuesta(resultEnvioPSE.getId());
                                 doc.setCodigoQR(resultEnvioPSE.getCodigoQR());
@@ -1196,7 +1209,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                 total = Float.parseFloat(jtbelista.getValueAt(fila, 11).toString());
                                 total = total - a_cuenta;
                             }
-                            
+
                         }
                         cbxPagos.addItem("Saldo: " + String.valueOf(total));
                         jlblTotal.setText("S/. " + String.valueOf(total));
@@ -1277,16 +1290,16 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                             cbxPagos.setEnabled(true);
                         }
                         //TipoDoc td = TipoDocADN.getByName(cbxtipodocumentoE.getSelectedItem().toString());
-                        
+
                         if (a_cuenta > 0 && i.getEstado().equals("2")) {
                             cbxtipodocumentoE.setSelectedItem(i.getTipoDocName());
                             cbxtipodocumentoE.setEditable(false);
-                        }else{
+                        } else {
                             cbxtipodocumentoEActionPerformed(evt);
                         }
                     }
                 }
-                
+
             }
 
         } catch (SQLException ex) {
@@ -1325,11 +1338,10 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     verTotales();
                 } else {
                     VerDatosProductos();
-                    jtfdIGV.setText(Formatos.df.format(total - (total /(1 + valorIGV))));
+                    jtfdIGV.setText(Formatos.df.format(total - (total / (1 + valorIGV))));
                     jtfdSubTotal.setText(Formatos.df.format(total / (1 + valorIGV)));
                     jlblTotal.setText("S/. " + Formatos.df.format(total));
                 }
-                
 
             }
 
@@ -1482,7 +1494,6 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 //        }
 //        float subtotal = importe / (1 + valorIGV);
 //        float igv = importe - subtotal;
-        
 
 //        float saldo = 0f;
 //        Ingresos i = IngresosADN.getIngresoIdByVentaId(idventa);

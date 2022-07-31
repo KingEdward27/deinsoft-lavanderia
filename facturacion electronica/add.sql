@@ -636,3 +636,22 @@ ADD INDEX `ingresos_idx02` (`fecha_pago` ASC, `estado` ASC) ;
 
 ALTER TABLE `dblavanderia`.`ingresos` 
 ADD INDEX `ingresos_idx03` (`idventa` ASC) ;
+
+-- 2022-07-10
+update ingresos set fecha_envio = fecha_pago where idingreso > 0
+
+-- 2022-0-19
+create table doc_ref
+(
+	doc_ref_id int auto_increment primary key,
+    idingreso int,
+    serie varchar(4),
+    numero int,
+    tipodoc_id int
+)engine=innodb;
+
+alter table doc_ref
+add constraint fk_docref_ingresos foreign key (idingreso) references ingresos (idingreso);
+
+alter table doc_ref
+add constraint fk_docref_tipodoc foreign key (tipodoc_id) references tipodoc(tipodoc_id);

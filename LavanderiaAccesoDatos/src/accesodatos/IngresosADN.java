@@ -121,7 +121,7 @@ public class IngresosADN {
         int r = 0;
         String sql = "update ingresos set envio_pse_flag=? , "
                 + "envio_pse_mensaje = ?,num_ticket = ?,"
-                + "codigoqr = ?,xmlhash =? "
+                + "codigoqr = ?,xmlhash =?,fecha_envio = ? "
                 + "where idingreso = ?";
         try (Connection cn = Conexion.Conexion();
                 PreparedStatement pst = cn.prepareStatement(sql)) {
@@ -130,7 +130,8 @@ public class IngresosADN {
             pst.setString(3, ent.getNroRespuesta());
             pst.setString(4, ent.getCodigoQR());
             pst.setString(5, ent.getXmlHash());
-            pst.setInt(6, ent.getIdIngreso());
+            pst.setDate(6, ent.getFechaEnvio());
+            pst.setInt(7, ent.getIdIngreso());
             r = pst.executeUpdate();
         }
         return r == 1 ? true : false;

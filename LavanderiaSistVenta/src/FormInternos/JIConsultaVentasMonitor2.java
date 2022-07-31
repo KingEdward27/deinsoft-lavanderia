@@ -72,6 +72,7 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
      */
     List<ConsultaVentas2> list;
     int contador = 0;
+
     public JIConsultaVentasMonitor2() {
         initComponents();
     }
@@ -487,7 +488,6 @@ void OcultarColumna(int columna) {
                     ProgressWorker worker = new ProgressWorker(jProgressBar1);
                     worker.execute();
 
-                    
                 }
             }
         }
@@ -528,7 +528,7 @@ void OcultarColumna(int columna) {
     private class ProgressWorker extends SwingWorker<Void, Integer> {
 
         private final JProgressBar progress;
-        
+
         public ProgressWorker(JProgressBar progress) {
             this.progress = progress;
         }
@@ -563,8 +563,89 @@ void OcultarColumna(int columna) {
         @Override
         protected void done() {
             progress.setValue(100);
+            try {
+                VerDatos();
+            } catch (SQLException ex) {
+                Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+            }
             JOptionPane.showMessageDialog(rootPane, "Total enviados: " + contador + ". \nTotal no enviados: " + (list.size() - contador));
         }
+    }
+
+    boolean generarNotaCredito() {
+        String enviado = "", tipoDoc = "", flagAdelanto = "", tipoF = "";
+        float monto;
+        int idVentaOIngreso = 0, idVenta = 0;
+        
+        int fila = jTable1.getSelectedRow();
+        
+        enviado = jTable1.getValueAt(fila, 7).toString();
+        tipoDoc = jTable1.getValueAt(fila, 1).toString();
+        flagAdelanto = jTable1.getValueAt(fila, 11).toString();
+        monto = Float.parseFloat(jTable1.getValueAt(fila, 6).toString());
+
+        idVentaOIngreso = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+        tipoF = jTable1.getValueAt(fila, 9).toString();
+        idVenta = Integer.parseInt(jTable1.getValueAt(fila, 10).toString());
+        
+        if (enviado.toLowerCase().equals("si")) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. El documento ya se ha enviado :( .:");
+            }
+            return false;
+        }
+        if (tipoDoc.toUpperCase().equals("NOTA DE VENTA")) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. El documento NOTA DE VENTA no se puede enviar :( .:");
+            }
+            return false;
+        }
+
+        ConsultaVentas2 datosVenta = null;
+        List<ConsultaVentas2> datosVentaDetalle = null;
+        try {
+
+            if (tipoF.equals("v")) {
+                datosVenta = VentasADN.getDatosVenta(null, null, idVentaOIngreso, false).get(0);
+            } else {
+                datosVenta = VentasADN.getDatosVenta2(null, null, idVentaOIngreso, false).get(0);
+            }
+            if (flagAdelanto.equals("1")) {
+                datosVentaDetalle = new ArrayList<>();
+//                                String codigo, String producto, float cantidad, float precio, 
+//                                float importe,int idproducto,float afectacionIGV
+                datosVentaDetalle.add(new ConsultaVentas2("-",
+                        "ADELANTO DE " + Formatos.df.format(monto) + "DE PAGO DE SERVICIO ",
+                        1, monto,
+                        monto, 0, monto - (monto / (1 + valorIGV))));
+            } else {
+                datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+                if (datosVenta.getTipoDoc().getValue().equals("01")) {
+                    for (ConsultaVentas2 consultaVentas2 : datosVentaDetalle) {
+                        consultaVentas2.setPrecio(consultaVentas2.getPrecio() + consultaVentas2.getPrecio() * valorIGV);
+                        consultaVentas2.setImporte(consultaVentas2.getPrecio() * consultaVentas2.getCantidad());
+                        consultaVentas2.setAfectacion_igv(consultaVentas2.getImporte() - consultaVentas2.getImporte() / (1 + valorIGV));
+                    }
+                }
+            }
+
+        } catch (SQLException ex) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
+            }
+
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } catch (ClassNotFoundException ex) {
+            if (jTable1 != null) {
+                JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
+            }
+            Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return false;
     }
 
     boolean enviar(JTable jTable1, int fila, ConsultaVentas2 item) {
@@ -623,6 +704,13 @@ void OcultarColumna(int columna) {
                         monto, 0, monto - (monto / (1 + valorIGV))));
             } else {
                 datosVentaDetalle = VentasADN.Detalle_Ventas(idVenta);
+                if (datosVenta.getTipoDoc().getValue().equals("01")) {
+                    for (ConsultaVentas2 consultaVentas2 : datosVentaDetalle) {
+                        consultaVentas2.setPrecio(consultaVentas2.getPrecio() + consultaVentas2.getPrecio() * valorIGV);
+                        consultaVentas2.setImporte(consultaVentas2.getPrecio() * consultaVentas2.getCantidad());
+                        consultaVentas2.setAfectacion_igv(consultaVentas2.getImporte() - consultaVentas2.getImporte() / (1 + valorIGV));
+                    }
+                }
             }
 
         } catch (SQLException ex) {
@@ -704,6 +792,7 @@ void OcultarColumna(int columna) {
 
     private void VerDatos() throws SQLException, ClassNotFoundException {
         try {
+            contador = 0;
             int filas = jTable1.getRowCount();
             for (int i = 0; i < filas; i++) {
                 dtm.removeRow(0);

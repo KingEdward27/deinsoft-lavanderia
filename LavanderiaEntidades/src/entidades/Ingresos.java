@@ -23,6 +23,7 @@ public class Ingresos implements iArregloLista{
     private int numDocE;
     private int indClienteE;
     private Date fechaPago;
+    private Date fechaEnvio;
     private Ventas venta;
     private String tipoDocName ;
     
@@ -204,6 +205,16 @@ public class Ingresos implements iArregloLista{
         this.tipoDocName = tipoDocName;
     }
 
+    public Date getFechaEnvio() {
+        return fechaEnvio;
+    }
+
+    public void setFechaEnvio(Date fechaEnvio) {
+        this.fechaEnvio = fechaEnvio;
+    }
+
+    
+
 
     //</editor-fold>
     
@@ -211,6 +222,10 @@ public class Ingresos implements iArregloLista{
     public Ingresos() {
     }
 
+    public Ingresos(int IdIngreso) {
+        this.IdIngreso = IdIngreso;
+    }
+    
     public Ingresos(int IdIngreso, Date Fecha, float Monto, String Motivo,String estado,String tipoDocName) {
         this.IdIngreso = IdIngreso;
         this.Fecha = Fecha;

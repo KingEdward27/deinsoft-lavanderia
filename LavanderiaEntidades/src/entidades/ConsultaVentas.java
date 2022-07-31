@@ -31,6 +31,7 @@ public class ConsultaVentas {
     
     private String envioPSEVenta;
     private String envioPSEIngreso;
+    private java.util.Date fechaEnvio;
     public int getIdventa() {
         return idventa;
     }
@@ -225,7 +226,7 @@ public class ConsultaVentas {
     }
     //consultaventas anular
     public ConsultaVentas(int idventa, String serie, String num, String cliente, 
-            Date fecha,String nomusuario, float ventatotal,String envioPSEVenta,String envioPSEIngreso) {
+            Date fecha,String nomusuario, float ventatotal,String envioPSEVenta,String envioPSEIngreso,java.util.Date fechaEnvio) {
         this.idventa = idventa;
         this.serie = serie;
         this.num = num;
@@ -236,6 +237,7 @@ public class ConsultaVentas {
         this.ventatotal = ventatotal;
         this.envioPSEVenta = envioPSEVenta;
         this.envioPSEIngreso = envioPSEIngreso;
+        this.fechaEnvio = fechaEnvio;
     }
     public ConsultaVentas(String cliente,Date fecha,String fec_entrega, 
             float cantidad,String descripcion_producto,float precio) {
@@ -343,7 +345,7 @@ public class ConsultaVentas {
         return aux;
     }
     public String[] ArregloDatosAnular(){
-        String[] aux = new String[9];
+        String[] aux = new String[10];
         aux[0] = String.valueOf(idventa);
         aux[1] = serie;
         aux[2] = num;
@@ -353,6 +355,7 @@ public class ConsultaVentas {
         aux[6] = Formatos.df.format(ventatotal);
         aux[7] = envioPSEVenta;
         aux[8] = envioPSEIngreso;
+        aux[9] = Formatos.sdfFecha.format(fechaEnvio);
         return aux;
     }
     public String[] ArregloDatos3(){
