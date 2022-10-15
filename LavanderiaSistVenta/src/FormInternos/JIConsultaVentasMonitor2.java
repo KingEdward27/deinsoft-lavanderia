@@ -5,6 +5,7 @@
 package FormInternos;
 
 import Adicional.AutoCompletion;
+import Adicional.SystemOutToLog4j;
 import Adicional.Util;
 import static FormInternos.JIListaVentasPendientes.valorIGV;
 import com.itextpdf.text.Document;
@@ -23,6 +24,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import entidades.*;
 import facturacionelectronica.EnvioPSE;
+import facturacionelectronica.Impresion;
 import facturacionelectronica.JDConfirmacion;
 import facturacionelectronica.RespuestaPSE;
 import java.awt.Color;
@@ -75,6 +77,9 @@ public class JIConsultaVentasMonitor2 extends javax.swing.JInternalFrame {
 
     public JIConsultaVentasMonitor2() {
         initComponents();
+    }
+    static {
+        SystemOutToLog4j.enableForClass(JIConsultaVentasMonitor2.class);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -717,13 +722,14 @@ void OcultarColumna(int columna) {
             if (jTable1 != null) {
                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
             }
-
+            System.out.println(Util.exceptionToString(ex));
             Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         } catch (ClassNotFoundException ex) {
             if (jTable1 != null) {
                 JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error al cargar los datos :( .:" + ex.getMessage());
             }
+            System.out.println(Util.exceptionToString(ex));
             Logger.getLogger(JIConsultaVentasMonitor2.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
@@ -781,6 +787,7 @@ void OcultarColumna(int columna) {
             } catch (Exception e) {
                 System.out.println(Util.exceptionToString(e));
                 Logger.getLogger(JIVentas.class.getName()).log(Level.SEVERE, null, e);
+                
                 if (jTable1 != null) {
                     JOptionPane.showMessageDialog(rootPane, ":. Ocurrió un error inesperado al guardar documentos en pc :(: " + e.toString());
                 }
