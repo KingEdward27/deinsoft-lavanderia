@@ -26,6 +26,10 @@ public class Ingresos implements iArregloLista{
     private Date fechaEnvio;
     private Ventas venta;
     private String tipoDocName ;
+    private String tipoOperacion ;
+    private String dtrCuentaBancaria;
+    private float dtrPorcentaje;
+    private float dtrMonto;
     
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdIngreso() {
@@ -211,6 +215,38 @@ public class Ingresos implements iArregloLista{
 
     public void setFechaEnvio(Date fechaEnvio) {
         this.fechaEnvio = fechaEnvio;
+    }
+
+    public String getTipoOperacion() {
+        return tipoOperacion;
+    }
+
+    public void setTipoOperacion(String tipoOperacion) {
+        this.tipoOperacion = tipoOperacion;
+    }
+
+    public String getDtrCuentaBancaria() {
+        return dtrCuentaBancaria;
+    }
+
+    public void setDtrCuentaBancaria(String dtrCuentaBancaria) {
+        this.dtrCuentaBancaria = dtrCuentaBancaria;
+    }
+
+    public float getDtrPorcentaje() {
+        return dtrPorcentaje;
+    }
+
+    public void setDtrPorcentaje(float dtrPorcentaje) {
+        this.dtrPorcentaje = dtrPorcentaje;
+    }
+
+    public float getDtrMonto() {
+        return dtrMonto;
+    }
+
+    public void setDtrMonto(float dtrMonto) {
+        this.dtrMonto = dtrMonto;
     }
 
     

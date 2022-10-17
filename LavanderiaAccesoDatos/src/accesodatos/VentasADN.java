@@ -541,7 +541,8 @@ public class VentasADN {
                             new Tipos_Servicio(rs.getInt(20), rs.getString(21), null), rs.getFloat(22),
                             rs.getString(23), rs.getInt(24),
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
-                            rs.getFloat(30),null,0,null,null,0,null,"",rs.getFloat(31)));
+                            rs.getFloat(30),null,0,null,null,0,null,"",rs.getFloat(31),
+                            null,null,0,0));
                 }
             }
         }
@@ -596,7 +597,9 @@ public class VentasADN {
                             new Tipos_Servicio(rs.getInt(20), rs.getString(21), null), rs.getFloat(22),
                             rs.getString(23), rs.getInt(24),
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
-                            rs.getFloat(30), rs.getString(31), rs.getInt(32),null,null,0,null,"",rs.getFloat(33)));
+                            rs.getFloat(30), rs.getString(31), rs.getInt(32),
+                            null,null,0,null,"",rs.getFloat(33),
+                            null,null,0,0));
                 }
             }
         }
@@ -630,7 +633,11 @@ public class VentasADN {
                     "ifnull(i.recibido,i.monto) recibido,\n" +
                     "ifnull(i.recibido,i.monto) - i.monto  vuelto,'i' tipo,v.idventa idVenta,"+ 
                     "ifnull(i2.serie_doc,''),ifnull(i2.num_doc,''),ifnull(i2.monto,''),ifnull(i2.fecha_pago,now()),"+ 
-                    "ifnull(i.flag_adelanto,'0'),ifnull(i.subtotal,0) \n" +
+                    "ifnull(i.flag_adelanto,'0'),ifnull(i.subtotal,0),"
+                    + "i.tipo_operacion tipo_operacion,"
+                    + "ifnull(i.detr_cuenta_bancaria,'') detr_cuenta_bancaria,"
+                    + "ifnull(i.detr_porcentaje,0) detr_porcentaje,"
+                    + "ifnull(i.detr_monto,0) detr_monto\n" +
                     "from ventas v \n" +
                     "inner join ingresos i on i.idventa = v.idventa\n" +
                     "inner join clientes cli on i.cliente_id=cli.idcliente\n" +
@@ -660,7 +667,8 @@ public class VentasADN {
                             rs.getString(23), rs.getInt(24),
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
                             rs.getFloat(30), rs.getString(31), rs.getInt(32),
-                            rs.getString(33), rs.getString(34), rs.getFloat(35), rs.getDate(36),rs.getString(37),rs.getFloat(38)));
+                            rs.getString(33), rs.getString(34), rs.getFloat(35), rs.getDate(36),rs.getString(37),rs.getFloat(38),
+                            rs.getString(39),rs.getString(40),rs.getFloat(41),rs.getFloat(42)));
                 }
             }
         }

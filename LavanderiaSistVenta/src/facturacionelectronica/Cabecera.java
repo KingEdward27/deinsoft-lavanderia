@@ -5,6 +5,7 @@
 package facturacionelectronica;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -50,6 +51,15 @@ public class Cabecera {
     private String numero_ref;
     private String monto_ref;
     private String fecha_ref;
+    
+    private String cta_banco_nacion_detraccion;
+    
+    private String cod_bien_detraccion;
+    
+    private String por_detraccion;
+    
+    private String mto_detraccion;
+    
     private List<Detalle> lista;
 
     private List<Tributo> listaTax;
@@ -308,6 +318,38 @@ public class Cabecera {
 
     public void setFecha_ref(String fecha_ref) {
         this.fecha_ref = fecha_ref;
+    }
+
+    public String getCta_banco_nacion_detraccion() {
+        return cta_banco_nacion_detraccion;
+    }
+
+    public void setCta_banco_nacion_detraccion(String cta_banco_nacion_detraccion) {
+        this.cta_banco_nacion_detraccion = cta_banco_nacion_detraccion;
+    }
+
+    public String getCod_bien_detraccion() {
+        return cod_bien_detraccion;
+    }
+
+    public void setCod_bien_detraccion(String cod_bien_detraccion) {
+        this.cod_bien_detraccion = cod_bien_detraccion;
+    }
+
+    public String getPor_detraccion() {
+        return por_detraccion;
+    }
+
+    public void setPor_detraccion(String por_detraccion) {
+        this.por_detraccion = por_detraccion;
+    }
+
+    public String getMto_detraccion() {
+        return mto_detraccion;
+    }
+
+    public void setMto_detraccion(String mto_detraccion) {
+        this.mto_detraccion = mto_detraccion;
     }
 
     public List<Tributo> getListaTax() {

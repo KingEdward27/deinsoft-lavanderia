@@ -56,7 +56,7 @@ public class EnvioPSE {
             servicio.setForma_pago("Contado");
             servicio.setFecha_emision(Util.sdfFecha.format(datosVenta.getFecha()));
             servicio.setFecha_vencimiento(null);
-            servicio.setTipo_operacion(Constantes.TIPO_OPERACION_WS);
+            servicio.setTipo_operacion(datosVenta.getTipoOperacion());
             servicio.setCliente_tipo(datosVenta.getTipoCliente().split("-")[0]);
             servicio.setCliente_documento(datosVenta.getDniCliente());
             servicio.setCliente_nombre(datosVenta.getCliente());
@@ -79,6 +79,11 @@ public class EnvioPSE {
             servicio.setNumero_ref(datosVenta.getNumDocRef());
             servicio.setMonto_ref(Util.df.format(datosVenta.getMontoRef()));
             servicio.setFecha_ref(Util.sdfFecha.format(datosVenta.getFechaRef()));
+            
+            servicio.setCta_banco_nacion_detraccion(datosVenta.getDtrCuentaBancaria());
+            servicio.setCod_bien_detraccion("020");
+            servicio.setPor_detraccion(Util.df.format(datosVenta.getDtrPorcentaje()));
+            servicio.setMto_detraccion(Util.df.format(datosVenta.getDtrMonto()));
 //            servicio.setIncluir_pdf(ConfiguracionADN.Datos().get(0).getFlagPDF().equals("1")?"true":"false");
 //            servicio.setIncluir_xml(ConfiguracionADN.Datos().get(0).getFlagXML().equals("1")?"true":"false");
             List<Detalle> listaItemsEnvio = new ArrayList<Detalle>();

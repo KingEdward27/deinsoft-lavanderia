@@ -182,8 +182,9 @@ public class IngresosADN {
                                 + "serie_doc,"
                                 + "num_doc,"
                                 + "cliente_id,"
-                                + "estado,igv,subtotal,fecha_pago,fecha,descuento,recibido) "
-                                + "VALUES (?,?,?,?,?,?,?,'2',?,?,?,now(),?,?) ";
+                                + "estado,igv,subtotal,fecha_pago,fecha,descuento,recibido,"
+                                + "tipo_operacion,detr_cuenta_bancaria,detr_porcentaje,detr_monto) "
+                                + "VALUES (?,?,?,?,?,?,?,'2',?,?,?,now(),?,?,?,?,?,?) ";
                         ps = cn.prepareStatement(sql);
                         ps.setFloat(1, i.getMonto());
                         ps.setString(2, i.getMotivo());
@@ -197,6 +198,12 @@ public class IngresosADN {
                         ps.setDate(10, i.getFechaPago());
                         ps.setFloat(11, i.getDescuento());
                         ps.setFloat(12, i.getRecibido());
+                        
+                        ps.setString(13, i.getTipoOperacion());
+                        ps.setString(14, i.getDtrCuentaBancaria());
+                        ps.setFloat(15, i.getDtrPorcentaje());
+                        ps.setFloat(16, i.getDtrMonto());
+                        
                         r = ps.executeUpdate();
 
                         sql = "select max(idingreso) from ingresos";
@@ -212,7 +219,8 @@ public class IngresosADN {
                                 + "cliente_id = ?,"
                                 + "estado = '2',"
                                 + "igv = ?,"
-                                + "subtotal = ?,fecha_pago = ?,descuento = ?, recibido = ?, monto = ? "
+                                + "subtotal = ?,fecha_pago = ?,descuento = ?, recibido = ?, monto = ?,"
+                                + "tipo_operacion = ?,detr_cuenta_bancaria = ?,detr_porcentaje = ?,detr_monto = ? "
                                 + "where idingreso = ?";
                         ps = cn.prepareStatement(sql);
                         //                ps.setString(1, ent.getEstado());
@@ -231,7 +239,13 @@ public class IngresosADN {
                         ps.setFloat(8, i.getDescuento());
                         ps.setFloat(9, i.getRecibido());
                         ps.setFloat(10, i.getMonto());
-                        ps.setInt(11, i.getIdIngreso());
+                        
+                        ps.setString(11, i.getTipoOperacion());
+                        ps.setString(12, i.getDtrCuentaBancaria());
+                        ps.setFloat(13, i.getDtrPorcentaje());
+                        ps.setFloat(14, i.getDtrMonto());
+                        
+                        ps.setInt(15, i.getIdIngreso());
                         
                         r = ps.executeUpdate();
                         ingresoId = i.getIdIngreso();

@@ -67,6 +67,11 @@ public class ConsultaVentas2 {
     private String notaReferenciaSerie;
     private String notaReferenciaNumero;
     
+    private String tipoOperacion;
+    private String dtrCuentaBancaria;
+    private float dtrPorcentaje;
+    private float dtrMonto;
+            
     public int getIdventa() {
         return idventa;
     }
@@ -440,6 +445,38 @@ public class ConsultaVentas2 {
         this.notaReferenciaNumero = notaReferenciaNumero;
     }
 
+    public String getTipoOperacion() {
+        return tipoOperacion;
+    }
+
+    public void setTipoOperacion(String tipoOperacion) {
+        this.tipoOperacion = tipoOperacion;
+    }
+
+    public String getDtrCuentaBancaria() {
+        return dtrCuentaBancaria;
+    }
+
+    public void setDtrCuentaBancaria(String dtrCuentaBancaria) {
+        this.dtrCuentaBancaria = dtrCuentaBancaria;
+    }
+
+    public float getDtrPorcentaje() {
+        return dtrPorcentaje;
+    }
+
+    public void setDtrPorcentaje(float dtrPorcentaje) {
+        this.dtrPorcentaje = dtrPorcentaje;
+    }
+
+    public float getDtrMonto() {
+        return dtrMonto;
+    }
+
+    public void setDtrMonto(float dtrMonto) {
+        this.dtrMonto = dtrMonto;
+    }
+
 
     
     public ConsultaVentas2() {
@@ -465,7 +502,9 @@ public class ConsultaVentas2 {
             float sumatoriaIGV,String serieDocE,int numDocE,String fechaEntrega,
             String envioPseFlag, String envioPseMensaje,float acuenta,
             float recibido,float vuelto,String tipo,int idVentaFromIngresos,
-            String serieDocRef,String numDocRef,float montoRef,Date fechaRef,String flagAdelanto,float subtotal) {
+            String serieDocRef,String numDocRef,float montoRef,Date fechaRef,
+            String flagAdelanto,float subtotal,
+            String tipoOperacion,String dtrCuentaBancaria,float dtrPorcentaje,float dtrMonto) {
         this.idventa = idventa;
         this.serie = serie;
         this.num = num;
@@ -501,6 +540,11 @@ public class ConsultaVentas2 {
         this.fechaRef = fechaRef;
         this.flagAdelanto = flagAdelanto;
         this.subtotal = subtotal;
+        
+        this.tipoOperacion = tipoOperacion;
+        this.dtrCuentaBancaria = dtrCuentaBancaria;
+        this.dtrPorcentaje = dtrPorcentaje;
+        this.dtrMonto = dtrMonto;
     }
     //anular ventas
 public ConsultaVentas2(int idventa, String serie,  String num, String cliente, Date fecha, float ventatotal) {

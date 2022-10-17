@@ -442,3 +442,20 @@ alter table doc_ref
 add constraint fk_docref_tipodoc foreign key (tipodoc_id) references tipodoc(tipodoc_id);
 
 UPDATE `dblavanderialocal1`.`numeracion_documento` SET `serie` = 'BB01' WHERE (`numeracion_documento_id` = '1');
+
+-- 2022-10-15
+
+alter table ingresos
+add tipo_operacion varchar(4);
+
+alter table ingresos
+add detr_cuenta_bancaria varchar(20);
+
+alter table ingresos
+add detr_porcentaje decimal(12,2);
+
+alter table ingresos
+add detr_monto decimal(12,2);
+
+update ingresos set tipo_operacion = '0101' where idingreso > 0;
+
