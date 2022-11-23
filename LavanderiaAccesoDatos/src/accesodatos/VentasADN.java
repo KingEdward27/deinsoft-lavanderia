@@ -35,8 +35,8 @@ public class VentasADN {
 //            }
             sql = "insert into ventas(idcliente, tipodoc, seriedoc, numdoc, fecha,hora, igv, subtotal, "
                     + "total,idusuario,estado,tipo_pago,idtiposervicio,fecha_entrega,"
-                    + "fecha_reg,a_cuenta,descuento,tipodoc_id,envio_pse_flag,envio_pse_mensaje,serieDocE,numDocE) "
-                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,null,?,?,?,?)";
+                    + "fecha_reg,a_cuenta,descuento,tipodoc_id,envio_pse_flag,envio_pse_mensaje,serieDocE,numDocE,saldo) "
+                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,null,?,?,?,?,?)";
             ps = cn.prepareStatement(sql);
             if (ent.getIdcliente() == 0) {
                 ps.setString(1, null);
@@ -68,6 +68,7 @@ public class VentasADN {
 //            } else {
             ps.setString(19, null);
             ps.setString(20, null);
+            ps.setFloat(21, ent.getTotal() - ent.getA_cuenta());
 //            }
 
             r = ps.executeUpdate();
@@ -516,7 +517,7 @@ public class VentasADN {
                 + "ifnull(envio_pse_flag,'') envio_pse_flag, ifnull(envio_pse_mensaje,'') envio_pse_mensaje,\n"
                 + "ifnull(v.a_cuenta,0) a_cuenta,"
                 + "ifnull(v.recibido,0) recibido,"
-                + "ifnull(v.vuelto,0) vuelto,ifnull(v.subtotal,0) "
+                + "ifnull(v.vuelto,0) vuelto,ifnull(v.subtotal,0),ifnull(v.saldo,0),v.hora "
                 + "from ventas v \n"
                 + "inner join clientes cli on v.idcliente=cli.idcliente\n"
                 + "left join tipodoc td on td.tipodoc_id = v.tipodoc_id\n"
@@ -542,7 +543,7 @@ public class VentasADN {
                             rs.getString(23), rs.getInt(24),
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
                             rs.getFloat(30),null,0,null,null,0,null,"",rs.getFloat(31),
-                            null,null,0,0));
+                            null,null,0,0,rs.getFloat(32), rs.getString(33)));
                 }
             }
         }
@@ -572,7 +573,7 @@ public class VentasADN {
                 + "ifnull(envio_pse_flag,'') envio_pse_flag, ifnull(envio_pse_mensaje,'') envio_pse_mensaje,\n"
                 + "ifnull(v.a_cuenta,0) a_cuenta,"
                 + "ifnull(v.recibido,0) recibido,"
-                + "ifnull(v.vuelto,0) vuelto,'v' tipo,v.idventa idVenta,ifnull(v.subtotal,0) "
+                + "ifnull(v.vuelto,0) vuelto,'v' tipo,v.idventa idVenta,ifnull(v.subtotal,0),v.hora "
                 + "from ventas v \n"
                 + "inner join clientes cli on v.clienteE_ID=cli.idcliente\n"
                 + "left join tipodoc td on td.tipodoc_id = v.tipodoc_id\n"
@@ -599,7 +600,7 @@ public class VentasADN {
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
                             rs.getFloat(30), rs.getString(31), rs.getInt(32),
                             null,null,0,null,"",rs.getFloat(33),
-                            null,null,0,0));
+                            null,null,0,0,0f, rs.getString(34)));
                 }
             }
         }
@@ -637,7 +638,8 @@ public class VentasADN {
                     + "i.tipo_operacion tipo_operacion,"
                     + "ifnull(i.detr_cuenta_bancaria,'') detr_cuenta_bancaria,"
                     + "ifnull(i.detr_porcentaje,0) detr_porcentaje,"
-                    + "ifnull(i.detr_monto,0) detr_monto\n" +
+                    + "ifnull(i.detr_monto,0) detr_monto,\n" 
+                    + "ifnull(v.saldo,0) saldo,v.hora\n" +
                     "from ventas v \n" +
                     "inner join ingresos i on i.idventa = v.idventa\n" +
                     "inner join clientes cli on i.cliente_id=cli.idcliente\n" +
@@ -668,7 +670,7 @@ public class VentasADN {
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
                             rs.getFloat(30), rs.getString(31), rs.getInt(32),
                             rs.getString(33), rs.getString(34), rs.getFloat(35), rs.getDate(36),rs.getString(37),rs.getFloat(38),
-                            rs.getString(39),rs.getString(40),rs.getFloat(41),rs.getFloat(42)));
+                            rs.getString(39),rs.getString(40),rs.getFloat(41),rs.getFloat(42),rs.getFloat(43), rs.getString(44)));
                 }
             }
         }

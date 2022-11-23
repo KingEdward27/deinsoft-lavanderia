@@ -71,7 +71,9 @@ public class ConsultaVentas2 {
     private String dtrCuentaBancaria;
     private float dtrPorcentaje;
     private float dtrMonto;
-            
+    private Float saldo;
+    private String hora;
+    
     public int getIdventa() {
         return idventa;
     }
@@ -373,6 +375,14 @@ public class ConsultaVentas2 {
         this.montoRef = montoRef;
     }
 
+    public Float getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(Float saldo) {
+        this.saldo = saldo;
+    }
+
     public Date getFechaRef() {
         return fechaRef;
     }
@@ -477,6 +487,14 @@ public class ConsultaVentas2 {
         this.dtrMonto = dtrMonto;
     }
 
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
+    }
+
 
     
     public ConsultaVentas2() {
@@ -504,7 +522,7 @@ public class ConsultaVentas2 {
             float recibido,float vuelto,String tipo,int idVentaFromIngresos,
             String serieDocRef,String numDocRef,float montoRef,Date fechaRef,
             String flagAdelanto,float subtotal,
-            String tipoOperacion,String dtrCuentaBancaria,float dtrPorcentaje,float dtrMonto) {
+            String tipoOperacion,String dtrCuentaBancaria,float dtrPorcentaje,float dtrMonto, Float saldo,String hora) {
         this.idventa = idventa;
         this.serie = serie;
         this.num = num;
@@ -545,6 +563,8 @@ public class ConsultaVentas2 {
         this.dtrCuentaBancaria = dtrCuentaBancaria;
         this.dtrPorcentaje = dtrPorcentaje;
         this.dtrMonto = dtrMonto;
+        this.saldo = saldo;
+        this.hora = hora;
     }
     //anular ventas
 public ConsultaVentas2(int idventa, String serie,  String num, String cliente, Date fecha, float ventatotal) {

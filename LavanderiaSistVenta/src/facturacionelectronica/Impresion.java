@@ -104,16 +104,18 @@ public class Impresion {
 
             parametros.put("pusuario_fecha", "admin el " + Formatos.sdfFecha.format(datosVenta.getFecha()));
             parametros.put("presolucion", "Autorizado mediantes resolución N° " + Constantes.RESOLUCION);
-            parametros.put("tipoDocFooter", "Representación impresa de la " + datosVenta.getTipoDoc());
+            parametros.put("tipoDocFooter", "Representación impresa de la " + datosVenta.getTipoDoc().getNombre());
             parametros.put("ppagina", "Para consultar el comprobante visita " + Constantes.PAGINA_WEB);
             parametros.put("presumen", datosVenta.getXmlHash());
             parametros.put("pACuenta", Formatos.df.format(datosVenta.getAcuenta()));
-            parametros.put("pSaldo", Formatos.df.format(isTicket?datosVenta.getVentatotal() - datosVenta.getAcuenta():0));
+            parametros.put("pSaldo", Formatos.df.format(isTicket?datosVenta.getSaldo():0f));
             parametros.put("pRecibido", Formatos.df.format(datosVenta.getRecibido()));
             parametros.put("pVuelto", Formatos.df.format(datosVenta.getVuelto()));
             parametros.put("pAnticipo", Formatos.df.format(datosVenta.getMontoRef()));
             parametros.put("idTipoDoc", datosVenta.getTipoDoc().getValue()== null? "00":datosVenta.getTipoDoc().getValue());
             parametros.put("isTicket", isTicket);
+            parametros.put("pFechaActual",  Formatos.sdfFecha.format(datosVenta.getFecha()) + " " + datosVenta.getHora());
+            parametros.put("pFechaRecojo", datosVenta.getFechaEntrega());
             parametros.put("psummary", "NOTA: Una vez retirada la prenda no hay lugar a reclamo. "
                     + "Pasado 30 dias de no retirar su ropa esta sera rematada "
                     + "para recuperar los gastos del servicio dado."

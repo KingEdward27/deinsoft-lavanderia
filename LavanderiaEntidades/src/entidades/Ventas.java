@@ -24,7 +24,7 @@ public class Ventas {
     private String strfecha_Entrega;
     private Date fecha_reg;
      private LinkedList <Detalle_Venta> lista;
-    private float a_cuenta;
+    private Float a_cuenta;
     private float descuento;
     private float recibido;
     private float vuelto;
@@ -176,11 +176,11 @@ public class Ventas {
         this.strfecha_Entrega = strfecha_Entrega;
     }
 
-    public float getA_cuenta() {
+    public Float getA_cuenta() {
         return a_cuenta;
     }
 
-    public void setA_cuenta(float a_cuenta) {
+    public void setA_cuenta(Float a_cuenta) {
         this.a_cuenta = a_cuenta;
     }
 

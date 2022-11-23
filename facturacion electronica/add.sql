@@ -459,3 +459,10 @@ add detr_monto decimal(12,2);
 
 update ingresos set tipo_operacion = '0101' where idingreso > 0;
 
+-- 2022-11-12
+ALTER TABLE clientes
+CHANGE COLUMN `Direccion` `Direccion` VARCHAR(300) NULL DEFAULT NULL ;
+
+ALTER TABLE clientes
+CHANGE COLUMN `Nombres` `Nombres` VARCHAR(350) NOT NULL ;
+

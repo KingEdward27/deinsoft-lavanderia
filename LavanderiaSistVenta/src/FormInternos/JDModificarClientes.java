@@ -216,7 +216,7 @@ public class JDModificarClientes extends javax.swing.JDialog {
             nom = jtfdNombres.getText().trim().toUpperCase();
             dn = jtfdDni.getText().trim().toUpperCase();
             //tel = jtfdTelefono.getText().trim().toUpperCase();
-            //dir = jtfdDireccion.getText().trim().toUpperCase();
+            dir = jtfdDireccion.getText().trim().toUpperCase();
             String mensaje = "";
             String correo = jtfdCorreo.getText().trim();
             String tipo = jcbxTipo.getSelectedItem().toString();

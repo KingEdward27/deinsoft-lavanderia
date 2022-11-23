@@ -143,6 +143,7 @@ public class IngresosADN {
         PreparedStatement ps = null;
         String sql;
         int ingresoId = 0;
+        int index = 0;
         try {
             cn = Conexion.Conexion();
             String numeroElectronico = "";
@@ -159,21 +160,25 @@ public class IngresosADN {
                 }
                 sql = "update ventas set estado=?,"
                         + "descuento=?,"
-                        + "recibido = ?,"
-                        //+ "a_cuenta = ?,"
-                        + "saldo = ?,"
-                        + "vuelto = ?,"
+                        + "recibido = ?,";
+                if (i.getVenta().getA_cuenta() != null) {
+                    sql = sql + "a_cuenta = ?,"
+                        + "saldo = ?,";
+                }
+                sql = sql + "vuelto = ?,"
                         + "fecha_pago = ? "
                         + "where idventa = ?";
                 ps = cn.prepareStatement(sql);
-                ps.setString(1, i.getVenta().getEstado());
-                ps.setFloat(2, i.getVenta().getDescuento());
-                ps.setFloat(3, i.getVenta().getRecibido());
-                //ps.setFloat(4, i.getVenta().getA_cuenta());
-                ps.setFloat(4, i.getVenta().getSaldo());
-                ps.setFloat(5, i.getVenta().getVuelto());
-                ps.setDate(6, i.getVenta().getFechaPago());
-                ps.setInt(7, i.getVentaId());
+                ps.setString(++index, i.getVenta().getEstado());
+                ps.setFloat(++index, i.getVenta().getDescuento());
+                ps.setFloat(++index, i.getVenta().getRecibido());
+                if (i.getVenta().getA_cuenta() != null) {
+                    ps.setFloat(++index, i.getVenta().getA_cuenta());
+                    ps.setFloat(++index, i.getVenta().getSaldo());
+                }
+                ps.setFloat(++index, i.getVenta().getVuelto());
+                ps.setDate(++index, i.getVenta().getFechaPago());
+                ps.setInt(++index, i.getVentaId());
                 r = ps.executeUpdate();
 
                 if (r > 0) {

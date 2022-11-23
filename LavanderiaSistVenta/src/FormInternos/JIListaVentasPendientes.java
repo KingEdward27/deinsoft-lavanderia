@@ -462,9 +462,15 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         jLabel20.setText("Cuenta bancaria:");
 
         tbxPorcentajeDetraccion.setEnabled(false);
+        tbxPorcentajeDetraccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbxPorcentajeDetraccionActionPerformed(evt);
+            }
+        });
 
         jLabel21.setText("Porcentaje:");
 
+        tbxMontoDetraccion.setEditable(false);
         tbxMontoDetraccion.setEnabled(false);
 
         jLabel22.setText("Monto:");
@@ -632,9 +638,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                     .addGap(20, 20, 20)
                                     .addComponent(cbxPagos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel18)
-                                    .addGap(26, 26, 26))
+                                .addComponent(jLabel18)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGap(20, 20, 20)
                                     .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -853,7 +857,10 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 c.setNombres(cbxClientes.getSelectedItem().toString());
                 v.setTipo_pago(cbxServicios1.getSelectedItem().toString());
                 v.setDescuento(descuento);
-                v.setSaldo(0);
+                if ((ingreso != null && ingreso.getEstado().equals("2")) || ingreso == null) {
+                    v.setA_cuenta(total);
+                    v.setSaldo(0);
+                }
 //                v.setIgv(total - total / (1 + valorIGV));
 //                v.setSubtotal(total / (1 + valorIGV));
 //                v.setTotal(total);
@@ -942,9 +949,9 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
 //                                String codigo, String producto, float cantidad, float precio, 
 //                                float importe,int idproducto,float afectacionIGV
                                 datosVentaDetalle.add(new ConsultaVentas2("-",
-                                        "ADELANTO DE " + Formatos.df.format(a_cuenta) + "DE PAGO DE SERVICIO ",
-                                        1, a_cuenta,
-                                        a_cuenta, 0, a_cuenta - (a_cuenta / (1 + valorIGV))));
+                                        "ADELANTO DE " + Formatos.df.format(total) + "DE PAGO DE SERVICIO ",
+                                        1, total,
+                                        total, 0, total - (total / (1 + valorIGV))));
                             } else {
                                 datosVentaDetalle = VentasADN.Detalle_Ventas(id);
                                 if (td.getValue().equals("01")) {
@@ -1447,6 +1454,16 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
             tbxMontoDetraccion.setEnabled(false);
         }
     }//GEN-LAST:event_ckxDetraccionActionPerformed
+
+    private void tbxPorcentajeDetraccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbxPorcentajeDetraccionActionPerformed
+        float porcentaje = 0;
+        try {
+            porcentaje = Float.parseFloat(tbxPorcentajeDetraccion.getText());
+        } catch (Exception e) {
+        }
+        float monto = this.total * porcentaje/100;
+        tbxMontoDetraccion.setText(Formatos.df.format(monto));
+    }//GEN-LAST:event_tbxPorcentajeDetraccionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbxClientes;
