@@ -30,6 +30,7 @@ public class Ingresos implements iArregloLista{
     private String dtrCuentaBancaria;
     private float dtrPorcentaje;
     private float dtrMonto;
+    private String formaPago;
     
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdIngreso() {
@@ -249,6 +250,14 @@ public class Ingresos implements iArregloLista{
         this.dtrMonto = dtrMonto;
     }
 
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
+    }
+
     
 
 
@@ -262,13 +271,14 @@ public class Ingresos implements iArregloLista{
         this.IdIngreso = IdIngreso;
     }
     
-    public Ingresos(int IdIngreso, Date Fecha, float Monto, String Motivo,String estado,String tipoDocName) {
+    public Ingresos(int IdIngreso, Date Fecha, float Monto, String Motivo,String estado,String tipoDocName,String formaPago) {
         this.IdIngreso = IdIngreso;
         this.Fecha = Fecha;
         this.Monto = Monto;
         this.Motivo = Motivo;
         this.estado = estado;
         this.tipoDocName = tipoDocName;
+        this.formaPago = formaPago;
     }
     
     public Ingresos(Date Fecha, float Monto, String Motivo) {

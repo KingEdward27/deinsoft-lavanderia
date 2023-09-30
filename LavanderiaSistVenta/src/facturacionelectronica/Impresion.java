@@ -105,7 +105,7 @@ public class Impresion {
             parametros.put("pusuario_fecha", "admin el " + Formatos.sdfFecha.format(datosVenta.getFecha()));
             parametros.put("presolucion", "Autorizado mediantes resolución N° " + Constantes.RESOLUCION);
             parametros.put("tipoDocFooter", "Representación impresa de la " + datosVenta.getTipoDoc().getNombre());
-            parametros.put("ppagina", "Para consultar el comprobante visita " + Constantes.PAGINA_WEB);
+            parametros.put("ppagina", "Para consultar el comprobante: " + Constantes.PAGINA_WEB);
             parametros.put("presumen", datosVenta.getXmlHash());
             parametros.put("pACuenta", Formatos.df.format(datosVenta.getAcuenta()));
             parametros.put("pSaldo", Formatos.df.format(isTicket?datosVenta.getSaldo():0f));
@@ -116,6 +116,7 @@ public class Impresion {
             parametros.put("isTicket", isTicket);
             parametros.put("pFechaActual",  Formatos.sdfFecha.format(datosVenta.getFecha()) + " " + datosVenta.getHora());
             parametros.put("pFechaRecojo", datosVenta.getFechaEntrega());
+            parametros.put("pFormaPago", datosVenta.getFormaPago());
             parametros.put("psummary", "NOTA: Una vez retirada la prenda no hay lugar a reclamo. "
                     + "Pasado 30 dias de no retirar su ropa esta sera rematada "
                     + "para recuperar los gastos del servicio dado."

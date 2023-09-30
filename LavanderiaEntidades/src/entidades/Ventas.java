@@ -39,6 +39,9 @@ public class Ventas {
 //    private int numDocE;
 //    private int indClienteE;
     private Date fechaPago;
+    
+    private String formaPago
+            ;
     //<editor-fold defaultstate="collapsed" desc="METODOS DE LECTURA Y ESCRITURA">
     public int getIdventa() {
         return Idventa;
@@ -296,6 +299,14 @@ public class Ventas {
         this.saldo = saldo;
     }
 
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
+    }
+
     
     //</editor-fold>
 
@@ -340,7 +351,9 @@ public class Ventas {
 
     @Override
     public String toString() {
-        return "Ventas{" + "Idventa=" + Idventa + ", idcliente=" + idcliente + ", Serie=" + Serie + ", nro=" + nro + ", fecha=" + fecha + ", hora=" + hora + ", igv=" + igv + ", subtotal=" + subtotal + ", total=" + total + ", idusuario=" + idusuario + ", estado=" + estado + ", idtiposervicio=" + idtiposervicio + ", tipo_pago=" + tipo_pago + ", descripcion_servicio=" + descripcion_servicio + ", fecha_Entrega=" + fecha_Entrega + ", strfecha_Entrega=" + strfecha_Entrega + ", fecha_reg=" + fecha_reg + ", lista=" + lista + ", a_cuenta=" + a_cuenta + ", descuento=" + descuento + ", recibido=" + recibido + ", vuelto=" + vuelto + ", fechaPago=" + fechaPago + '}';
+        return "Ventas{" + "Idventa=" + Idventa + ", idcliente=" + idcliente + ", Serie=" + Serie + ", nro=" 
+                + nro + ", fecha=" + fecha + ", hora=" + hora + ", igv=" + igv + ", subtotal=" + 
+                subtotal + ", total=" + total + ", idusuario=" + idusuario + ", estado=" + estado + ", idtiposervicio=" + idtiposervicio + ", tipo_pago=" + tipo_pago + ", descripcion_servicio=" + descripcion_servicio + ", fecha_Entrega=" + fecha_Entrega + ", strfecha_Entrega=" + strfecha_Entrega + ", fecha_reg=" + fecha_reg + ", lista=" + lista + ", a_cuenta=" + a_cuenta + ", descuento=" + descuento + ", recibido=" + recibido + ", vuelto=" + vuelto + ", fechaPago=" + fechaPago + '}';
     }
 
     

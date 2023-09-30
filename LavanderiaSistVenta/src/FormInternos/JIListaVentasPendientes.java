@@ -115,6 +115,8 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         jLabel21 = new javax.swing.JLabel();
         tbxMontoDetraccion = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        cbxFormaPago = new javax.swing.JComboBox();
 
         setClosable(true);
         setMaximizable(true);
@@ -514,6 +516,16 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                 .addGap(46, 46, 46))
         );
 
+        jLabel23.setText("Forma Pago:");
+
+        cbxFormaPago.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Contado", "Credito" }));
+        cbxFormaPago.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        cbxFormaPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxFormaPagoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -528,24 +540,31 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel16)
-                                .addGap(18, 18, 18)
-                                .addComponent(jdprFecVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbxPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel19))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel18))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel17)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(cbxtipodocumentoE, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel16)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jlblTotal1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(jdprFecVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel23)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbxFormaPago, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbxPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel19))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel18))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel17)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(cbxtipodocumentoE, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jlblTotal1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -642,10 +661,17 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                                 .addGroup(layout.createSequentialGroup()
                                     .addGap(20, 20, 20)
                                     .addComponent(cbxServicios1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(16, 16, 16)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jdprFecVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jdprFecVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel16)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel23)
+                                    .addComponent(cbxFormaPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -822,12 +848,21 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(rootPane, "El tipo de comprobante debe ser el mismo que el del pago a cuenta: " + ingreso.getTipoDocName());
                     return;
                 }
+                if (!ingreso.getFormaPago().equals(cbxFormaPago.getSelectedItem().toString())) {
+                    JOptionPane.showMessageDialog(rootPane, "La forma de pago debe ser la misma que el del pago a cuenta y debe ser contado: " + ingreso.getTipoDocName());
+                    return;
+                }
             }
 
             if (cbxPagos.getItemCount() > 1 && cbxPagos.getSelectedIndex() == 1) {
                 JOptionPane.showMessageDialog(rootPane, "Debe generar el comprobante del pago a cuenta primero");
                 return;
             }
+            if (cbxPagos.getItemCount() > 1 && cbxFormaPago.getSelectedIndex() == 1) {
+                JOptionPane.showMessageDialog(rootPane, "Si es pago a cuenta el comprobante no puede ser a crédito");
+                return;
+            }
+            
             if (!cbxPagos.getSelectedItem().toString().contains("Saldo")) {
                 total = a_cuenta - descuento;
                 is_acuenta = true;
@@ -911,6 +946,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
                     i.setSerieDocE(jlblTotal1.getText().split("-")[0]);
                     i.setFechaPago(Formatos.FechaSQL(fecha));
                     i.setTipoOperacion(Constantes.TIPO_OPERACION_WS);
+                    i.setFormaPago(cbxFormaPago.getSelectedItem().toString());
                     if (ckxDetraccion.isSelected()) {
                         i.setDtrCuentaBancaria(tbxCuentaBancaria.getText());
                         i.setDtrPorcentaje(Float.parseFloat(tbxPorcentajeDetraccion.getText()));
@@ -1465,8 +1501,13 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
         tbxMontoDetraccion.setText(Formatos.df.format(monto));
     }//GEN-LAST:event_tbxPorcentajeDetraccionActionPerformed
 
+    private void cbxFormaPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxFormaPagoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxFormaPagoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cbxClientes;
+    private javax.swing.JComboBox cbxFormaPago;
     private javax.swing.JComboBox cbxPagos;
     private javax.swing.JComboBox cbxServicios1;
     private javax.swing.JComboBox cbxtipodocumentoE;
@@ -1486,6 +1527,7 @@ public class JIListaVentasPendientes extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;

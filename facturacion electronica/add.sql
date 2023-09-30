@@ -466,3 +466,9 @@ CHANGE COLUMN `Direccion` `Direccion` VARCHAR(300) NULL DEFAULT NULL ;
 ALTER TABLE clientes
 CHANGE COLUMN `Nombres` `Nombres` VARCHAR(350) NOT NULL ;
 
+-- 2023-09-28
+alter table ventas
+add forma_pago varchar(20) default 'Contado';
+
+alter table ingresos
+add forma_pago varchar(20) default 'Contado';

@@ -73,6 +73,7 @@ public class ConsultaVentas2 {
     private float dtrMonto;
     private Float saldo;
     private String hora;
+    private String formaPago;
     
     public int getIdventa() {
         return idventa;
@@ -495,6 +496,14 @@ public class ConsultaVentas2 {
         this.hora = hora;
     }
 
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
+    }
+
 
     
     public ConsultaVentas2() {
@@ -522,7 +531,7 @@ public class ConsultaVentas2 {
             float recibido,float vuelto,String tipo,int idVentaFromIngresos,
             String serieDocRef,String numDocRef,float montoRef,Date fechaRef,
             String flagAdelanto,float subtotal,
-            String tipoOperacion,String dtrCuentaBancaria,float dtrPorcentaje,float dtrMonto, Float saldo,String hora) {
+            String tipoOperacion,String dtrCuentaBancaria,float dtrPorcentaje,float dtrMonto, Float saldo,String hora,String formaPago) {
         this.idventa = idventa;
         this.serie = serie;
         this.num = num;
@@ -565,6 +574,7 @@ public class ConsultaVentas2 {
         this.dtrMonto = dtrMonto;
         this.saldo = saldo;
         this.hora = hora;
+        this.formaPago = formaPago;
     }
     //anular ventas
 public ConsultaVentas2(int idventa, String serie,  String num, String cliente, Date fecha, float ventatotal) {

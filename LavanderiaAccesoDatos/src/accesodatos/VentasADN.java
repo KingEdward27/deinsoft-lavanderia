@@ -70,7 +70,8 @@ public class VentasADN {
             ps.setString(20, null);
             ps.setFloat(21, ent.getTotal() - ent.getA_cuenta());
 //            }
-
+           
+            ps.setString(20, ent.getFormaPago());
             r = ps.executeUpdate();
 
             sql = "select max(idventa) from ventas";
@@ -543,7 +544,7 @@ public class VentasADN {
                             rs.getString(23), rs.getInt(24),
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
                             rs.getFloat(30),null,0,null,null,0,null,"",rs.getFloat(31),
-                            null,null,0,0,rs.getFloat(32), rs.getString(33)));
+                            null,null,0,0,rs.getFloat(32), rs.getString(33),""));
                 }
             }
         }
@@ -600,7 +601,7 @@ public class VentasADN {
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
                             rs.getFloat(30), rs.getString(31), rs.getInt(32),
                             null,null,0,null,"",rs.getFloat(33),
-                            null,null,0,0,0f, rs.getString(34)));
+                            null,null,0,0,0f, rs.getString(34),""));
                 }
             }
         }
@@ -639,7 +640,7 @@ public class VentasADN {
                     + "ifnull(i.detr_cuenta_bancaria,'') detr_cuenta_bancaria,"
                     + "ifnull(i.detr_porcentaje,0) detr_porcentaje,"
                     + "ifnull(i.detr_monto,0) detr_monto,\n" 
-                    + "ifnull(v.saldo,0) saldo,v.hora\n" +
+                    + "ifnull(v.saldo,0) saldo,v.hora, i.forma_pago\n" +
                     "from ventas v \n" +
                     "inner join ingresos i on i.idventa = v.idventa\n" +
                     "inner join clientes cli on i.cliente_id=cli.idcliente\n" +
@@ -670,7 +671,7 @@ public class VentasADN {
                             rs.getString(25), rs.getString(26), rs.getString(27),rs.getFloat(28),rs.getFloat(29),
                             rs.getFloat(30), rs.getString(31), rs.getInt(32),
                             rs.getString(33), rs.getString(34), rs.getFloat(35), rs.getDate(36),rs.getString(37),rs.getFloat(38),
-                            rs.getString(39),rs.getString(40),rs.getFloat(41),rs.getFloat(42),rs.getFloat(43), rs.getString(44)));
+                            rs.getString(39),rs.getString(40),rs.getFloat(41),rs.getFloat(42),rs.getFloat(43), rs.getString(44), rs.getString(45)));
                 }
             }
         }

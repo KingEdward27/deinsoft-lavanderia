@@ -100,7 +100,7 @@ public class IngresosADN {
 
     private static Ingresos findIngresoIdByVentaId(int ventaId) throws SQLException, ClassNotFoundException {
         Ingresos r = null;
-        String sql = "select i.idingreso,i.monto,i.estado,ifnull(td.nombre,'') nombre from ingresos i "
+        String sql = "select i.idingreso,i.monto,i.estado,ifnull(td.nombre,'') nombre, forma_pago from ingresos i "
                 + "left join tipodoc td on td.tipodoc_id = i.tipodoc_id "
                 + "where i.idventa = ? and i.flag_adelanto = '1'";
         try (Connection cn = Conexion.Conexion();
@@ -109,7 +109,7 @@ public class IngresosADN {
             // leer el siguiente valor:
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    r = new Ingresos(rs.getInt(1), null, rs.getFloat(2), null, rs.getString(3), rs.getString(4));
+                    r = new Ingresos(rs.getInt(1), null, rs.getFloat(2), null, rs.getString(3), rs.getString(4), rs.getString(5));
                     
                 }
             }
@@ -188,8 +188,8 @@ public class IngresosADN {
                                 + "num_doc,"
                                 + "cliente_id,"
                                 + "estado,igv,subtotal,fecha_pago,fecha,descuento,recibido,"
-                                + "tipo_operacion,detr_cuenta_bancaria,detr_porcentaje,detr_monto) "
-                                + "VALUES (?,?,?,?,?,?,?,'2',?,?,?,now(),?,?,?,?,?,?) ";
+                                + "tipo_operacion,detr_cuenta_bancaria,detr_porcentaje,detr_monto, forma_pago) "
+                                + "VALUES (?,?,?,?,?,?,?,'2',?,?,?,now(),?,?,?,?,?,?, ?) ";
                         ps = cn.prepareStatement(sql);
                         ps.setFloat(1, i.getMonto());
                         ps.setString(2, i.getMotivo());
@@ -208,6 +208,7 @@ public class IngresosADN {
                         ps.setString(14, i.getDtrCuentaBancaria());
                         ps.setFloat(15, i.getDtrPorcentaje());
                         ps.setFloat(16, i.getDtrMonto());
+                        ps.setString(17, i.getFormaPago());
                         
                         r = ps.executeUpdate();
 

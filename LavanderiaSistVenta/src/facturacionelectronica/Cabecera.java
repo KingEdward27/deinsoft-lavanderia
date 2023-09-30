@@ -60,9 +60,13 @@ public class Cabecera {
     
     private String mto_detraccion;
     
+    private String monto_neto_pendiente;
+    
     private List<Detalle> lista;
 
     private List<Tributo> listaTax;
+    
+    private List<Cuotas> listaCuotas;
     
     public List<Detalle> getLista() {
         return lista;
@@ -360,6 +364,22 @@ public class Cabecera {
         this.listaTax = listaTax;
     }
 
+    public List<Cuotas> getListaCuotas() {
+        return listaCuotas;
+    }
+
+    public void setListaCuotas(List<Cuotas> listaCuotas) {
+        this.listaCuotas = listaCuotas;
+    }
+
+    public String getMonto_neto_pendiente() {
+        return monto_neto_pendiente;
+    }
+
+    public void setMonto_neto_pendiente(String monto_neto_pendiente) {
+        this.monto_neto_pendiente = monto_neto_pendiente;
+    }
+
     public Cabecera() {
     }
 
@@ -375,16 +395,22 @@ public class Cabecera {
 
         JsonArrayBuilder objectBuilderDetail = Json.createArrayBuilder();
         JsonArrayBuilder objectBuilderDetail2 = Json.createArrayBuilder();
+        JsonArrayBuilder objectBuilderDetail3 = Json.createArrayBuilder();
         for (Detalle items : lista) {
             objectBuilderDetail.add(items.toJson(items));
         }
         for (Tributo items : listaTax) {
             objectBuilderDetail2.add(items.toJson(items));
         }
+        for (Cuotas items : listaCuotas) {
+            objectBuilderDetail3.add(items.toJson(items));
+        }
         JsonArray objectDetail = objectBuilderDetail.build();
         JsonArray objectDetail2 = objectBuilderDetail2.build();
+        JsonArray objectDetail3 = objectBuilderDetail3.build();
         objectBuilder.add("lista_productos", objectDetail);
         objectBuilder.add("lista_tributos", objectDetail2);
+        objectBuilder.add("lista_cuotas", objectDetail3);
         JsonObject object = objectBuilder.build();
         return object.toString();
     }

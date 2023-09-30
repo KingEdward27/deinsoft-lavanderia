@@ -53,7 +53,7 @@ public class EnvioPSE {
             servicio.setTipo(tipoDocSunat);
             servicio.setSerie(datosVenta.getSerieDocE());
             servicio.setNumero(String.valueOf(datosVenta.getNumDocE()));
-            servicio.setForma_pago("Contado");
+            servicio.setForma_pago(datosVenta.getFormaPago());
             servicio.setFecha_emision(Util.sdfFecha.format(datosVenta.getFecha()));
             servicio.setFecha_vencimiento(null);
             servicio.setTipo_operacion(datosVenta.getTipoOperacion());
@@ -122,6 +122,17 @@ public class EnvioPSE {
             
             servicio.setLista(listaItemsEnvio);
             servicio.setListaTax(listaItemsTax);
+            List<Cuotas> listaItemsCuotas = new ArrayList<Cuotas>();
+            if (!datosVenta.getFormaPago().toLowerCase().equals("contado")) {
+                
+                Cuotas cuota = new Cuotas();
+                cuota.setTipo_moneda_pago(Constantes.MONEDA);
+                cuota.setMonto_pago(Formatos.df.format(sumBaseImponible + sumTributo));
+                cuota.setFecha_pago(Util.sdfFecha.format(datosVenta.getFecha()));
+                listaItemsCuotas.add(cuota);
+                servicio.setMonto_neto_pendiente("0");
+            }
+            servicio.setListaCuotas(listaItemsCuotas);
             String jsonBody;
             try {
                 jsonBody = servicio.toJson(servicio);
