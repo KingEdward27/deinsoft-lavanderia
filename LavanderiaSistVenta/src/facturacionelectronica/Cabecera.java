@@ -60,6 +60,7 @@ public class Cabecera {
     
     private String mto_detraccion;
     
+    private String moneda_monto_neto_pendiente;
     private String monto_neto_pendiente;
     
     private List<Detalle> lista;
@@ -379,6 +380,16 @@ public class Cabecera {
     public void setMonto_neto_pendiente(String monto_neto_pendiente) {
         this.monto_neto_pendiente = monto_neto_pendiente;
     }
+
+    public String getMoneda_monto_neto_pendiente() {
+        return moneda_monto_neto_pendiente;
+    }
+
+    public void setMoneda_monto_neto_pendiente(String moneda_monto_neto_pendiente) {
+        this.moneda_monto_neto_pendiente = moneda_monto_neto_pendiente;
+    }
+
+    
 
     public Cabecera() {
     }

@@ -3,7 +3,7 @@ PEREZ DELGADO BLANCA NERI (LAVANDERIA)
 
 10414316595
 INHUESTO
-tatiumege
+Blanca1234
 
 USUARIO CLAVE RENIEC CDT
 ===================
@@ -43,6 +43,21 @@ permitir generar comprobante en a cuenta
 
 
 la boleta sale con la fecha del pago a cuenta
-https://deinsoft-facturador-w.azurewebsites.net/
+http://inifact.pro/deinsoft-facturador-cloud/
 usuario: lavanderiachick
 clave: DEINSOFT202201$$
+
+10067868957
+
+BB03
+FF03
+
+STRATTEN
+ainkyjaky
+
+clave certificado:
+10067868957ABC
+
+varasolisj@gmail.com
+JOSEVARA
+06786895Abc

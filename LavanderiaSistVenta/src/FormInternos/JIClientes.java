@@ -4,7 +4,9 @@
  */
 package FormInternos;
 
+import Adicional.Util;
 import accesodatos.ClientesADN;
+import client.LoginRequest;
 import entidades.Clientes;
 import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
@@ -227,6 +229,11 @@ public class JIClientes extends javax.swing.JInternalFrame {
         jtfdDni.setEditable(false);
         jtfdDni.setHint("Ingrese su DNI");
         jtfdDni.setLength(11);
+        jtfdDni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfdDniActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("DNI/RUC:");
 
@@ -614,6 +621,17 @@ public class JIClientes extends javax.swing.JInternalFrame {
     private void jtfdCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdCorreoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfdCorreoActionPerformed
+
+    private void jtfdDniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfdDniActionPerformed
+        LoginRequest l = new LoginRequest("edward21.sistemas@gmail.com", "123456");
+        try {
+            String jsonToken = Util.simpleApiWithJsonBody("http://inifact.pro/ventas-backend/login",l.toJson(l), "post", null, "*/*", "application/json");
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Operación inválida: "+ e.getMessage());
+        }
+        
+    }//GEN-LAST:event_jtfdDniActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

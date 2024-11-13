@@ -1,11 +1,18 @@
 package Adicional;
 
 import entidades.Formatos;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -98,5 +105,53 @@ public class Util {
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date1.getTime() - date2.getTime();
         return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+    }
+    
+    public static String simpleApiWithJsonBody(String urlParam, String jsonBody,  String httpMethod, String authorization,
+             String accept,
+             String contentType) {
+        boolean result = false;
+        System.out.println("jsonBody: " + jsonBody);
+        try {
+            URL url = new URL(urlParam);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setRequestMethod(httpMethod);
+            conn.setRequestProperty("Accept", accept);
+            conn.setRequestProperty("Authorization", "Bearer " + authorization);
+            conn.setRequestProperty("Content-Type", contentType);
+            conn.connect();
+
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+            writer.write(jsonBody);
+            writer.close();
+
+            BufferedReader br = null;
+            if (conn.getResponseCode() == 200 || conn.getResponseCode() == 201) {
+                br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                result = true;
+            } else {
+                br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+                result = false;
+            }
+            String output, jsonString = "";
+            System.out.println("output is-----------------");
+
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+                jsonString = jsonString + output;
+            }
+            return jsonString;
+        } catch (ConnectException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

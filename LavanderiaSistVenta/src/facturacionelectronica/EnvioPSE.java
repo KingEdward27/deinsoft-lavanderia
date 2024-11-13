@@ -25,7 +25,9 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,9 +130,21 @@ public class EnvioPSE {
                 Cuotas cuota = new Cuotas();
                 cuota.setTipo_moneda_pago(Constantes.MONEDA);
                 cuota.setMonto_pago(Formatos.df.format(sumBaseImponible + sumTributo));
-                cuota.setFecha_pago(Util.sdfFecha.format(datosVenta.getFecha()));
+                
+                Calendar cal = Calendar.getInstance();  
+                try{  
+                   cal.setTime(datosVenta.getFecha());  
+                }catch(Exception e){  
+                    e.printStackTrace();  
+                 }  
+
+                // use add() method to add the days to the given date  
+                cal.add(Calendar.MONTH, 1);  
+        
+                cuota.setFecha_pago(Util.sdfFecha.format(cal.getTime()));
                 listaItemsCuotas.add(cuota);
-                servicio.setMonto_neto_pendiente("0");
+                servicio.setMonto_neto_pendiente(Formatos.df.format(sumBaseImponible + sumTributo));
+                servicio.setMoneda_monto_neto_pendiente(Constantes.MONEDA);
             }
             servicio.setListaCuotas(listaItemsCuotas);
             String jsonBody;
